@@ -114,6 +114,34 @@ Notebook settings: **Accelerator = GPU T4 x2**, **Internet = On**. Avoid P100.
 # If SGLang fails in FlashInfer on T4:
 # !SGLANG_ATTN=triton bash /kaggle/working/inference-lab/week01/run_bench.sh sglang
 ```
+
+### Reading the vLLM test output
+`kaggle_setup.sh` runs `pytest tests/v1/core -q -x --maxfail=5` (about 1,300 tests) and saves the output to `~/lab/logs/vllm_tests.log`. In `-q` mode each test prints one character:
+
+| Char | Meaning |
+|---|---|
+| `.` | passed |
+| `F` | **failed**: the test ran and an assertion or the code under test raised |
+| `E` | **error**: the test never ran, because its setup (a fixture) or module import raised. Usually an environment problem: a missing package, a model download, or a GPU feature T4 lacks |
+| `s` | skipped on purpose (e.g. `@pytest.mark.skipif` for an unsupported GPU) |
+| `x` / `X` | expected failure that failed / unexpectedly passed |
+
+Each line holds 72 tests, and `[ 27%]` is overall progress. `--maxfail=5` stops after 5 `F`/`E` combined (it overrides `-x`). The run ends with a summary such as `1290 passed, 2 errors in 312.45s`.
+
+Find out what went wrong (same session, after the tests finish):
+```python
+# Which tests errored or failed
+!grep -E "^(ERROR|FAILED) " /root/lab/logs/vllm_tests.log
+```
+```python
+# Why: the traceback of each error (use "= FAILURES =" for F)
+!grep -n -A25 "= ERRORS =" /root/lab/logs/vllm_tests.log | head -60
+```
+```python
+# Rerun just one test with full output (node id from the first command)
+!cd /root/lab/vllm && .venv/bin/python -m pytest "tests/v1/core/<file>.py::<test_name>" -x -vv
+```
+Then decide: an environment cause (T4/sm_75, missing optional dep) goes in `LOG.md`. A real bug that reproduces on current `main` is a `good first issue` candidate: search existing issues before filing.
 Copy `results/` and `~/lab/logs/` back into this repo and commit them. **Shut the session down afterwards**, or it keeps using quota.
 
 ## Known pitfalls
