@@ -82,14 +82,26 @@ On GPU (Kaggle), steps 7–8 are `GPUModelRunner.execute_model` / `sample_tokens
 6. Useful debugger moves: `F10` step over, `F11` step into, `Shift+F11` step out. Right-click a breakpoint → **Edit Condition** (e.g. `len(self.waiting) > 0`) to skip empty iterations. The **Call Stack** panel shows how steps 4 → 5 → 6 nest.
 7. Turn what you saw into the Week 1 diagram (API server → scheduler → KV cache manager → model runner → sampler) and save it in `week01/`.
 
+## Push to GitHub (before every Kaggle run)
+Kaggle only sees what is on GitHub (`jjzz888/inference-lab`, public), not your local files. If you skip this, `git clone` on Kaggle gets an old or empty repo and fails with `kaggle_setup.sh: No such file or directory`.
+
+The local `inference-lab/` folder is a git repo tracking `origin/main`. After changing any script:
+```bash
+cd "/Users/jing/Documents/Obsidian Vault/nvidia/inference-lab"
+git status                      # check what changed
+git add -A && git commit -m "week01: <what changed>"
+git push
+```
+Check: `gh api repos/jjzz888/inference-lab/contents/week01 --jq '.[].name'` lists the scripts. The repo is public, so never commit tokens or keys.
+
 ## Kaggle
 Notebook settings: **Accelerator = GPU T4 x2**, **Internet = On**. Avoid P100.
 
-Getting the scripts in: push this repo to GitHub and `!git clone` it, or paste each file into a cell with `%%writefile`.
-
 ```python
 # Cell 1: setup (~10–20 min with precompiled vLLM kernels)
-!git clone https://github.com/<you>/inference-lab.git /kaggle/working/inference-lab
+# rm -rf first: a clone left over from an earlier run in this session won't update itself.
+!rm -rf /kaggle/working/inference-lab
+!git clone https://github.com/jjzz888/inference-lab.git /kaggle/working/inference-lab
 !bash /kaggle/working/inference-lab/week01/kaggle_setup.sh
 ```
 ```python
