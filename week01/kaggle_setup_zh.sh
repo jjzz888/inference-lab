@@ -13,6 +13,9 @@
 #   SGLANG_REF       SGLang 使用的 Git ref（默认：驱动支持 CUDA 13 时为 main，否则为 v0.5.19）
 #   VLLM_FULL_BUILD=1 完整编译 C++/CUDA，而不是复用预编译内核（Kaggle CPU 上可能耗时数小时，通常不建议）
 #   RUN_TESTS=0      跳过快速测试子集
+#   SGLANG_BUILD_RUST_EXTS  要编译哪些 SGLang Rust 扩展（默认 none；Kaggle 上没有 cargo）。
+#                    不编译也能正常 serving：前缀缓存会退回 Python 版 TreeCore。
+#                    设为 rust_tree_core 时会安装 rustup，并只编译 Rust 版 radix tree。
 
 # 启用严格模式：命令失败、使用未定义变量或管道命令失败时退出。
 set -euo pipefail
@@ -184,6 +187,20 @@ setup_sglang() {
   [ -d .venv ] || uv venv --python 3.12 --seed --managed-python
   # 激活 SGLang 的虚拟环境，并把 uv pip 固定到这个 venv。
   use_venv
+  # SGLang 的 setup.py 会编译 Rust（PyO3）扩展，需要 cargo，而 Kaggle 镜像里没有。
+  # 这些扩展只用于 gRPC、Rust 版 server、少数多模态预处理，以及 Rust 版 radix tree
+  # （缺失时自动退回 Python 版 TreeCore）。所以默认跳过；用户已设置时沿用用户的值。
+  export SGLANG_BUILD_RUST_EXTS="${SGLANG_BUILD_RUST_EXTS:-none}"
+  # 打印实际取值，方便在日志里确认。
+  echo "SGLANG_BUILD_RUST_EXTS=$SGLANG_BUILD_RUST_EXTS"
+  # 需要编译 Rust 扩展、但系统里没有 cargo 时，用官方 rustup 安装最小化的 Rust 工具链。
+  if [ "$SGLANG_BUILD_RUST_EXTS" != "none" ] && ! command -v cargo >/dev/null 2>&1; then
+    say "SGLang: installing Rust toolchain (rustup, minimal profile)"
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
+    # 把 ~/.cargo/bin 加入 PATH，让后面的构建能找到 cargo 和 rustc。
+    # shellcheck disable=SC1091
+    source "$HOME/.cargo/env"
+  fi
   # 从仓库的 python 子目录以 editable 模式安装 SGLang；输出同时显示并保存到日志。
   uv pip install -e "python" 2>&1 | tee "$LOG_DIR/sglang_build.log"
 

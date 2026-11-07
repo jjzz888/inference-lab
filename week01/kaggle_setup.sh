@@ -13,6 +13,9 @@
 #   SGLANG_REF   git ref for SGLang                   (default: main if driver supports CUDA 13, else v0.5.19)
 #   VLLM_FULL_BUILD=1   compile C++/CUDA instead of reusing precompiled kernels (hours on Kaggle CPUs; avoid)
 #   RUN_TESTS=0  skip the quick test subset
+#   SGLANG_BUILD_RUST_EXTS  which SGLang Rust extensions to build (default: none; Kaggle has no cargo).
+#                Serving still works: the radix cache falls back to the Python TreeCore.
+#                =rust_tree_core installs rustup and builds only the Rust radix tree.
 set -euo pipefail
 
 TARGET="${1:-all}"
@@ -120,6 +123,17 @@ setup_sglang() {
   say "SGLang: venv + editable install"
   [ -d .venv ] || uv venv --python 3.12 --seed --managed-python
   use_venv
+  # SGLang's setup.py builds Rust (PyO3) extensions and needs cargo, which Kaggle lacks.
+  # They're only needed for gRPC, the Rust server, a few multimodal processors, and the
+  # Rust radix tree (which falls back to the Python TreeCore). Skip them by default.
+  export SGLANG_BUILD_RUST_EXTS="${SGLANG_BUILD_RUST_EXTS:-none}"
+  echo "SGLANG_BUILD_RUST_EXTS=$SGLANG_BUILD_RUST_EXTS"
+  if [ "$SGLANG_BUILD_RUST_EXTS" != "none" ] && ! command -v cargo >/dev/null 2>&1; then
+    say "SGLang: installing Rust toolchain (rustup, minimal profile)"
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
+    # shellcheck disable=SC1091
+    source "$HOME/.cargo/env"
+  fi
   uv pip install -e "python" 2>&1 | tee "$LOG_DIR/sglang_build.log"
 
   say "SGLang: sanity check"
