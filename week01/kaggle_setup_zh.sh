@@ -1,0 +1,206 @@
+#!/usr/bin/env bash
+# 第 1 周：在 Kaggle GPU（2 张 T4）会话中从源码构建 vLLM 和 SGLang。
+# 每个 Kaggle 会话都会从干净环境开始，因此每次会话启动时都要运行一次。
+#
+# 用法：
+#   bash kaggle_setup_zh.sh            # 安装 vLLM 和 SGLang
+#   bash kaggle_setup_zh.sh vllm       # 只安装 vLLM
+#   bash kaggle_setup_zh.sh sglang     # 只安装 SGLang
+#
+# 可通过环境变量覆盖的设置：
+#   WORKDIR          源码仓库和虚拟环境的目录（默认：$HOME/lab，避开 /kaggle/working 的 20 GB 输出配额）
+#   VLLM_REF         vLLM 使用的 Git ref（默认：main）
+#   SGLANG_REF       SGLang 使用的 Git ref（默认：驱动支持 CUDA 13 时为 main，否则为 v0.5.19）
+#   VLLM_FULL_BUILD=1 完整编译 C++/CUDA，而不是复用预编译内核（Kaggle CPU 上可能耗时数小时，通常不建议）
+#   RUN_TESTS=0      跳过快速测试子集
+
+# 启用严格模式：命令失败、使用未定义变量或管道命令失败时退出。
+set -euo pipefail
+
+# 第一个参数为安装目标；未提供时默认为 all。
+TARGET="${1:-all}"
+# 工作目录；可用 WORKDIR 环境变量覆盖，默认位于用户主目录下的 lab。
+WORKDIR="${WORKDIR:-$HOME/lab}"
+# vLLM 的 Git ref；可用 VLLM_REF 覆盖，默认使用 main。
+VLLM_REF="${VLLM_REF:-main}"
+# 是否运行测试；可用 RUN_TESTS 覆盖，默认运行。
+RUN_TESTS="${RUN_TESTS:-1}"
+# 日志目录；可用 LOG_DIR 覆盖，默认在工作目录下的 logs。
+LOG_DIR="${LOG_DIR:-$WORKDIR/logs}"
+# 创建工作目录和日志目录；目录已存在时不会报错。
+mkdir -p "$WORKDIR" "$LOG_DIR"
+
+# 定义进度输出函数，用青色粗体打印带箭头的阶段标题。
+say() { printf '\n\033[1;36m==> %s\033[0m\n' "$*"; }
+
+# ---------------------------------------------------------------- 环境检查
+# 显示 GPU/驱动阶段标题。
+say "GPU / driver"
+# 显示 NVIDIA GPU 和驱动的概要信息。
+nvidia-smi
+# 查询每张 GPU 的名称、计算能力、驱动版本及显存总量，并以 CSV 格式输出。
+nvidia-smi --query-gpu=name,compute_cap,driver_version,memory.total --format=csv
+# 从 nvidia-smi 输出中提取驱动支持的 CUDA 主版本号；提取失败时设为 0。
+DRIVER_CUDA_MAJOR="$(nvidia-smi | grep -oP 'CUDA Version: \K[0-9]+' || echo 0)"
+# 打印驱动支持的最高 CUDA 主版本号。
+echo "Driver supports CUDA up to major version: $DRIVER_CUDA_MAJOR"
+
+# 每次都安装/升级 uv：Kaggle 镜像可能自带旧版 uv，旧版无法解析 vLLM 的 [tool.uv] 配置，
+# 会悄悄忽略整个配置表（torch 的 no-build-isolation、排除 openai-harmony）。
+say "Installing / upgrading uv"
+# 安静地使用 pip 安装/升级 uv。
+pip install -q -U uv
+# 打印 uv 的版本，确认命令可用。
+uv --version
+
+# 定义克隆或更新仓库的函数：参数依次为 $1=仓库 URL、$2=本地目录、$3=Git ref。
+clone_or_update() {  # $1=url $2=dir $3=ref
+  # 如果目标目录不是一个 Git 仓库，就克隆仓库。
+  if [ ! -d "$2/.git" ]; then
+    git clone "$1" "$2"
+  fi
+  # 从 origin 获取标签信息，静默运行。
+  git -C "$2" fetch --tags --quiet origin
+  # 切换到指定的分支、标签或其他 Git ref。
+  git -C "$2" checkout --quiet "$3"
+  # 若当前位于分支上（而不是标签或分离 HEAD），则只允许快进更新。
+  if git -C "$2" symbolic-ref -q HEAD >/dev/null; then git -C "$2" pull --ff-only --quiet; fi
+  # 输出仓库目录名、当前提交短哈希和指定的 ref。
+  echo "$(basename "$2") @ $(git -C "$2" rev-parse --short HEAD) ($3)"
+}
+
+# ---------------------------------------------------------------- vLLM 安装
+# 定义 vLLM 的克隆、安装、检查和测试流程。
+setup_vllm() {
+  # 显示即将使用的 vLLM ref。
+  say "vLLM: clone ($VLLM_REF)"
+  # 克隆或更新 vLLM 仓库。
+  clone_or_update https://github.com/vllm-project/vllm.git "$WORKDIR/vllm" "$VLLM_REF"
+  # 进入 vLLM 源码目录。
+  cd "$WORKDIR/vllm"
+
+  # 显示正在准备 vLLM 虚拟环境。
+  say "vLLM: venv"
+  # 如果虚拟环境不存在，就创建 Python 3.12 环境，预装基础工具并使用 uv 管理 Python。
+  [ -d .venv ] || uv venv --python 3.12 --seed --managed-python
+  # 告知 ShellCheck：下面加载的虚拟环境脚本路径是动态生成的，因此无法静态解析。
+  # shellcheck disable=SC1091
+  # 激活 vLLM 的虚拟环境。
+  source .venv/bin/activate
+
+  # 若设置 VLLM_FULL_BUILD=1，则执行完整 C++/CUDA 编译。
+  if [ "${VLLM_FULL_BUILD:-0}" = "1" ]; then
+    # 显示正在进行完整构建。
+    say "vLLM: FULL build (C++/CUDA compile)"
+    # 设置构建并发数（默认 4），以 editable 模式安装并自动选择 PyTorch 后端；输出同时显示并保存到日志。
+    MAX_JOBS="${MAX_JOBS:-4}" uv pip install -e . --torch-backend=auto 2>&1 | tee "$LOG_DIR/vllm_build.log"
+  # 否则使用预编译内核进行仅 Python 部分的可编辑安装。
+  else
+    # 显示正在使用预编译内核安装。
+    say "vLLM: Python-only editable build with precompiled kernels"
+    # 预编译模式必须使用 uv pip；普通的 pip install -e . 在此模式下无法工作。
+    # 设置预编译模式，以 editable 方式安装，并自动选择 PyTorch 后端；输出同时显示并保存到日志。
+    VLLM_USE_PRECOMPILED=1 uv pip install --editable . --torch-backend=auto 2>&1 | tee "$LOG_DIR/vllm_build.log"
+  fi
+  # 尝试下载 vLLM 内核；若命令失败或当前 ref 不支持该命令，则显示警告并继续。
+  vllm download-kernels || echo "WARN: 'vllm download-kernels' failed or not available on this ref"
+
+  # 显示正在检查 vLLM 安装是否正常。
+  say "vLLM: sanity check"
+  # 运行内嵌 Python 程序，打印已安装的 vLLM、PyTorch、CUDA 和 GPU 信息。
+  python - <<'PY'
+# 导入 PyTorch 和 vLLM，以检查安装状态及设备信息。
+import torch, vllm
+# 打印 vLLM 版本和模块文件位置。
+print("vllm", vllm.__version__, "| file", vllm.__file__)
+# 打印 PyTorch 版本、PyTorch 使用的 CUDA 版本及可见 GPU 数量。
+print("torch", torch.__version__, "| cuda", torch.version.cuda, "| gpus", torch.cuda.device_count())
+# 打印第 0 张 GPU 的计算能力。
+print("capability", torch.cuda.get_device_capability(0))
+PY
+
+  # 当 RUN_TESTS 的值为 "1" 时运行快速测试。
+  if [ "$RUN_TESTS" = "1" ]; then
+    # 显示将测试 vLLM v1 核心中的调度器和 KV cache 管理器。
+    say "vLLM: quick tests (tests/v1/core: scheduler + KV cache manager)"
+    # 安静地安装 pytest 和异步测试插件。
+    uv pip install -q pytest pytest-asyncio
+    # 运行 v1 核心测试：安静模式，遇到首个失败即停止，最多报告 5 个失败；保存测试日志。
+    # 测试失败不应中止整个安装流程；失败信息会写入日志供后续排查。
+    pytest tests/v1/core -q -x --maxfail=5 2>&1 | tee "$LOG_DIR/vllm_tests.log" || \
+      echo "WARN: some vLLM tests failed; see $LOG_DIR/vllm_tests.log"
+  fi
+  # 退出 vLLM 虚拟环境。
+  deactivate
+}
+
+# ---------------------------------------------------------------- SGLang 安装
+# 定义 SGLang 的克隆、安装和检查流程。
+setup_sglang() {
+  # 获取 SGLANG_REF；未设置时先置为空字符串，随后根据驱动版本选择默认值。
+  local ref="${SGLANG_REF:-}"
+  # 如果没有指定 SGLang ref，就根据驱动支持的 CUDA 版本选择。
+  if [ -z "$ref" ]; then
+    # CUDA 13 或更高版本使用 main；较旧版本使用 v0.5.19。
+    if [ "$DRIVER_CUDA_MAJOR" -ge 13 ]; then ref=main; else ref=v0.5.19; fi
+  fi
+  # 若驱动支持的 CUDA 版本低于 13，提示将使用兼容 CUDA 12 的版本。
+  if [ "$DRIVER_CUDA_MAJOR" -lt 13 ]; then
+    echo "NOTE: driver CUDA < 13; latest SGLang is CUDA 13 only, so using $ref (last CUDA 12 lane)."
+  fi
+
+  # 显示即将使用的 SGLang ref。
+  say "SGLang: clone ($ref)"
+  # 克隆或更新 SGLang 仓库。
+  clone_or_update https://github.com/sgl-project/sglang.git "$WORKDIR/sglang" "$ref"
+  # 进入 SGLang 源码目录。
+  cd "$WORKDIR/sglang"
+
+  # 显示正在准备 SGLang 虚拟环境并进行可编辑安装。
+  say "SGLang: venv + editable install"
+  # 如果虚拟环境不存在，就创建 Python 3.12 环境，预装基础工具并使用 uv 管理 Python。
+  [ -d .venv ] || uv venv --python 3.12 --seed --managed-python
+  # 告知 ShellCheck：下面加载的虚拟环境脚本路径是动态生成的，因此无法静态解析。
+  # shellcheck disable=SC1091
+  # 激活 SGLang 的虚拟环境。
+  source .venv/bin/activate
+  # 从仓库的 python 子目录以 editable 模式安装 SGLang；输出同时显示并保存到日志。
+  uv pip install -e "python" 2>&1 | tee "$LOG_DIR/sglang_build.log"
+
+  # 显示正在检查 SGLang 安装是否正常。
+  say "SGLang: sanity check"
+  # 运行内嵌 Python 程序，打印 SGLang、PyTorch、CUDA、GPU 信息，并尝试检查 FlashInfer。
+  python - <<'PY'
+# 导入 PyTorch 和 SGLang，以检查安装状态及设备信息。
+import torch, sglang
+# 打印 SGLang 版本和模块文件位置。
+print("sglang", sglang.__version__, "| file", sglang.__file__)
+# 打印 PyTorch 版本、PyTorch 使用的 CUDA 版本及可见 GPU 数量。
+print("torch", torch.__version__, "| cuda", torch.version.cuda, "| gpus", torch.cuda.device_count())
+# 尝试导入 FlashInfer 并打印其版本。
+try:
+    import flashinfer; print("flashinfer", flashinfer.__version__)
+# 若导入失败，打印错误并提示改用 Triton attention backend。
+except Exception as e:
+    print("flashinfer import failed:", e, "-> use --attention-backend triton")
+PY
+  # SGLang 的测试目录结构经常变化，因此建议安装完成后手动挑选一两个测试文件运行，例如：
+  #   ls test/ ; python -m pytest <some unit test> -q
+  # 退出 SGLang 虚拟环境。
+  deactivate
+}
+
+# 根据第一个命令行参数选择安装目标。
+case "$TARGET" in
+  # 只安装 vLLM。
+  vllm)   setup_vllm ;;
+  # 只安装 SGLang。
+  sglang) setup_sglang ;;
+  # 依次安装 vLLM 和 SGLang。
+  all)    setup_vllm; setup_sglang ;;
+  # 参数不合法时显示可用选项，并以状态码 2 退出。
+  *) echo "unknown target: $TARGET (use vllm | sglang | all)"; exit 2 ;;
+esac
+
+# 显示安装完成及日志目录位置。
+say "Done. Logs in $LOG_DIR"
