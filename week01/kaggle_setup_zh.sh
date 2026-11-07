@@ -13,6 +13,8 @@
 #   SGLANG_REF       SGLang 使用的 Git ref（默认：驱动支持 CUDA 13 时为 main，否则为 v0.5.19）
 #   VLLM_FULL_BUILD=1 完整编译 C++/CUDA，而不是复用预编译内核（Kaggle CPU 上可能耗时数小时，通常不建议）
 #   RUN_TESTS=0      跳过快速测试子集
+#   WARMUP_HYBRID=0  跳过测试前的 JIT 缓存预热（省 2 到 8 分钟，但 hybrid 前缀缓存测试
+#                    很可能会撞上它 480 秒的 server 启动时限）
 #   SGLANG_BUILD_RUST_EXTS  要编译哪些 SGLang Rust 扩展（默认 none；Kaggle 上没有 cargo）。
 #                    不编译也能正常 serving：前缀缓存会退回 Python 版 TreeCore。
 #                    设为 rust_tree_core 时会安装 rustup，并只编译 Rust 版 radix tree。
@@ -199,6 +201,30 @@ PY
     # （tests/conftest.py 在文件顶层 import 了 tblib，缺了它所有测试都无法加载）。
     # 不装官方的 requirements/test/cuda.txt：近 7900 行，且固定 torch +cu130，会替换掉已装好的 torch。
     uv pip install -q pytest pytest-asyncio tblib
+
+    # 为 hybrid 前缀缓存测试预热 JIT 编译缓存。这个测试的 server 必须在 480 秒内就绪
+    # （写死在 tests/utils.py 里），但在 T4 + 2 个 CPU 线程上冷启动时，显存 profiling 阶段
+    # 光 Triton 编译就要约 6.5 分钟。先不限时地启动一次引擎，把 ~/.triton/cache（以及
+    # FlashInfer 的缓存）填好，测试里的 server 就能在约 2 分钟内起来。WARMUP_HYBRID=0 可跳过。
+    # 模型名直接从测试文件里的 MODEL = "..." 读取，这样上游换了模型也会自动跟上。
+    local hybrid_test=tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py warm_model
+    warm_model="$(sed -n 's/^MODEL = "\(.*\)"$/\1/p' "$hybrid_test" 2>/dev/null | head -1 || true)"
+    if [ "${WARMUP_HYBRID:-1}" = "1" ] && [ -n "$warm_model" ]; then
+      say "vLLM: warming JIT caches with $warm_model (cold start can take ~8 min)"
+      local t0=$SECONDS
+      # 用默认参数创建一次 LLM（和测试 server 的配置一致），输出写进日志，不刷屏。
+      # 预热失败只给警告，不中断 setup。
+      if python - "$warm_model" > "$LOG_DIR/vllm_warmup.log" 2>&1 <<'PY'
+import sys
+from vllm import LLM
+LLM(sys.argv[1])
+print("ENGINE READY")
+PY
+      then echo "warm-up done in $((SECONDS - t0)) s"
+      else echo "WARN: warm-up failed after $((SECONDS - t0)) s; see $LOG_DIR/vllm_warmup.log (the hybrid test may time out)"
+      fi
+    fi
+
     # 运行 v1 核心测试：安静模式，遇到首个失败即停止，最多报告 5 个失败；保存测试日志。
     # 测试失败不应中止整个安装流程；失败信息会写入日志供后续排查。
     pytest tests/v1/core -q -x --maxfail=5 2>&1 | tee "$LOG_DIR/vllm_tests.log" || \

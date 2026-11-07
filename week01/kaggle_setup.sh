@@ -13,6 +13,8 @@
 #   SGLANG_REF   git ref for SGLang                   (default: main if driver supports CUDA 13, else v0.5.19)
 #   VLLM_FULL_BUILD=1   compile C++/CUDA instead of reusing precompiled kernels (hours on Kaggle CPUs; avoid)
 #   RUN_TESTS=0  skip the quick test subset
+#   WARMUP_HYBRID=0  skip the JIT-cache warm-up before the tests (saves ~2–8 min, but the
+#                hybrid prefix-cache test will likely hit its 480 s server timeout)
 #   SGLANG_BUILD_RUST_EXTS  which SGLang Rust extensions to build (default: none; Kaggle has no cargo).
 #                Serving still works: the radix cache falls back to the Python TreeCore.
 #                =rust_tree_core installs rustup and builds only the Rust radix tree.
@@ -140,6 +142,27 @@ PY
     # Minimal deps for tests/v1/core: tests/conftest.py imports tblib at module level.
     # Not requirements/test/cuda.txt: ~7.9k lines, pins torch +cu130 (would replace our torch).
     uv pip install -q pytest pytest-asyncio tblib
+
+    # Warm the JIT caches for the hybrid prefix-cache test. Its server must be healthy within
+    # 480 s (hard-coded in tests/utils.py), but a cold start on T4 + 2 CPU threads spends ~6.5 min
+    # Triton-compiling during memory profiling. One unbounded engine start fills ~/.triton/cache
+    # (and FlashInfer's cache) so the test's server comes up in ~2 min. WARMUP_HYBRID=0 skips it.
+    local hybrid_test=tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py warm_model
+    warm_model="$(sed -n 's/^MODEL = "\(.*\)"$/\1/p' "$hybrid_test" 2>/dev/null | head -1 || true)"
+    if [ "${WARMUP_HYBRID:-1}" = "1" ] && [ -n "$warm_model" ]; then
+      say "vLLM: warming JIT caches with $warm_model (cold start can take ~8 min)"
+      local t0=$SECONDS
+      if python - "$warm_model" > "$LOG_DIR/vllm_warmup.log" 2>&1 <<'PY'
+import sys
+from vllm import LLM
+LLM(sys.argv[1])
+print("ENGINE READY")
+PY
+      then echo "warm-up done in $((SECONDS - t0)) s"
+      else echo "WARN: warm-up failed after $((SECONDS - t0)) s; see $LOG_DIR/vllm_warmup.log (the hybrid test may time out)"
+      fi
+    fi
+
     # Don't abort setup on test failures; failures are worth logging (possible first issues).
     pytest tests/v1/core -q -x --maxfail=5 2>&1 | tee "$LOG_DIR/vllm_tests.log" || \
       echo "WARN: some vLLM tests failed; see $LOG_DIR/vllm_tests.log"

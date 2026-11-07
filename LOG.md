@@ -53,6 +53,7 @@ Caveats before drawing conclusions:
 ### Next for the benchmark
 - ~~Record vLLM's attention backend and CUDA graph capture sizes~~: TRITON_ATTN, 51 PIECEWISE + 35 FULL graph sizes (see caveats).
 - Isolate the attention kernel: `SGLANG_ATTN=triton bash week01/run_bench.sh sglang`, then compare against the vLLM run.
+  - **Run 1, cold (`sglang-20261107-154655`): not usable.** 4.81 req/s, 616 output tok/s, mean TTFT 21,028 ms (P90 33,023), mean TPOT 160.85 ms, median ITL 44.49 ms, **max ITL 35,147 ms**. Median ITL is normal, so decode itself was fine. The 35 s stall and the TTFT tail point to Triton JIT-compiling kernels for shapes first seen during the benchmark (server warm-up didn't cover them), on 2 CPU threads. _Rerun warm; max ITL should drop to a few seconds before the numbers count._
 - Rerun both at fixed concurrency (e.g. `--max-concurrency 16, 64`) and at finite request rates, which is closer to real serving than a single burst.
 - Align the knobs that differ by default (per-step token budget, max running requests) and repeat 3×.
 

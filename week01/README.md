@@ -173,6 +173,7 @@ Copy `results/` and `~/lab/logs/` back into this repo and commit them. **Shut th
 - **Every Kaggle session starts clean.** Rerun `kaggle_setup.sh` each time.
 
 ## Done when
-- [ ] `smoke_offline.py` runs on the Mac and stops at a breakpoint in `Scheduler.schedule`
-- [ ] Both engines install on Kaggle, and `tests/v1/core` has run (failures noted in `LOG.md`)
-- [ ] One `run_bench.sh both` result committed, with TTFT, TPOT and throughput copied into `LOG.md`
+- [x] `smoke_offline.py` runs on the Mac and stops at a breakpoint in `Scheduler.schedule`. Done 2026-11-07 on vLLM `a8dacd7238`.
+- [x] Both engines install on Kaggle, and `tests/v1/core` has run (failures noted in `LOG.md`). Done 2026-11-07: vLLM `1ecc9cc4ce`, SGLang `ba5906471`. 1,286/1,287 tests pass after environment fixes; details in [vllm_core_tests.md](vllm_core_tests.md).
+- [x] One `run_bench.sh both` result, with TTFT, TPOT and throughput copied into `LOG.md`. Done 2026-11-07: comparison and backend findings in [LOG.md](../LOG.md).
+  - [ ] Optional: download the raw `results/week01/` folders (`bench.txt`, `meta.txt`, `server.log`, `result.jsonl`) from Kaggle's Output panel and commit them. So far only the numbers are in `LOG.md`.
