@@ -43,13 +43,16 @@ Reading the numbers:
 - This measures peak throughput under a burst, not latency under realistic load.
 
 Caveats before drawing conclusions:
-- **Attention backend differs.** T4 has no FlashAttention 2 (needs sm ≥ 8.0). SGLang used FlashInfer. vLLM's choice is in its `server.log` / `meta.txt` (_to check_), likely a Triton or FlexAttention backend.
-- **CUDA graphs at 200 concurrent requests.** SGLang's decode log shows `cuda graph: False`: 200 running requests exceed its default CUDA-graph batch-size cap. Check vLLM's capture sizes too.
+- **Attention backend differs, and is the likely main cause.** T4 has no FlashAttention 2 (needs sm ≥ 8.0).
+  - vLLM: `Using TRITON_ATTN attention backend out of potential backends: ['TRITON_ATTN', 'FLEX_ATTENTION']`.
+  - SGLang: FlashInfer (its default).
+- **CUDA graphs point the other way.** vLLM captured 51 PIECEWISE and 35 FULL CUDA graph sizes, so its 200-request decode most likely ran on a graph. SGLang's decode log shows `cuda graph: False`: 200 running requests exceed its default CUDA-graph batch-size cap. SGLang still had 1.4× lower TPOT without graphs, which points at the attention kernel (Triton vs FlashInfer) rather than graph capture. **Test:** rerun SGLang with `SGLANG_ATTN=triton` so both use Triton attention.
 - **Defaults differ.** Per-step token budget (`max_num_batched_tokens` vs SGLang's chunked prefill size), max sequences, and memory fraction are not aligned.
 - **One run each, on a shared cloud GPU.** Repeat at least 3× and report the spread before calling the gap real.
 
 ### Next for the benchmark
-- Record vLLM's attention backend and CUDA graph capture sizes from `vllm-20261107-151619/server.log`.
+- ~~Record vLLM's attention backend and CUDA graph capture sizes~~: TRITON_ATTN, 51 PIECEWISE + 35 FULL graph sizes (see caveats).
+- Isolate the attention kernel: `SGLANG_ATTN=triton bash week01/run_bench.sh sglang`, then compare against the vLLM run.
 - Rerun both at fixed concurrency (e.g. `--max-concurrency 16, 64`) and at finite request rates, which is closer to real serving than a single burst.
 - Align the knobs that differ by default (per-step token budget, max running requests) and repeat 3×.
 
