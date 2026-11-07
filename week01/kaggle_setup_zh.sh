@@ -143,8 +143,10 @@ PY
   if [ "$RUN_TESTS" = "1" ]; then
     # 显示将测试 vLLM v1 核心中的调度器和 KV cache 管理器。
     say "vLLM: quick tests (tests/v1/core: scheduler + KV cache manager)"
-    # 安静地安装 pytest 和异步测试插件。
-    uv pip install -q pytest pytest-asyncio
+    # 安装跑 tests/v1/core 所需的最少依赖：pytest、异步测试插件，以及 tblib
+    # （tests/conftest.py 在文件顶层 import 了 tblib，缺了它所有测试都无法加载）。
+    # 不装官方的 requirements/test/cuda.txt：近 7900 行，且固定 torch +cu130，会替换掉已装好的 torch。
+    uv pip install -q pytest pytest-asyncio tblib
     # 运行 v1 核心测试：安静模式，遇到首个失败即停止，最多报告 5 个失败；保存测试日志。
     # 测试失败不应中止整个安装流程；失败信息会写入日志供后续排查。
     pytest tests/v1/core -q -x --maxfail=5 2>&1 | tee "$LOG_DIR/vllm_tests.log" || \

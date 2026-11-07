@@ -93,7 +93,9 @@ PY
 
   if [ "$RUN_TESTS" = "1" ]; then
     say "vLLM: quick tests (tests/v1/core: scheduler + KV cache manager)"
-    uv pip install -q pytest pytest-asyncio
+    # Minimal deps for tests/v1/core: tests/conftest.py imports tblib at module level.
+    # Not requirements/test/cuda.txt: ~7.9k lines, pins torch +cu130 (would replace our torch).
+    uv pip install -q pytest pytest-asyncio tblib
     # Don't abort setup on test failures; failures are worth logging (possible first issues).
     pytest tests/v1/core -q -x --maxfail=5 2>&1 | tee "$LOG_DIR/vllm_tests.log" || \
       echo "WARN: some vLLM tests failed; see $LOG_DIR/vllm_tests.log"
