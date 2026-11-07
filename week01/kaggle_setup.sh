@@ -34,6 +34,47 @@ nvidia-smi --query-gpu=name,compute_cap,driver_version,memory.total --format=csv
 DRIVER_CUDA_MAJOR="$(nvidia-smi | grep -oP 'CUDA Version: \K[0-9]+' || echo 0)"
 echo "Driver supports CUDA up to major version: $DRIVER_CUDA_MAJOR"
 
+# FlashInfer ships no prebuilt sm_75 (T4) kernels, so it JIT-compiles them on first use.
+# The link step passes `-L/usr/local/cuda/lib64/stubs -lcuda`, but this image's toolkit has
+# no libcuda.so there ("/usr/bin/ld: cannot find -lcuda"), so vLLM/SGLang engines die at
+# startup. Put a libcuda.so symlink to the driver's real libcuda.so.1 somewhere the linker
+# searches. /usr/local/cuda is a READ-ONLY mount on Kaggle, so the stubs dir usually fails and
+# /usr/local/lib (one of ld's default dirs) is used. Each candidate is verified by linking.
+say "libcuda.so link stub for FlashInfer JIT"
+libcuda_links() {  # can the linker resolve -lcuda the way FlashInfer's JIT asks for it?
+  printf 'int main(){return 0;}\n' | c++ -x c++ - -L/usr/local/cuda/lib64/stubs -lcuda \
+    -o /tmp/libcuda_link_test >/dev/null 2>&1
+}
+fix_libcuda_link() {
+  local real dir
+  if ! command -v c++ >/dev/null 2>&1; then echo "WARN: no c++ compiler; skipping"; return 0; fi
+  if libcuda_links; then echo "ok: -lcuda already links"; return 0; fi
+  # Containers often mount driver libs outside ldconfig's cache (found via LD_LIBRARY_PATH),
+  # so check those dirs first, then ldconfig, then a filesystem search.
+  local d llp="${LD_LIBRARY_PATH:-}"   # default to empty: set -u + unset var would abort
+  real=""
+  for d in ${llp//:/ } /usr/local/nvidia/lib64 /usr/local/nvidia/lib \
+           /usr/lib/x86_64-linux-gnu /usr/lib64 /usr/lib64-nvidia; do
+    if [ -e "$d/libcuda.so.1" ]; then real="$d/libcuda.so.1"; break; fi
+  done
+  # Read all of ldconfig's output (no early exit) so pipefail never sees a SIGPIPE.
+  [ -n "$real" ] || real="$(ldconfig -p 2>/dev/null | awk '/libcuda\.so\.1 /{p=$NF} END{print p}' || true)"
+  # Last resort: a capped filesystem search (a full `find /` can take minutes).
+  [ -n "$real" ] || real="$(timeout 60 find / -name 'libcuda.so.1' -not -path '/proc/*' 2>/dev/null | head -1 || true)"
+  if [ -z "$real" ]; then
+    echo "WARN: driver libcuda.so.1 not found; FlashInfer JIT linking may fail"; return 0
+  fi
+  # Try each dir; a failed mkdir/ln (read-only fs) must not abort the script under set -e.
+  for dir in /usr/local/cuda/lib64/stubs /usr/local/lib /usr/lib/x86_64-linux-gnu; do
+    if mkdir -p "$dir" 2>/dev/null && ln -sf "$real" "$dir/libcuda.so" 2>/dev/null; then
+      if libcuda_links; then echo "created: $dir/libcuda.so -> $real (verified: -lcuda links)"; return 0; fi
+      rm -f "$dir/libcuda.so"
+    fi
+  done
+  echo "WARN: could not make -lcuda linkable; FlashInfer JIT on sm_75 may fail"
+}
+fix_libcuda_link
+
 # Always upgrade: an old uv (Kaggle images may ship one) silently ignores vLLM's [tool.uv] settings.
 say "Installing / upgrading uv"
 pip install -q -U uv

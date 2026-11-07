@@ -138,9 +138,13 @@ Find out what went wrong (same session, after the tests finish):
 !grep -n -A25 "= ERRORS =" /root/lab/logs/vllm_tests.log | head -60
 ```
 ```python
-# Rerun just one test with full output (node id from the first command)
-!cd /root/lab/vllm && .venv/bin/python -m pytest "tests/v1/core/<file>.py::<test_name>" -x -vv
+# Rerun just one test with full output (node id from the first command).
+# PATH must include the venv's bin: server tests spawn `vllm serve` as a subprocess.
+# -s shows the server's own log, which is where "Server exited unexpectedly" is explained.
+!cd /root/lab/vllm && PATH=/root/lab/vllm/.venv/bin:$PATH .venv/bin/python -m pytest "tests/v1/core/<file>.py::<test_name>" -x -vv -s
 ```
+What each test file covers, plus this week's results and error analysis: [vllm_core_tests.md](vllm_core_tests.md).
+
 Then decide: an environment cause (T4/sm_75, missing optional dep) goes in `LOG.md`. A real bug that reproduces on current `main` is a `good first issue` candidate: search existing issues before filing.
 Copy `results/` and `~/lab/logs/` back into this repo and commit them. **Shut the session down afterwards**, or it keeps using quota.
 
@@ -160,6 +164,7 @@ Copy `results/` and `~/lab/logs/` back into this repo and commit them. **Shut th
 - ✅ **`uv pip install` lands in Kaggle's system Python instead of the venv.** Symptoms: tracebacks through `/usr/local/bin/vllm` and `/usr/local/lib/python3.13/dist-packages/...`, `PyTorch and TorchAudio were compiled with different CUDA versions` (vLLM's deps upgraded the image's torch but not its torchaudio), then `No module named 'torch'` in the venv sanity check. Cause (confirmed): the Kaggle image sets `UV_SYSTEM_PYTHON=true`, which overrides venv activation. (It also sets empty `UV_CONSTRAINT`/`UV_BUILD_CONSTRAINT`, `UV_INSTALL_DIR=/usr/local/bin` and `UV_BREAK_SYSTEM_PACKAGES=false`, all harmless.) `kaggle_setup.sh` now prints any `UV_*` vars or `uv.toml`, and `use_venv` pins every uv call with `UV_PYTHON=$VIRTUAL_ENV/bin/python UV_SYSTEM_PYTHON=false`. The sanity check prints `in venv: True`. **If it already happened in a session, use Run → Factory reset**: the system Python's torch was changed, so uninstalling vLLM alone doesn't restore it.
 - ✅ **vLLM tests fail to load: `No module named 'tblib'`** (from `tests/conftest.py`). The tests need more than `pytest`. `kaggle_setup.sh` installs only what `tests/v1/core` needs (`pytest pytest-asyncio tblib`). Don't install the full `requirements/test/cuda.txt`: it has ~7.9k lines and pins `torch==2.14.0+cu130`, which would replace the venv's torch.
 - ✅ **SGLang build fails: `cargo is required to discover the Rust extension modules`.** SGLang's `setup.py` builds Rust (PyO3) extensions, and Kaggle has no Rust toolchain. `kaggle_setup.sh` sets `SGLANG_BUILD_RUST_EXTS=none` by default. That is fine for HTTP serving: those extensions only serve gRPC, the Rust server, a few multimodal processors, and the Rust radix tree, which falls back to the Python TreeCore (server log: `Using the Python TreeCore`). **Note it next to SGLang benchmark numbers.** To use the Rust radix tree, run with `SGLANG_BUILD_RUST_EXTS=rust_tree_core`: the script installs rustup and builds only that crate.
+- ✅ **FlashInfer JIT link fails on T4: `/usr/bin/ld: cannot find -lcuda`.** The engine dies with `Ninja build failed` → `Engine core initialization failed` → `Server exited unexpectedly`. FlashInfer has no prebuilt sm_75 kernels and JIT-compiles them on first use (e.g. `~/.cache/flashinfer/0.7.3/75/cached_ops/norm`). nvcc 13.0 compiles fine, but the link step uses `-L/usr/local/cuda/lib64/stubs -lcuda`, and the image has no `libcuda.so` there. The driver's `libcuda.so.1` lives in `/usr/local/nvidia/lib64` (on `LD_LIBRARY_PATH`, not in `ldconfig`), and `/usr/local/cuda` is a read-only mount. So `kaggle_setup.sh` symlinks `/usr/local/lib/libcuda.so` (a default `ld` search dir) to it, and verifies by linking a test program with `-lcuda`. In a notebook, run shell snippets that use `$var` or `{...}` in a `%%bash` cell: `!` lines are rewritten by IPython first. This affects any model/engine path that uses FlashInfer kernels, so SGLang too. (`Cannot use FA version 2 ... compute capability >= 8` in the same log is not fatal: vLLM picks another attention backend.)
 - **SGLang needs CUDA 13 on `main`.** `kaggle_setup.sh` reads the driver's CUDA version and falls back to `v0.5.19` (the last CUDA 12 release). Override with `SGLANG_REF=...`.
 - **No BF16 on T4.** Both scripts force `--dtype half`.
 - **vLLM precompiled mode needs `uv pip`.** Plain `pip install -e .` does not work with `VLLM_USE_PRECOMPILED=1`.

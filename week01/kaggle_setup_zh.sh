@@ -48,6 +48,55 @@ DRIVER_CUDA_MAJOR="$(nvidia-smi | grep -oP 'CUDA Version: \K[0-9]+' || echo 0)"
 # 打印驱动支持的最高 CUDA 主版本号。
 echo "Driver supports CUDA up to major version: $DRIVER_CUDA_MAJOR"
 
+# FlashInfer 没有为 sm_75（T4）预编译 kernel，第一次用到时会现场编译（JIT）。
+# 链接这一步会带上 `-L/usr/local/cuda/lib64/stubs -lcuda`，但 Kaggle 镜像的 CUDA 工具包
+# 在那里没有 libcuda.so（报错 "/usr/bin/ld: cannot find -lcuda"），导致 vLLM/SGLang 引擎启动时崩溃。
+# 修法：在链接器会查找的目录里放一个 libcuda.so 软链接，指向宿主机驱动挂载进来的真正的 libcuda.so.1。
+# Kaggle 上 /usr/local/cuda 是只读挂载，stubs 目录通常写不进去，所以会改用 /usr/local/lib
+# （ld 默认查找的目录之一）。每个候选目录建好软链接后，都用一次真实链接来验证。
+say "libcuda.so link stub for FlashInfer JIT"
+# 用和 FlashInfer JIT 相同的参数（-L stubs -lcuda）链接一个空程序，判断 -lcuda 能否被找到。
+libcuda_links() {  # can the linker resolve -lcuda the way FlashInfer's JIT asks for it?
+  printf 'int main(){return 0;}\n' | c++ -x c++ - -L/usr/local/cuda/lib64/stubs -lcuda \
+    -o /tmp/libcuda_link_test >/dev/null 2>&1
+}
+fix_libcuda_link() {
+  local real dir
+  # 没有 c++ 编译器就没法验证（FlashInfer JIT 本身也会失败），给警告后跳过。
+  if ! command -v c++ >/dev/null 2>&1; then echo "WARN: no c++ compiler; skipping"; return 0; fi
+  # 已经能链接就不用处理（比如镜像以后补上了，或者本 session 已经修过）。
+  if libcuda_links; then echo "ok: -lcuda already links"; return 0; fi
+  # 容器里的驱动库常常不在 ldconfig 的缓存里，而是靠 LD_LIBRARY_PATH 找到，
+  # 所以先查 LD_LIBRARY_PATH 里的目录和容器常用的驱动目录。
+  # LD_LIBRARY_PATH 未设置时用空字符串代替，否则在 set -u 下展开未定义变量会让脚本直接退出。
+  local d llp="${LD_LIBRARY_PATH:-}"
+  real=""
+  for d in ${llp//:/ } /usr/local/nvidia/lib64 /usr/local/nvidia/lib \
+           /usr/lib/x86_64-linux-gnu /usr/lib64 /usr/lib64-nvidia; do
+    if [ -e "$d/libcuda.so.1" ]; then real="$d/libcuda.so.1"; break; fi
+  done
+  # 上面没找到，再从 ldconfig 的库缓存里找。
+  # awk 读完全部输出再打印（不提前 exit），避免 ldconfig 收到 SIGPIPE 后被 pipefail 判为失败。
+  [ -n "$real" ] || real="$(ldconfig -p 2>/dev/null | awk '/libcuda\.so\.1 /{p=$NF} END{print p}' || true)"
+  # ldconfig 里找不到时，退而在文件系统里搜索（跳过 /proc）。
+  # 最后的兜底，全盘搜索最多 60 秒（完整搜一遍 / 可能要好几分钟）。
+  [ -n "$real" ] || real="$(timeout 60 find / -name 'libcuda.so.1' -not -path '/proc/*' 2>/dev/null | head -1 || true)"
+  # 实在找不到就只给警告，不中断 setup。
+  if [ -z "$real" ]; then
+    echo "WARN: driver libcuda.so.1 not found; FlashInfer JIT linking may fail"; return 0
+  fi
+  # 依次尝试各个候选目录。目录只读时 mkdir/ln 会失败，用 if 包住，避免 set -e 让整个脚本退出。
+  # 建好软链接后立即验证；验证不通过就删掉软链接，换下一个目录。
+  for dir in /usr/local/cuda/lib64/stubs /usr/local/lib /usr/lib/x86_64-linux-gnu; do
+    if mkdir -p "$dir" 2>/dev/null && ln -sf "$real" "$dir/libcuda.so" 2>/dev/null; then
+      if libcuda_links; then echo "created: $dir/libcuda.so -> $real (verified: -lcuda links)"; return 0; fi
+      rm -f "$dir/libcuda.so"
+    fi
+  done
+  echo "WARN: could not make -lcuda linkable; FlashInfer JIT on sm_75 may fail"
+}
+fix_libcuda_link
+
 # 每次都安装/升级 uv：Kaggle 镜像可能自带旧版 uv，旧版无法解析 vLLM 的 [tool.uv] 配置，
 # 会悄悄忽略整个配置表（torch 的 no-build-isolation、排除 openai-harmony）。
 say "Installing / upgrading uv"
