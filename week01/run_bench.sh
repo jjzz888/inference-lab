@@ -14,6 +14,9 @@
 #   SGLANG_ATTN  SGLang attention backend (default: unset; set "triton" if FlashInfer fails on T4)
 #   WORKDIR      same as kaggle_setup.sh (default: $HOME/lab)
 #   OUT_ROOT     where results go (default: /kaggle/working/results/week01 if it exists, else ./results/week01)
+#   SERVER_TIMEOUT  seconds to wait for a server to become healthy (default: 1800). A cold start
+#                on T4 JIT-compiles FlashInfer (nvcc) and Triton kernels on 2 CPU threads; one
+#                vLLM test server needed ~8.5 min. Later starts reuse the caches and are faster.
 set -euo pipefail
 
 ENGINE="${1:?usage: run_bench.sh vllm|sglang|both}"
@@ -42,14 +45,32 @@ cleanup() {
 trap cleanup EXIT
 
 wait_healthy() {  # $1=port $2=server log
-  for _ in $(seq 1 180); do  # up to ~15 min (first run downloads the model)
-    if curl -sf "http://127.0.0.1:$1/health" >/dev/null; then echo "server ready"; return 0; fi
+  local start=$SECONDS timeout="${SERVER_TIMEOUT:-1800}"
+  while [ $((SECONDS - start)) -lt "$timeout" ]; do
+    if curl -sf "http://127.0.0.1:$1/health" >/dev/null; then
+      echo "server ready after $((SECONDS - start)) s"; return 0
+    fi
     if ! kill -0 "$SERVER_PID" 2>/dev/null; then
       echo "server exited early; last log lines:"; tail -n 50 "$2"; return 1
     fi
     sleep 5
   done
-  echo "timeout waiting for server"; tail -n 50 "$2"; return 1
+  echo "timeout after ${timeout}s waiting for server"; tail -n 50 "$2"; return 1
+}
+
+# FlashInfer JIT on T4 needs a linkable libcuda.so, which kaggle_setup.sh creates.
+# In a fresh session without setup, SGLang (and some vLLM paths) die at startup.
+check_libcuda() {
+  if [ -e /usr/local/lib/libcuda.so ] || [ -e /usr/local/cuda/lib64/stubs/libcuda.so ]; then return 0; fi
+  echo "WARN: no linkable libcuda.so; run kaggle_setup.sh in this session first (FlashInfer JIT will fail)"
+}
+
+# Append which backends the server picked (attention backend, SGLang TreeCore) to meta.txt.
+record_backends() {  # $1=out dir
+  {
+    echo "--- backends picked (from server.log)"
+    grep -i -E "attention backend|Using .*(Backend|backend)|TreeCore" "$1/server.log" | head -8 | cut -c1-200 || true
+  } >> "$1/meta.txt"
 }
 
 write_meta() {  # $1=out dir $2=engine dir
@@ -75,6 +96,7 @@ bench_vllm() {
   vllm serve "$MODEL" --dtype half --port 8000 > "$out/server.log" 2>&1 &
   SERVER_PID=$!
   wait_healthy 8000 "$out/server.log"
+  record_backends "$out"
 
   say "vLLM: benchmark"
   vllm bench serve --backend vllm --model "$MODEL" --port 8000 \
@@ -101,9 +123,18 @@ bench_sglang() {
     > "$out/server.log" 2>&1 &
   SERVER_PID=$!
   wait_healthy 30000 "$out/server.log"
+  record_backends "$out"
+  echo "sglang_attention_backend_override: ${SGLANG_ATTN:-none}" >> "$out/meta.txt"
 
-  say "SGLang: benchmark"
-  python -m sglang.bench_serving --backend sglang --port 30000 --model "$MODEL" \
+  # The benchmark moved from sglang.bench_serving to sglang.benchmark.serving; older refs
+  # (e.g. the v0.5.19 CUDA 12 fallback) only have the old module.
+  local bench_mod=sglang.benchmark.serving
+  python -c "import importlib.util as u, sys; sys.exit(0 if u.find_spec('$bench_mod') else 1)" \
+    || bench_mod=sglang.bench_serving
+  echo "sglang_bench_module: $bench_mod" >> "$out/meta.txt"
+
+  say "SGLang: benchmark ($bench_mod)"
+  python -m "$bench_mod" --backend sglang --port 30000 --model "$MODEL" \
     --dataset-name random --random-input-len "$INPUT_LEN" --random-output-len "$OUTPUT_LEN" \
     --random-range-ratio 1.0 `# fixed lengths, to match vLLM's default (ratio 0 = fixed in vLLM)` \
     --num-prompts "$NUM_PROMPTS" --request-rate "$REQUEST_RATE" \
@@ -114,6 +145,7 @@ bench_sglang() {
   echo "results: $out"
 }
 
+check_libcuda
 case "$ENGINE" in
   vllm)   bench_vllm ;;
   sglang) bench_sglang ;;

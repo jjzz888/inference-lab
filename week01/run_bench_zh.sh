@@ -14,6 +14,9 @@
 #   SGLANG_ATTN  SGLang attention 后端（默认不设置；若 T4 上 FlashInfer 失败，可设为 "triton"）
 #   WORKDIR      与 kaggle_setup.sh 相同（默认：$HOME/lab）
 #   OUT_ROOT     结果保存目录（默认：若 /kaggle/working 存在则用 /kaggle/working/results/week01，否则用 ./results/week01）
+#   SERVER_TIMEOUT  等待 server 就绪的最长秒数（默认 1800）。T4 上冷启动要在 2 个 CPU 线程上
+#                现场编译 FlashInfer（nvcc）和 Triton kernel，一个 vLLM 测试 server 就用了约 8.5 分钟；
+#                之后的启动会复用编译缓存，快得多。
 
 # 启用严格模式：命令失败、使用未定义变量或管道命令失败时退出。
 set -euo pipefail
@@ -64,10 +67,13 @@ trap cleanup EXIT
 
 # 定义健康检查函数：参数为 $1=端口、$2=服务器日志文件。
 wait_healthy() {  # $1=端口 $2=服务器日志
-  # 最多检查 180 次，每次间隔 5 秒，最长约 15 分钟（首次运行可能需要下载模型）。
-  for _ in $(seq 1 180); do
-    # 请求本机服务的健康检查接口；成功后报告就绪并返回成功状态。
-    if curl -sf "http://127.0.0.1:$1/health" >/dev/null; then echo "server ready"; return 0; fi
+  # 按秒计时（bash 内置的 $SECONDS），最长等 SERVER_TIMEOUT 秒，默认 30 分钟。
+  local start=$SECONDS timeout="${SERVER_TIMEOUT:-1800}"
+  while [ $((SECONDS - start)) -lt "$timeout" ]; do
+    # 请求本机服务的健康检查接口；成功后报告用了多少秒，并返回成功状态。
+    if curl -sf "http://127.0.0.1:$1/health" >/dev/null; then
+      echo "server ready after $((SECONDS - start)) s"; return 0
+    fi
     # 如果服务器进程已经退出，打印日志末尾 50 行并返回失败。
     if ! kill -0 "$SERVER_PID" 2>/dev/null; then
       echo "server exited early; last log lines:"; tail -n 50 "$2"; return 1
@@ -75,8 +81,24 @@ wait_healthy() {  # $1=端口 $2=服务器日志
     # 等待 5 秒后再次检查。
     sleep 5
   done
-  # 超出等待次数仍未就绪时，报告超时、打印日志末尾并返回失败。
-  echo "timeout waiting for server"; tail -n 50 "$2"; return 1
+  # 超过时限仍未就绪时，报告超时、打印日志末尾并返回失败。
+  echo "timeout after ${timeout}s waiting for server"; tail -n 50 "$2"; return 1
+}
+
+# T4 上 FlashInfer 现场编译需要能链接到 libcuda.so，这个软链接由 kaggle_setup.sh 创建。
+# 新 session 里如果没先跑 setup，SGLang（以及 vLLM 的部分路径）会在启动时崩溃，所以这里先提醒。
+check_libcuda() {
+  if [ -e /usr/local/lib/libcuda.so ] || [ -e /usr/local/cuda/lib64/stubs/libcuda.so ]; then return 0; fi
+  echo "WARN: no linkable libcuda.so; run kaggle_setup.sh in this session first (FlashInfer JIT will fail)"
+}
+
+# 从 server 日志里摘出它实际选用的后端（attention 后端、SGLang 的 TreeCore），追加到 meta.txt，
+# 方便对比结果时知道两边各自跑的是什么配置。|| true 防止没匹配到时 set -e 退出。
+record_backends() {  # $1=out dir
+  {
+    echo "--- backends picked (from server.log)"
+    grep -i -E "attention backend|Using .*(Backend|backend)|TreeCore" "$1/server.log" | head -8 | cut -c1-200 || true
+  } >> "$1/meta.txt"
 }
 
 # 定义元数据写入函数：参数为 $1=结果目录、$2=引擎源码目录。
@@ -121,6 +143,8 @@ bench_vllm() {
   SERVER_PID=$!
   # 等待 vLLM 的健康检查接口就绪。
   wait_healthy 8000 "$out/server.log"
+  # 记录 vLLM 实际选用的后端。
+  record_backends "$out"
 
   # 显示即将运行 vLLM 基准测试。
   say "vLLM: benchmark"
@@ -162,11 +186,21 @@ bench_sglang() {
   SERVER_PID=$!
   # 等待 SGLang 的健康检查接口就绪。
   wait_healthy 30000 "$out/server.log"
+  # 记录 SGLang 实际选用的后端，以及是否手动指定了 attention 后端。
+  record_backends "$out"
+  echo "sglang_attention_backend_override: ${SGLANG_ATTN:-none}" >> "$out/meta.txt"
 
-  # 显示即将运行 SGLang 基准测试。
-  say "SGLang: benchmark"
+  # SGLang 的基准工具已经从 sglang.bench_serving 挪到了 sglang.benchmark.serving；
+  # 旧版本（比如 CUDA 12 的退路 v0.5.19）只有旧模块。先探测新模块是否存在，不存在就用旧的。
+  local bench_mod=sglang.benchmark.serving
+  python -c "import importlib.util as u, sys; sys.exit(0 if u.find_spec('$bench_mod') else 1)" \
+    || bench_mod=sglang.bench_serving
+  echo "sglang_bench_module: $bench_mod" >> "$out/meta.txt"
+
+  # 显示即将运行 SGLang 基准测试，以及用的是哪个模块。
+  say "SGLang: benchmark ($bench_mod)"
   # 使用 SGLang 的服务基准工具，向本机服务发送随机负载请求。
-  python -m sglang.bench_serving --backend sglang --port 30000 --model "$MODEL" \
+  python -m "$bench_mod" --backend sglang --port 30000 --model "$MODEL" \
     --dataset-name random --random-input-len "$INPUT_LEN" --random-output-len "$OUTPUT_LEN" \
     --random-range-ratio 1.0 `# 固定长度，以匹配 vLLM 的默认行为（vLLM 中 ratio 0 表示固定长度）` \
     --num-prompts "$NUM_PROMPTS" --request-rate "$REQUEST_RATE" \
@@ -179,6 +213,8 @@ bench_sglang() {
   echo "results: $out"
 }
 
+# 先检查 libcuda.so 链接是否已就位（没有的话只警告，不中断）。
+check_libcuda
 # 根据第一个命令行参数选择要运行的引擎测试。
 case "$ENGINE" in
   # 只运行 vLLM 测试。
