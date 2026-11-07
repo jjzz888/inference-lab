@@ -172,7 +172,21 @@ setup_vllm() {
     say "vLLM: Python-only editable build with precompiled kernels"
     # 预编译模式必须使用 uv pip；普通的 pip install -e . 在此模式下无法工作。
     # 设置预编译模式，以 editable 方式安装，并自动选择 PyTorch 后端；输出同时显示并保存到日志。
-    VLLM_USE_PRECOMPILED=1 uv pip install --editable . --torch-backend=auto 2>&1 | tee "$LOG_DIR/vllm_build.log"
+    local build_log="$LOG_DIR/vllm_build.log" near
+    if ! VLLM_USE_PRECOMPILED=1 uv pip install --editable . --torch-backend=auto 2>&1 | tee "$build_log"; then
+      # main 的更新比 vLLM 构建 wheel 的 CI 快：刚合入改动 csrc/ 的 PR 时，HEAD 还没有发布 wheel
+      # （报错 "No precompiled wheel is published yet for <sha>"）。报错里会给出最近一个有 wheel 的
+      # commit；切换到那个 commit 本身，wheel 和源码就完全一致，然后重试安装。
+      # 从日志里提取形如 "(<40 位 sha>, 2 commits older)" 的 commit；提取不到就报错退出。
+      near="$(grep -oE '\([0-9a-f]{40}, [0-9]+ commits? older\)' "$build_log" | grep -oE '[0-9a-f]{40}' | head -1 || true)"
+      if [ -z "$near" ]; then echo "ERROR: precompiled install failed; see $build_log"; return 1; fi
+      say "vLLM: no wheel for $(git rev-parse --short HEAD) yet; falling back to ${near:0:10} (has a published wheel)"
+      git checkout --quiet "$near"
+      # 重试安装，日志追加到同一个文件。
+      VLLM_USE_PRECOMPILED=1 uv pip install --editable . --torch-backend=auto 2>&1 | tee -a "$build_log"
+    fi
+    # 打印最终安装的 commit，回退后它会和 main 不同，记录结果时要以这个为准。
+    echo "vLLM installed at $(git rev-parse --short HEAD)"
   fi
   # 尝试下载 vLLM 内核；若命令失败或当前 ref 不支持该命令，则显示警告并继续。
   vllm download-kernels || echo "WARN: 'vllm download-kernels' failed or not available on this ref"

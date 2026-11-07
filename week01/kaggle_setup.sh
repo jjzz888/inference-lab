@@ -124,7 +124,18 @@ setup_vllm() {
   else
     say "vLLM: Python-only editable build with precompiled kernels"
     # Must be `uv pip`: plain `pip install -e .` does not work in precompiled mode.
-    VLLM_USE_PRECOMPILED=1 uv pip install --editable . --torch-backend=auto 2>&1 | tee "$LOG_DIR/vllm_build.log"
+    local build_log="$LOG_DIR/vllm_build.log" near
+    if ! VLLM_USE_PRECOMPILED=1 uv pip install --editable . --torch-backend=auto 2>&1 | tee "$build_log"; then
+      # main moves faster than vLLM's wheel CI: right after a PR that touches csrc/, HEAD has no
+      # published wheel ("No precompiled wheel is published yet for <sha>"). vLLM names the
+      # nearest commit that has one; check THAT commit out so wheel and sources match, and retry.
+      near="$(grep -oE '\([0-9a-f]{40}, [0-9]+ commits? older\)' "$build_log" | grep -oE '[0-9a-f]{40}' | head -1 || true)"
+      if [ -z "$near" ]; then echo "ERROR: precompiled install failed; see $build_log"; return 1; fi
+      say "vLLM: no wheel for $(git rev-parse --short HEAD) yet; falling back to ${near:0:10} (has a published wheel)"
+      git checkout --quiet "$near"
+      VLLM_USE_PRECOMPILED=1 uv pip install --editable . --torch-backend=auto 2>&1 | tee -a "$build_log"
+    fi
+    echo "vLLM installed at $(git rev-parse --short HEAD)"
   fi
   vllm download-kernels || echo "WARN: 'vllm download-kernels' failed or not available on this ref"
 
