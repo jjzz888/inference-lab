@@ -36,6 +36,21 @@ say "Installing / upgrading uv"
 pip install -q -U uv
 uv --version
 
+# Kaggle's image can make `uv pip install` target the SYSTEM Python (3.13, /usr/local/lib/...)
+# even inside an activated venv: vLLM then lands next to Kaggle's own torch/torchaudio and the
+# venv stays empty ("No module named 'torch'"). Show any preset uv settings, then pin every
+# uv call in this script to the venv explicitly (see use_venv below).
+say "uv settings preset by the image (if any)"
+env | grep '^UV_' || echo "(no UV_* env vars)"
+for f in /etc/uv/uv.toml "$HOME/.config/uv/uv.toml"; do [ -f "$f" ] && { echo "--- $f"; cat "$f"; }; done
+
+use_venv() {  # activate ./.venv and force all uv pip calls into it
+  # shellcheck disable=SC1091
+  source .venv/bin/activate
+  export UV_PYTHON="$VIRTUAL_ENV/bin/python" UV_SYSTEM_PYTHON=false
+}
+leave_venv() { deactivate; unset UV_PYTHON UV_SYSTEM_PYTHON; }
+
 clone_or_update() {  # $1=url $2=dir $3=ref
   if [ ! -d "$2/.git" ]; then
     git clone "$1" "$2"
@@ -55,8 +70,7 @@ setup_vllm() {
 
   say "vLLM: venv"
   [ -d .venv ] || uv venv --python 3.12 --seed --managed-python
-  # shellcheck disable=SC1091
-  source .venv/bin/activate
+  use_venv
 
   if [ "${VLLM_FULL_BUILD:-0}" = "1" ]; then
     say "vLLM: FULL build (C++/CUDA compile)"
@@ -70,7 +84,8 @@ setup_vllm() {
 
   say "vLLM: sanity check"
   python - <<'PY'
-import torch, vllm
+import sys, torch, vllm
+print("python", sys.executable, "| in venv:", sys.prefix != sys.base_prefix)
 print("vllm", vllm.__version__, "| file", vllm.__file__)
 print("torch", torch.__version__, "| cuda", torch.version.cuda, "| gpus", torch.cuda.device_count())
 print("capability", torch.cuda.get_device_capability(0))
@@ -83,7 +98,7 @@ PY
     pytest tests/v1/core -q -x --maxfail=5 2>&1 | tee "$LOG_DIR/vllm_tests.log" || \
       echo "WARN: some vLLM tests failed; see $LOG_DIR/vllm_tests.log"
   fi
-  deactivate
+  leave_venv
 }
 
 # ---------------------------------------------------------------- SGLang
@@ -102,13 +117,13 @@ setup_sglang() {
 
   say "SGLang: venv + editable install"
   [ -d .venv ] || uv venv --python 3.12 --seed --managed-python
-  # shellcheck disable=SC1091
-  source .venv/bin/activate
+  use_venv
   uv pip install -e "python" 2>&1 | tee "$LOG_DIR/sglang_build.log"
 
   say "SGLang: sanity check"
   python - <<'PY'
-import torch, sglang
+import sys, torch, sglang
+print("python", sys.executable, "| in venv:", sys.prefix != sys.base_prefix)
 print("sglang", sglang.__version__, "| file", sglang.__file__)
 print("torch", torch.__version__, "| cuda", torch.version.cuda, "| gpus", torch.cuda.device_count())
 try:
@@ -118,7 +133,7 @@ except Exception as e:
 PY
   # SGLang's test layout changes often; run one or two files by hand after setup, e.g.
   #   ls test/ ; python -m pytest <some unit test> -q
-  deactivate
+  leave_venv
 }
 
 case "$TARGET" in

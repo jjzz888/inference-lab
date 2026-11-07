@@ -53,6 +53,26 @@ pip install -q -U uv
 # 打印 uv 的版本，确认命令可用。
 uv --version
 
+# Kaggle 镜像可能让 `uv pip install` 装进**系统** Python（3.13，/usr/local/lib/...），
+# 即使已经激活了 venv 也一样：vLLM 会和 Kaggle 自带的 torch/torchaudio 装在一起（CUDA 版本冲突），
+# 而 venv 里什么都没有（"No module named 'torch'"）。
+# 先打印镜像预设的 uv 设置方便排查，再把本脚本里所有 uv 调用显式固定到 venv（见下面的 use_venv）。
+say "uv settings preset by the image (if any)"
+# 列出所有 UV_ 开头的环境变量；没有就打印提示（|| 防止 grep 无匹配时触发 set -e 退出）。
+env | grep '^UV_' || echo "(no UV_* env vars)"
+# 打印系统级和用户级的 uv 配置文件（如果存在）。
+for f in /etc/uv/uv.toml "$HOME/.config/uv/uv.toml"; do [ -f "$f" ] && { echo "--- $f"; cat "$f"; }; done
+
+# 激活当前目录下的 .venv，并强制之后所有 uv pip 命令都装进这个 venv：
+# UV_PYTHON 指定目标解释器，UV_SYSTEM_PYTHON=false 覆盖镜像可能设置的"装进系统 Python"。
+use_venv() {  # activate ./.venv and force all uv pip calls into it
+  # shellcheck disable=SC1091
+  source .venv/bin/activate
+  export UV_PYTHON="$VIRTUAL_ENV/bin/python" UV_SYSTEM_PYTHON=false
+}
+# 退出 venv，并清除上面设置的变量，避免影响下一个仓库的安装。
+leave_venv() { deactivate; unset UV_PYTHON UV_SYSTEM_PYTHON; }
+
 # 定义克隆或更新仓库的函数：参数依次为 $1=仓库 URL、$2=本地目录、$3=Git ref。
 clone_or_update() {  # $1=url $2=dir $3=ref
   # 如果目标目录不是一个 Git 仓库，就克隆仓库。
@@ -83,10 +103,8 @@ setup_vllm() {
   say "vLLM: venv"
   # 如果虚拟环境不存在，就创建 Python 3.12 环境，预装基础工具并使用 uv 管理 Python。
   [ -d .venv ] || uv venv --python 3.12 --seed --managed-python
-  # 告知 ShellCheck：下面加载的虚拟环境脚本路径是动态生成的，因此无法静态解析。
-  # shellcheck disable=SC1091
-  # 激活 vLLM 的虚拟环境。
-  source .venv/bin/activate
+  # 激活 vLLM 的虚拟环境，并把 uv pip 固定到这个 venv。
+  use_venv
 
   # 若设置 VLLM_FULL_BUILD=1，则执行完整 C++/CUDA 编译。
   if [ "${VLLM_FULL_BUILD:-0}" = "1" ]; then
@@ -110,7 +128,9 @@ setup_vllm() {
   # 运行内嵌 Python 程序，打印已安装的 vLLM、PyTorch、CUDA 和 GPU 信息。
   python - <<'PY'
 # 导入 PyTorch 和 vLLM，以检查安装状态及设备信息。
-import torch, vllm
+import sys, torch, vllm
+# 打印实际使用的 Python 解释器，以及它是否在 venv 里（应为 True；False 说明又装进了系统 Python）。
+print("python", sys.executable, "| in venv:", sys.prefix != sys.base_prefix)
 # 打印 vLLM 版本和模块文件位置。
 print("vllm", vllm.__version__, "| file", vllm.__file__)
 # 打印 PyTorch 版本、PyTorch 使用的 CUDA 版本及可见 GPU 数量。
@@ -130,8 +150,8 @@ PY
     pytest tests/v1/core -q -x --maxfail=5 2>&1 | tee "$LOG_DIR/vllm_tests.log" || \
       echo "WARN: some vLLM tests failed; see $LOG_DIR/vllm_tests.log"
   fi
-  # 退出 vLLM 虚拟环境。
-  deactivate
+  # 退出 vLLM 虚拟环境，并清除 uv 的目标设置。
+  leave_venv
 }
 
 # ---------------------------------------------------------------- SGLang 安装
@@ -160,10 +180,8 @@ setup_sglang() {
   say "SGLang: venv + editable install"
   # 如果虚拟环境不存在，就创建 Python 3.12 环境，预装基础工具并使用 uv 管理 Python。
   [ -d .venv ] || uv venv --python 3.12 --seed --managed-python
-  # 告知 ShellCheck：下面加载的虚拟环境脚本路径是动态生成的，因此无法静态解析。
-  # shellcheck disable=SC1091
-  # 激活 SGLang 的虚拟环境。
-  source .venv/bin/activate
+  # 激活 SGLang 的虚拟环境，并把 uv pip 固定到这个 venv。
+  use_venv
   # 从仓库的 python 子目录以 editable 模式安装 SGLang；输出同时显示并保存到日志。
   uv pip install -e "python" 2>&1 | tee "$LOG_DIR/sglang_build.log"
 
@@ -172,7 +190,9 @@ setup_sglang() {
   # 运行内嵌 Python 程序，打印 SGLang、PyTorch、CUDA、GPU 信息，并尝试检查 FlashInfer。
   python - <<'PY'
 # 导入 PyTorch 和 SGLang，以检查安装状态及设备信息。
-import torch, sglang
+import sys, torch, sglang
+# 打印实际使用的 Python 解释器，以及它是否在 venv 里（应为 True）。
+print("python", sys.executable, "| in venv:", sys.prefix != sys.base_prefix)
 # 打印 SGLang 版本和模块文件位置。
 print("sglang", sglang.__version__, "| file", sglang.__file__)
 # 打印 PyTorch 版本、PyTorch 使用的 CUDA 版本及可见 GPU 数量。
@@ -186,8 +206,8 @@ except Exception as e:
 PY
   # SGLang 的测试目录结构经常变化，因此建议安装完成后手动挑选一两个测试文件运行，例如：
   #   ls test/ ; python -m pytest <some unit test> -q
-  # 退出 SGLang 虚拟环境。
-  deactivate
+  # 退出 SGLang 虚拟环境，并清除 uv 的目标设置。
+  leave_venv
 }
 
 # 根据第一个命令行参数选择安装目标。
