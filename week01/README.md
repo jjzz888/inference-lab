@@ -153,8 +153,43 @@ Copy `results/` and `~/lab/logs/` back into this repo and commit them. **Shut th
 
 It isn't in setup because setup already runs vLLM's tests (~34 min) and the JIT warm-up. Run it occasionally: the first time, after a new SGLang commit, or before an SGLang PR.
 
+**Recommended: the default scope as a background run** (a fresh session, about 1 h in total; interactive sessions reset when idle). Settings: **Accelerator = GPU T4 x2**, **Internet = On**. Each cell starts with `%%bash`.
+
+**Cell 1: SGLang-only setup** (~10–15 min). `kaggle_setup.sh sglang` skips vLLM, its tests and the JIT warm-up.
+```bash
+%%bash
+set -o pipefail
+rm -rf /kaggle/working/inference-lab
+git clone -q https://github.com/jjzz888/inference-lab.git /kaggle/working/inference-lab
+bash /kaggle/working/inference-lab/week01/kaggle_setup.sh sglang 2>&1 | tee /kaggle/working/setup_sglang.log | grep -E "==>|created:|WARN|ERROR|installed at|in venv|sglang"
+```
+
+**Cell 2: SGLang unit tests, default scope** (`unit/managers` + `unit/mem_cache`, ~45 min). The script exits 0 even when tests fail, so Cell 3 still runs.
+```bash
+%%bash
+set -o pipefail
+bash /kaggle/working/inference-lab/week01/sglang_tests.sh 2>&1 | tee /kaggle/working/sglang_tests_console.log
+```
+
+**Cell 3: put the logs in the Output.** `~/lab/logs` is outside `/kaggle/working`, so it isn't saved unless you copy it.
+```bash
+%%bash
+mkdir -p /kaggle/working/results/week01/logs
+cp /root/lab/logs/sglang_tests.log /root/lab/logs/sglang_unit_files.txt /root/lab/logs/sglang_build.log /kaggle/working/results/week01/logs/ 2>/dev/null
+cp /kaggle/working/setup_sglang.log /kaggle/working/results/week01/logs/
+git -C /root/lab/sglang log -1 --format='sglang %H %ci' > /kaggle/working/results/week01/commits_sglang_tests.txt
+find /kaggle/working/results/week01 -type f | sort | xargs ls -la
+```
+
+Then **Save Version** → **Save & Run All (Commit)**, and download with the CLI as in [[#4. Download and commit the raw results]]. Copy only `logs/sglang_*.log`, `logs/setup_sglang.log`, `logs/sglang_unit_files.txt` and `commits_sglang_tests.txt`: this run has no vLLM logs, so don't overwrite the vLLM ones in the repo.
+
+In an interactive session that already ran the full setup, Cell 2 alone is enough:
 ```python
 !bash /kaggle/working/inference-lab/week01/sglang_tests.sh        # ~45 min
+```
+Find the failures afterwards:
+```python
+!grep -nE "FAILED|Error|Traceback|passed|failed" /root/lab/logs/sglang_tests.log | tail -40
 ```
 - **Default scope** mirrors vLLM's `tests/v1/core`:
   - `test/registered/unit/managers`: the scheduler, 95 files, ~18 min.
