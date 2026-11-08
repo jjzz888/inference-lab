@@ -209,8 +209,20 @@ You can close the page while it runs.
 - The test summary line: only the diffusion test should still fail (`1 failed, … passed`, no errors). The total can differ slightly by commit.
 
 ### 4. Download and commit the raw results
-1. When the run finishes, open the notebook version's **Output** tab and download the whole `results/week01` folder. Kaggle zips it.
-2. Unzip it into this repo as `results/week01/`. Check the contents and file sizes first, and commit no tokens or credentials.
+1. When the run finishes, download the output. There are two ways:
+   - **CLI (preferred).** It fetches the latest version's whole Output, plus the full notebook run log `<notebook>.log`:
+     ```bash
+     kaggle kernels status tiramisooo/notebook315e497798   # wait for "KernelWorkerStatus.COMPLETE"
+     kaggle kernels output tiramisooo/notebook315e497798 -p /tmp/kaggle_out
+     ```
+     ```bash
+     cp -R /tmp/kaggle_out/results/week01/. "/Users/jing/Documents/Obsidian Vault/nvidia/inference-lab/results/week01/"
+     ```
+     One-time setup:
+     - Install with `uv tool install --with six kaggle`. kaggle 2.2.5 imports `six` but doesn't declare it, so without `--with six` it fails with `ModuleNotFoundError: No module named 'six'`.
+     - In Kaggle **Settings → API**, create a token and save it as `~/.kaggle/access_token` with `chmod 600`.
+   - **Web.** Open the notebook version's **Output** tab and download the `results` folder (Kaggle zips it), then unzip it.
+2. Copy only `results/week01/` into this repo, not the Output's `inference-lab/` repo copy or `__huggingface_repos__.json`. Check the contents and file sizes first, and commit no tokens or credentials.
 3. From `logs/vllm_tests.log` and `logs/vllm_warmup.log`, confirm the warm-up effect. Update Next Steps item 2 in [vllm_core_tests.md](vllm_core_tests.md).
 4. Compare the new benchmark numbers with the earlier runs. Update `LOG.md`, and tick the "commit the raw `results/week01/` folders" item under "Done when".
 5. Commit and push.
@@ -244,4 +256,4 @@ You can close the page while it runs.
 - [x] `smoke_offline.py` runs on the Mac and stops at a breakpoint in `Scheduler.schedule`. Done 2026-11-07 on vLLM `a8dacd7238`.
 - [x] Both engines install on Kaggle, and `tests/v1/core` has run (failures noted in `LOG.md`). Done 2026-11-07: vLLM `1ecc9cc4ce`, SGLang `ba5906471`. 1,286/1,287 tests pass after environment fixes; details in [vllm_core_tests.md](vllm_core_tests.md).
 - [x] One `run_bench.sh both` result, with TTFT, TPOT and throughput copied into `LOG.md`. Done 2026-11-07: comparison and backend findings in [LOG.md](../LOG.md).
-  - [ ] Optional: download the raw `results/week01/` folders (`bench.txt`, `meta.txt`, `server.log`, `result.jsonl`) from Kaggle's Output panel and commit them. So far only the numbers are in `LOG.md`.
+  - [x] Optional: download the raw `results/week01/` folders (`bench.txt`, `meta.txt`, `server.log`, `result.jsonl`) from Kaggle's Output panel and commit them. Done 2026-11-08 for the background rerun: see `results/week01/`. The 11-07 raw files were lost with that session; their numbers are in `LOG.md`.

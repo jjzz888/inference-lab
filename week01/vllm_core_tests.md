@@ -115,6 +115,17 @@ After the environment fixes ([[#Error Analysis]]):
 
 Net result: 1,286 of 1,287 pass on Kaggle T4 once the environment is fixed, and the remaining failure is in the test, not in vLLM.
 
+**Rerun 2026-11-08** (background run on a fresh session, vLLM `fd8f3f398e`; raw log in `results/week01/logs/vllm_tests.log`):
+
+| Item | Value |
+|---|---|
+| Summary line | `1 failed, 1276 passed, 18 warnings, 1 error in 2041.55s (0:34:01)` |
+| `F` | `test_diffusion_read_deferral_keeps_a_longer_pp_wait`: same portability bug, still on upstream `main` |
+| `E` | `test_prefix_cache_hit_rate[base]`: `Server failed to start in time`. The JIT warm-up crashed (see [[#Next Steps]] item 2), so the cache was cold |
+| `[mtp]` | passed: it ran after `[base]` had already filled part of the cache |
+
+The total is 10 lower than on 11-07 because upstream changed the suite between commits.
+
 ## Error Analysis
 For each problem, record the test node id, the root cause from its traceback, and the category: environment (T4/sm_75, missing optional dependency, model download), or a real bug that reproduces on current `main`.
 
@@ -158,7 +169,12 @@ For each problem, record the test node id, the root cause from its traceback, an
 ## Next Steps
 Draft, from this run:
 
-1. **Week 2 first PR: the diffusion test.** Search vLLM issues and PRs for `test_diffusion_read_deferral_keeps_a_longer_pp_wait` and "World size is larger than the number of available GPUs". If nothing exists, make the test independent of the host's GPU count. Reproduce first on Kaggle (2× T4), and run the other diffusion tests in `test_scheduler.py` to make sure they still pass.
-2. **Full-suite reruns on a fresh Kaggle session.** **Automated.** `kaggle_setup.sh` now fixes the `libcuda.so` link, and before `tests/v1/core` it warms the JIT caches by starting the hybrid test's model once with no time limit. The model name is read from `MODEL = "..."` in the test file, so it follows upstream. The log goes to `~/lab/logs/vllm_warmup.log`, a failed warm-up only warns, and `WARMUP_HYBRID=0` skips it. _Not yet verified in a fresh session._
+1. **Week 2 first PR: the diffusion test.** Search vLLM issues and PRs for `test_diffusion_read_deferral_keeps_a_longer_pp_wait` and "World size is larger than the number of available GPUs". If nothing exists, make the test independent of the host's GPU count. Reproduce first on Kaggle (2× T4), and run the other diffusion tests in `test_scheduler.py` to make sure they still pass. **Planned in [first_pr_plan.md](../week02/first_pr_plan.md).** No existing issue or PR. The bug also hits two PP=2 tests on 1-GPU hosts, so the fix goes in the shared `create_scheduler` helper.
+2. **Full-suite reruns on a fresh Kaggle session.** **Automated.** `kaggle_setup.sh` now fixes the `libcuda.so` link, and before `tests/v1/core` it warms the JIT caches by starting the hybrid test's model once with no time limit. The model name is read from `MODEL = "..."` in the test file, so it follows upstream. The log goes to `~/lab/logs/vllm_warmup.log`, a failed warm-up only warns, and `WARMUP_HYBRID=0` skips it.
+   - **Verified on a fresh session (2026-11-08):**
+     - ✅ The `libcuda.so` auto-fix worked: `created: ... (verified: -lcuda links)`.
+     - ➖ The wheel fallback didn't trigger: `fd8f3f398e` already had a published wheel.
+     - ❌ The warm-up crashed after 66 s with `FileNotFoundError: '/root/lab/vllm/<stdin>'`. It fed the script through stdin (`python - <<PY`), and vLLM starts EngineCore with multiprocessing `spawn`, which re-imports `__main__` from its path. `<stdin>` isn't a file. **Fixed:** the warm-up now uses `python -c`, which has no path, so spawn skips the re-import. Reproduced and verified with a plain-Python spawn test and a fake vLLM that spawns a child.
+   - _Next: rerun once more to confirm the hybrid `[base]` test passes with the fixed warm-up._
 3. ~~**Benchmarks.** Run `run_bench.sh both` in a session where setup has finished.~~ **Done (2026-11-07).** Results, backend findings (vLLM `TRITON_ATTN` vs SGLang FlashInfer) and the follow-up `SGLANG_ATTN=triton` rerun are in [LOG.md](../LOG.md).
 4. **Read the scheduler through tests.** Step through `test_scheduler.py` and `test_prefix_caching.py` cases on the Mac (pytest is now in `~/code/vllm/.venv`), alongside the request-lifecycle diagram.

@@ -11,6 +11,7 @@
 
 ### Tests
 - vLLM `tests/v1/core` (Kaggle T4): `1 failed, 1284 passed, 2 errors` in 26 min. After the environment fixes, 1,286/1,287 pass. The remaining failure is a test portability bug (PP=3 on a 2-GPU host). Details: [week01/vllm_core_tests.md](week01/vllm_core_tests.md).
+- Rerun 2026-11-08 (background run, vLLM `fd8f3f398e`): `1 failed, 1276 passed, 1 error` in 34 min. The error is the hybrid test `[base]` timing out, because the new JIT warm-up crashed (stdin script + spawn bug, now fixed). `[mtp]` passed. Raw logs: `results/week01/logs/`.
 - SGLang: not run yet.
 
 ### Serving benchmark (Qwen2.5-0.5B-Instruct, FP16, T4, random 512 in / 128 out, 200 prompts, rate=inf)
@@ -34,9 +35,26 @@ Both runs: Kaggle 2× T4 (one GPU used), driver 580.178.04, 2026-11-07, one run 
 | P99 TPOT (ms) | 95.06 | 64.02 | 1.5× lower |
 | Median / P99 ITL (ms) | 50.73 / 347.98 | 34.55 / 176.41 | 1.5× / 2.0× lower |
 
-Run directories:
-- vLLM: `results/week01/vllm-20261107-151619` (commit `1ecc9cc4ce`, torch `2.14.0+cu132`)
-- SGLang: `results/week01/sglang-20261107-151822` (commit `ba5906471`, torch `2.14.1+cu130`). Attention backend: FlashInfer (default). Prefix cache: Python TreeCore (no Rust extensions). Server cold start about 4 min.
+Run directories (2026-11-07; the raw files stayed on Kaggle and were lost with the session):
+- vLLM: `vllm-20261107-151619` (commit `1ecc9cc4ce`, torch `2.14.0+cu132`)
+- SGLang: `sglang-20261107-151822` (commit `ba5906471`, torch `2.14.1+cu130`). Attention backend: FlashInfer (default). Prefix cache: Python TreeCore (no Rust extensions). Server cold start about 4 min.
+
+**Rerun 2026-11-08 (background run on a fresh session, raw files committed in `results/week01/`):**
+- vLLM `vllm-20261108-014602`: commit `fd8f3f398e`, torch `2.14.0+cu132`, `TRITON_ATTN`.
+- SGLang `sglang-20261108-014805`: commit `cbbc6b67f`, torch `2.14.1+cu130`, FlashInfer, Python TreeCore.
+
+| Metric | vLLM 11-07 | vLLM 11-08 | SGLang 11-07 | SGLang 11-08 |
+|---|---|---|---|---|
+| Request throughput (req/s) | 13.41 | 13.37 | 22.63 | 22.90 |
+| Output token throughput (tok/s) | 1,716.97 | 1,711.94 | 2,897.28 | 2,930.56 |
+| Mean TTFT (ms) | 5,190.60 | 5,170.94 | 2,259.82 | 2,405.09 |
+| P99 TTFT (ms) | 9,470.35 | 9,465.03 | 4,118.24 | 4,534.62 |
+| Mean TPOT (ms) | 71.74 | 72.19 | 50.90 | 48.90 |
+| Median ITL (ms) | 50.73 | 51.21 | 34.55 | 29.01 |
+| P99 ITL (ms) | 347.98 | 345.43 | 176.41 | 183.41 |
+
+- **Reproducible.** On different days, sessions and newer commits, throughput moved by < 1.5% for both engines, and SGLang's lead stayed at **~1.7×** (22.90 / 13.37 = 1.71). With two runs, the gap is well outside run-to-run noise.
+- vLLM is almost identical across runs. SGLang's TTFT varied more (+6% mean, +10% P99), while its median ITL improved (34.55 → 29.01 ms), possibly from the newer commit.
 
 Reading the numbers:
 - `rate=inf` sends all 200 requests at t=0 (102,400 prompt tokens). TTFT is mostly queueing behind prefill, which is chunked under a per-step token budget. SGLang's log shows 2,048-token prefill batches of about 5 sequences, so 200 prompts need about 50 prefill steps. TPOT and ITL rise while prefill chunks share steps with running decodes, which explains P99 ITL ≫ median for both engines.

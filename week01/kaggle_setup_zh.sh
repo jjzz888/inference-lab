@@ -228,12 +228,11 @@ PY
       local t0=$SECONDS
       # 用默认参数创建一次 LLM（和测试 server 的配置一致），输出写进日志，不刷屏。
       # 预热失败只给警告，不中断 setup。
-      if python - "$warm_model" > "$LOG_DIR/vllm_warmup.log" 2>&1 <<'PY'
-import sys
-from vllm import LLM
-LLM(sys.argv[1])
-print("ENGINE READY")
-PY
+      # 必须用 `python -c`，不能用 stdin 传脚本（`python - <<PY`）：vLLM 用 multiprocessing 的
+      # "spawn" 方式启动 EngineCore，子进程会按 __main__ 的文件路径重新加载主程序，而 "<stdin>"
+      # 不是真实文件（报错 FileNotFoundError: '/root/lab/vllm/<stdin>'）。-c 没有文件路径，spawn 会跳过这一步。
+      if python -c 'import sys; from vllm import LLM; LLM(sys.argv[1]); print("ENGINE READY")' \
+           "$warm_model" > "$LOG_DIR/vllm_warmup.log" 2>&1
       then echo "warm-up done in $((SECONDS - t0)) s"
       else echo "WARN: warm-up failed after $((SECONDS - t0)) s; see $LOG_DIR/vllm_warmup.log (the hybrid test may time out)"
       fi

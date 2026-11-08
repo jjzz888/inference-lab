@@ -163,12 +163,11 @@ PY
     if [ "${WARMUP_HYBRID:-1}" = "1" ] && [ -n "$warm_model" ]; then
       say "vLLM: warming JIT caches with $warm_model (cold start can take ~8 min)"
       local t0=$SECONDS
-      if python - "$warm_model" > "$LOG_DIR/vllm_warmup.log" 2>&1 <<'PY'
-import sys
-from vllm import LLM
-LLM(sys.argv[1])
-print("ENGINE READY")
-PY
+      # Must be `python -c`, not a stdin heredoc (`python - <<PY`): vLLM spawns EngineCore with
+      # multiprocessing "spawn", which re-imports __main__ from its path, and "<stdin>" isn't a
+      # file (FileNotFoundError: '/root/lab/vllm/<stdin>'). -c has no path, so spawn skips that.
+      if python -c 'import sys; from vllm import LLM; LLM(sys.argv[1]); print("ENGINE READY")' \
+           "$warm_model" > "$LOG_DIR/vllm_warmup.log" 2>&1
       then echo "warm-up done in $((SECONDS - t0)) s"
       else echo "WARN: warm-up failed after $((SECONDS - t0)) s; see $LOG_DIR/vllm_warmup.log (the hybrid test may time out)"
       fi
