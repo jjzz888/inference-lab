@@ -13,7 +13,7 @@
 - vLLM `tests/v1/core` (Kaggle T4): `1 failed, 1284 passed, 2 errors` in 26 min. After the environment fixes, 1,286/1,287 pass. The remaining failure is a test portability bug (PP=3 on a 2-GPU host). Details: [week01/vllm_core_tests.md](week01/vllm_core_tests.md).
 - Rerun 2026-11-08 (background run, vLLM `fd8f3f398e`): `1 failed, 1276 passed, 1 error` in 34 min. The error is the hybrid test `[base]` timing out, because the new JIT warm-up crashed (stdin script + spawn bug, now fixed). `[mtp]` passed. Raw logs: commit `da56775`.
 - Second rerun 2026-11-08 (Kaggle Version #2, vLLM `ebc97ad8d0`, fixed warm-up): warm-up `ENGINE READY` in 592 s, then `1 failed, 1277 passed` in 24 min. **Both hybrid tests pass with no manual steps.** The only failure is the diffusion PP=3 test (Week 2 PR). Raw logs: `results/week01/logs/`.
-- SGLang: not run yet. Script: [week01/sglang_tests.sh](week01/sglang_tests.sh). It runs the CPU unit tests for the scheduler (`unit/managers`) and KV cache (`unit/mem_cache`), ~253 files and ~45 min, via `test/run_suite.py`. Run it on Kaggle after setup.
+- SGLang unit tests 2026-11-08 (Kaggle background run, SGLang `cbbc6b67f4`, [week01/sglang_tests.sh](week01/sglang_tests.sh)): `unit/managers` + `unit/mem_cache`, 255 registered files in 60 min. **248/255 files pass.** Failures: 2 missing `parameterized` (script fixed), 3 need the Rust toolchain (skipped on Kaggle), 1 FP8 E4M3 kernel on T4 without a capability check, 1 HiCache test whose CUDA fakes break on a GPU host. That last one exposes a real bug: `cudaGetErrorString(int)` raises `TypeError` in `pool_host/common.py`. Details: [week01/sglang_tests.md](week01/sglang_tests.md). Raw logs: `results/week01/logs/sglang_*`.
 
 ### Serving benchmark (Qwen2.5-0.5B-Instruct, FP16, T4, random 512 in / 128 out, 200 prompts, rate=inf)
 | Engine | Mean TTFT (ms) | P99 TTFT (ms) | Mean TPOT (ms) | Output tok/s | Req/s |
@@ -115,3 +115,4 @@ Caveats before drawing conclusions:
 
 ### Notes / possible first issues
 - vLLM `test_diffusion_read_deferral_keeps_a_longer_pp_wait` fails on any CUDA host with < 3 GPUs (`World size (3) is larger than the number of available GPUs (2)`). Week 2 PR candidate.
+- SGLang `pool_host/common.py` passes an `int` to `torch.cuda.cudart().cudaGetErrorString`, which expects a `cudaError` enum, so CUDA host-register/unregister failures raise `TypeError` instead of the intended warning or `RuntimeError`. SGLang PR candidate (see [week01/sglang_tests.md](week01/sglang_tests.md)).

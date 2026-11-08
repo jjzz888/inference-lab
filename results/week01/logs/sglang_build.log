@@ -1,72 +1,128 @@
-Resolved 204 packages in 10m 40s
+Resolved 204 packages in 52.11s
    Building sglang @ file:///root/lab/sglang/python
-Downloading zstandard (5.3MiB)
-Downloading tokenizers (3.2MiB)
-Downloading jedi (4.7MiB)
-Downloading pandas (11.5MiB)
-Downloading pillow (6.6MiB)
-Downloading openai-harmony (2.9MiB)
-Downloading pyarrow (52.5MiB)
-Downloading timm (2.4MiB)
 Downloading cython (3.3MiB)
-Downloading deepseek-recipe (12.3MiB)
-Downloading scipy (33.7MiB)
+Downloading cryptography (4.5MiB)
+Downloading uvloop (4.3MiB)
+Downloading grpcio (7.0MiB)
+Downloading tokenizers (3.2MiB)
+Downloading nvidia-cuda-cccl (3.9MiB)
+Downloading hf-xet (4.1MiB)
+Downloading timm (2.4MiB)
 Downloading lxml (5.0MiB)
-Downloading pycryptodomex (2.2MiB)
-Downloading soundfile (1.3MiB)
-Downloading torchvision (7.2MiB)
-Downloading sentencepiece (1.3MiB)
-Downloading sgl-flash-mla (9.4MiB)
-Downloading py-spy (2.8MiB)
-Downloading llguidance (2.9MiB)
-Downloading transformers (12.0MiB)
-Downloading torch-memory-saver (2.5MiB)
-Downloading torchcodec (9.5MiB)
-Downloading xgrammar (1.2MiB)
-Downloading tml-renderers (4.5MiB)
-Downloading modelscope (5.8MiB)
-Downloading sgl-deep-gemm (4.9MiB)
-Downloading nvshmem4py-cu13 (4.8MiB)
-Downloading torchaudio (1.7MiB)
+Downloading zstandard (5.3MiB)
 Downloading numba (3.6MiB)
-Downloading sgl-deep-ep (14.7MiB)
+Downloading pycountry (7.7MiB)
+Downloading llguidance (2.9MiB)
+Downloading scipy (33.7MiB)
+Downloading modelscope (5.8MiB)
+Downloading tml-renderers (4.5MiB)
+Downloading nccl4py (3.5MiB)
+Downloading sgl-deep-gemm (4.9MiB)
+Downloading pillow (6.6MiB)
+Downloading torch-memory-saver (2.5MiB)
+Downloading deepseek-recipe (12.3MiB)
+Downloading transformers (12.0MiB)
+Downloading torchcodec (9.5MiB)
+Downloading cuda-core (6.3MiB)
+Downloading nccl-extensions (21.5MiB)
+Downloading nvidia-cudnn-frontend (11.1MiB)
+Downloading nvshmem4py-cu13 (4.8MiB)
 Downloading nvidia-mathdx (21.9MiB)
+Downloading jedi (4.7MiB)
+Downloading nvidia-cutlass-dsl-libs-cu13 (87.7MiB)
+Downloading pyarrow (52.5MiB)
+Downloading tilelang (48.2MiB)
+Downloading z3-solver (27.9MiB)
+Downloading sgl-flash-mla (9.4MiB)
+Downloading nvidia-cutlass-dsl-libs-base (2.9MiB)
 Downloading sglang-kernel (355.7MiB)
- Downloaded xgrammar
- Downloaded soundfile
- Downloaded sentencepiece
- Downloaded torchaudio
- Downloaded pycryptodomex
+Downloading nvidia-cuda-nvcc (44.8MiB)
+Downloading nvidia-nvvm (71.7MiB)
+Downloading openai-harmony (2.9MiB)
+Downloading sgl-deep-ep (14.7MiB)
+Downloading py-spy (2.8MiB)
+Downloading mistral-common (6.3MiB)
+Downloading numpy (15.8MiB)
+Downloading llvmlite (53.7MiB)
+Downloading torchvision (7.2MiB)
+Downloading apache-tvm-ffi (2.6MiB)
+Downloading nvidia-cutlass-dsl-libs-cu12 (87.5MiB)
+Downloading flashinfer-python (76.1MiB)
+Downloading pandas (11.5MiB)
+Downloading anthropic (2.3MiB)
  Downloaded timm
  Downloaded torch-memory-saver
- Downloaded py-spy
- Downloaded openai-harmony
+Downloading pycryptodomex (2.2MiB)
+ Downloaded apache-tvm-ffi
+ Downloaded anthropic
+Downloading pydantic-core (2.2MiB)
+Downloading aiohttp (1.8MiB)
+Downloading torchaudio (1.7MiB)
  Downloaded llguidance
+ Downloaded py-spy
  Downloaded cython
+Downloading nvidia-cutlass-dsl-libs-core (1.6MiB)
+ Downloaded openai-harmony
+Downloading sentencepiece (1.3MiB)
+Downloading soundfile (1.3MiB)
+ Downloaded nvidia-cutlass-dsl-libs-base
  Downloaded tokenizers
+Downloading xgrammar (1.2MiB)
+Downloading pygments (1.2MiB)
+Downloading tiktoken (1.1MiB)
+ Downloaded nccl4py
  Downloaded numba
+ Downloaded nvidia-cuda-cccl
+ Downloaded hf-xet
+ Downloaded soundfile
+ Downloaded tiktoken
+ Downloaded sentencepiece
  Downloaded tml-renderers
- Downloaded jedi
+ Downloaded pygments
+ Downloaded aiohttp
+ Downloaded uvloop
+ Downloaded cryptography
+ Downloaded torchaudio
+ Downloaded xgrammar
+ Downloaded nvidia-cutlass-dsl-libs-core
+ Downloaded pycryptodomex
  Downloaded nvshmem4py-cu13
+ Downloaded pydantic-core
+ Downloaded jedi
  Downloaded sgl-deep-gemm
  Downloaded lxml
  Downloaded zstandard
  Downloaded modelscope
+ Downloaded cuda-core
+ Downloaded mistral-common
  Downloaded pillow
+ Downloaded grpcio
  Downloaded torchvision
- Downloaded torchcodec
+ Downloaded pycountry
  Downloaded sgl-flash-mla
+ Downloaded torchcodec
+ Downloaded nvidia-cudnn-frontend
  Downloaded pandas
- Downloaded transformers
  Downloaded deepseek-recipe
- Downloaded sgl-deep-ep
- Downloaded nvidia-mathdx
- Downloaded scipy
- Downloaded pyarrow
+ Downloaded transformers
       Built sglang @ file:///root/lab/sglang/python
+ Downloaded sgl-deep-ep
+ Downloaded numpy
+ Downloaded nccl-extensions
+ Downloaded nvidia-mathdx
+ Downloaded z3-solver
+ Downloaded scipy
+ Downloaded nvidia-cuda-nvcc
+ Downloaded tilelang
+ Downloaded pyarrow
+ Downloaded nvidia-nvvm
+ Downloaded nvidia-cutlass-dsl-libs-cu13
+ Downloaded nvidia-cutlass-dsl-libs-cu12
+ Downloaded llvmlite
+ Downloaded flashinfer-python
  Downloaded sglang-kernel
-Prepared 73 packages in 17.49s
-Installed 204 packages in 708ms
+Prepared 175 packages in 27.70s
+Installed 204 packages in 2.23s
  + aiohappyeyeballs==2.7.1
  + aiohttp==3.14.5
  + aiosignal==1.4.0

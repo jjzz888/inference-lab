@@ -164,7 +164,7 @@ git clone -q https://github.com/jjzz888/inference-lab.git /kaggle/working/infere
 bash /kaggle/working/inference-lab/week01/kaggle_setup.sh sglang 2>&1 | tee /kaggle/working/setup_sglang.log | grep -E "==>|created:|WARN|ERROR|installed at|in venv|sglang"
 ```
 
-**Cell 2: SGLang unit tests, default scope** (`unit/managers` + `unit/mem_cache`, ~45 min). The script exits 0 even when tests fail, so Cell 3 still runs.
+**Cell 2: SGLang unit tests, default scope** (`unit/managers` + `unit/mem_cache`, ~60 min). The script exits 0 even when tests fail, so Cell 3 still runs.
 ```bash
 %%bash
 set -o pipefail
@@ -185,20 +185,23 @@ Then **Save Version** → **Save & Run All (Commit)**, and download with the CLI
 
 In an interactive session that already ran the full setup, Cell 2 alone is enough:
 ```python
-!bash /kaggle/working/inference-lab/week01/sglang_tests.sh        # ~45 min
+!bash /kaggle/working/inference-lab/week01/sglang_tests.sh        # ~60 min
 ```
 Find the failures afterwards:
 ```python
-!grep -nE "FAILED|Error|Traceback|passed|failed" /root/lab/logs/sglang_tests.log | tail -40
+# Which files failed (run_suite prints one "✗ FAILED" line per file)
+!grep -n "✗ FAILED" /root/lab/logs/sglang_tests.log
+# Why: the exception lines inside the log
+!grep -nE "^(ERROR|FAIL): |Error: |Error\(" /root/lab/logs/sglang_tests.log | head -40
 ```
 - **Default scope** mirrors vLLM's `tests/v1/core`:
-  - `test/registered/unit/managers`: the scheduler, 95 files, ~18 min.
-  - `test/registered/unit/mem_cache`: KV/radix cache, 158 files, ~26 min.
+  - `test/registered/unit/managers`: the scheduler, 102 files.
+  - `test/registered/unit/mem_cache`: KV/radix cache, 194 files. 255 of the 296 are registered in `base-a-test-cpu` and run (60 min on Kaggle, 2026-11-08).
   - Only files registered in `base-a-test-cpu` run.
 - **Full scope.** `SCOPE=full` runs all of `base-a-test-cpu`: ~1,160 files, ~4.8 h estimated, with `--fork-worker-batch-size 8`. Use a background run for it. `DIRS="..."` picks custom dirs.
 - **Not run: SGLang's GPU pre-flight suite** (`base-a-test-1-gpu-small`). It launches gated `meta-llama/Llama-3.1-8B-Instruct`, whose FP16 weights (~16 GB) don't fit a 15 GB T4.
-- **Dependencies.** Installs only `pytest expecttest`, not SGLang's heavy `[test]` extra. If a test reports `ModuleNotFoundError`, add the package with `EXTRA_DEPS="pkg"`.
-- **Output.** The full log is `~/lab/logs/sglang_tests.log`, and the script prints the last 40 lines (run_suite's summary).
+- **Dependencies.** Installs only `pytest expecttest parameterized`, not SGLang's heavy `[test]` extra. If a test reports `ModuleNotFoundError`, add the package with `EXTRA_DEPS="pkg"`.
+- **Output.** The full log is `~/lab/logs/sglang_tests.log`. The script prints the last 40 lines, which are per-file timings, so find the failures with the `grep` above. Results and failure analysis of the 2026-11-08 run: [sglang_tests.md](sglang_tests.md).
 
 ## Full rerun on a fresh Kaggle session (background run)
 Use this to rerun everything end to end in one go: setup, tests, smoke test and benchmarks. It also captures the raw results. Run it as a **background commit** rather than cell by cell in an interactive session:

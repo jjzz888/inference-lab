@@ -1,0 +1,49 @@
+sglang @ cbbc6b67f4 (2026-11-08 09:42:04 +0800)
+
+[1;36m==> Test deps[0m
+
+[1;36m==> Scope: 296 files from: test/registered/unit/managers test/registered/unit/mem_cache[0m
+
+[1;36m==> Running test/run_suite.py --hw cpu --suite base-a-test-cpu --continue-on-error --only-file-list /root/lab/logs/sglang_unit_files.txt[0m
+
+[1;36m==> Done in 60 min: some tests failed. Full log: /root/lab/logs/sglang_tests.log[0m
+{"file": "test/registered/unit/managers/test_scheduler_running_reqs.py", "passed": true, "elapsed": 15}
+{"file": "test/registered/unit/managers/test_request_class_override_points.py", "passed": true, "elapsed": 15}
+{"file": "test/registered/unit/managers/test_mm_process_config.py", "passed": true, "elapsed": 15}
+{"file": "test/registered/unit/managers/test_auxiliary_output.py", "passed": true, "elapsed": 16}
+{"file": "test/registered/unit/managers/test_scheduler_on_idle_load.py", "passed": true, "elapsed": 15}
+{"file": "test/registered/unit/managers/test_scheduler_dp_converted_batch_full.py", "passed": true, "elapsed": 15}
+{"file": "test/registered/unit/managers/test_scheduler_recv_skipper.py", "passed": true, "elapsed": 11}
+{"file": "test/registered/unit/managers/test_mm_hashes.py", "passed": true, "elapsed": 9}
+{"file": "test/registered/unit/managers/test_stop_str_speculative.py", "passed": true, "elapsed": 12}
+{"file": "test/registered/unit/managers/test_embed_overrides.py", "passed": true, "elapsed": 13}
+{"file": "test/registered/unit/managers/test_mm_token_counts.py", "passed": true, "elapsed": 12}
+{"file": "test/registered/unit/managers/test_scheduler_health_check_signal.py", "passed": true, "elapsed": 15}
+{"file": "test/registered/unit/managers/test_tokenizer_manager_rid_cleanup.py", "passed": true, "elapsed": 13}
+{"file": "test/registered/unit/managers/test_prefill_delayer_gather.py", "passed": true, "elapsed": 22}
+{"file": "test/registered/unit/managers/test_lora_lru_unload_unit.py", "passed": true, "elapsed": 9}
+{"file": "test/registered/unit/managers/test_fanout_communicator.py", "passed": true, "elapsed": 8}
+{"file": "test/registered/unit/managers/test_scheduler_weight_version_tracking.py", "passed": true, "elapsed": 15}
+{"file": "test/registered/unit/managers/test_mm_utils_split.py", "passed": true, "elapsed": 17}
+{"file": "test/registered/unit/managers/test_flat_raw_top_logprobs.py", "passed": true, "elapsed": 14}
+{"file": "test/registered/unit/managers/test_deterministic_chunk_align.py", "passed": true, "elapsed": 15}
+{"file": "test/registered/unit/managers/test_prefill_adder.py", "passed": true, "elapsed": 16}
+{"file": "test/registered/unit/managers/test_schedule_batch_req_pool_indices.py", "passed": true, "elapsed": 15}
+{"file": "test/registered/unit/managers/test_hidden_state_server_mode.py", "passed": true, "elapsed": 13}
+{"file": "test/registered/unit/managers/test_req_kv_lengths.py", "passed": true, "elapsed": 26}
+{"file": "test/registered/unit/managers/test_scheduler_sampling_mask_validation.py", "passed": true, "elapsed": 15}
+{"file": "test/registered/unit/managers/test_output_streamer_logprobs.py", "passed": true, "elapsed": 13}
+{"file": "test/registered/unit/managers/test_scheduler_held_row_admission.py", "passed": true, "elapsed": 15}
+{"file": "test/registered/unit/managers/test_kv_page_invariants.py", "passed": true, "elapsed": 13}
+{"file": "test/registered/unit/managers/test_scheduler_timeouts.py", "passed": true, "elapsed": 15}
+{"file": "test/registered/unit/managers/test_hisparse_spec_coordinator.py", "passed": true, "elapsed": 13}
+{"file": "test/registered/unit/managers/test_req_custom_params_ref.py", "passed": true, "elapsed": 13}
+{"file": "test/registered/unit/managers/test_pp_cp_rank_offsets.py", "passed": true, "elapsed": 14}
+{"file": "test/registered/unit/managers/scheduler_components/test_dp_attn.py", "passed": true, "elapsed": 58}
+{"file": "test/registered/unit/managers/scheduler_components/test_request_retirer.py", "passed": true, "elapsed": 23}
+{"file": "test/registered/unit/managers/scheduler_components/test_dynamic_chunk_sizer.py", "passed": true, "elapsed": 13}
+{"file": "test/registered/unit/managers/scheduler_components/test_request_list.py", "passed": true, "elapsed": 16}
+{"file": "test/registered/unit/managers/scheduler_components/test_invariant_checker.py", "passed": true, "elapsed": 13}
+{"file": "test/registered/unit/managers/scheduler_components/test_output_sender.py", "passed": true, "elapsed": 14}
+{"file": "test/registered/unit/managers/scheduler_components/test_shm_tag_exchange.py", "passed": true, "elapsed": 41}
+========== TIMINGS END ==========

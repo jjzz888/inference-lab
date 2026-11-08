@@ -6,13 +6,13 @@
 # 而 SGLang 测试只是偶尔做一次的验证（第一次跑、换了 SGLang 版本、准备给 SGLang 提 PR 前），
 # 不是每次实验都需要。
 #
-# 默认范围对应 vLLM 的 tests/v1/core：调度器（unit/managers，95 个文件，约 18 分钟）
-# 和 KV/radix cache（unit/mem_cache，158 个文件，约 26 分钟）。
+# 默认范围对应 vLLM 的 tests/v1/core：调度器（unit/managers，102 个文件）
+# 和 KV/radix cache（unit/mem_cache，194 个文件），其中 255 个注册在 base-a-test-cpu 里。
 # 不跑 SGLang 的 GPU 快速检查（base-a-test-1-gpu-small）：它会启动需要申请权限的
 # meta-llama/Llama-3.1-8B-Instruct，FP16 权重本身就约 16 GB，放不进 15 GB 的 T4。
 #
 # 使用方法：
-#   bash sglang_tests_zh.sh                     # managers + mem_cache（约 253 个文件，约 45 分钟）
+#   bash sglang_tests_zh.sh                     # managers + mem_cache（255 个注册文件，约 60 分钟）
 #   SCOPE=full bash sglang_tests_zh.sh          # 完整的 base-a-test-cpu（约 1160 个文件，预计约 4.8 小时）
 #   DIRS="test/registered/unit/managers" bash sglang_tests_zh.sh   # 自定义目录（相对仓库根目录）
 #
@@ -51,7 +51,7 @@ say "Test deps"
 # --python 显式指向 venv：Kaggle 镜像预设了 UV_SYSTEM_PYTHON=true，不指定会装进系统 Python。
 # SGLang 官方的 [test] 依赖组包含 lm-eval 等很重的包，这里只装必需的；缺什么再用 EXTRA_DEPS 补。
 # shellcheck disable=SC2086
-UV_SYSTEM_PYTHON=false uv pip install --python "$PY" -q pytest expecttest ${EXTRA_DEPS:-}
+UV_SYSTEM_PYTHON=false uv pip install --python "$PY" -q pytest expecttest parameterized ${EXTRA_DEPS:-}
 
 # run_suite.py 的公共参数：CPU 硬件、base-a-test-cpu 这个 suite、某个文件失败后继续跑。
 args=(--hw cpu --suite base-a-test-cpu --continue-on-error)

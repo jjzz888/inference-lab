@@ -6,13 +6,13 @@
 # JIT warm-up, and these are an occasional check (first run, new SGLang commit, before an
 # SGLang PR), not something every experiment session needs.
 #
-# Default scope mirrors vLLM's tests/v1/core: the scheduler (unit/managers, 95 files, ~18 min)
-# and KV/radix cache (unit/mem_cache, 158 files, ~26 min). SGLang's GPU pre-flight suite
+# Default scope mirrors vLLM's tests/v1/core: the scheduler (unit/managers, 102 files)
+# and KV/radix cache (unit/mem_cache, 194 files); 255 of them are registered in base-a-test-cpu. SGLang's GPU pre-flight suite
 # (base-a-test-1-gpu-small) is skipped: it launches gated meta-llama/Llama-3.1-8B-Instruct,
 # whose FP16 weights alone (~16 GB) don't fit a 15 GB T4.
 #
 # Usage:
-#   bash sglang_tests.sh                     # managers + mem_cache (~253 files, ~45 min)
+#   bash sglang_tests.sh                     # managers + mem_cache (255 registered files, ~60 min)
 #   SCOPE=full bash sglang_tests.sh          # whole base-a-test-cpu (~1160 files, ~4.8 h est)
 #   DIRS="test/registered/unit/managers" bash sglang_tests.sh   # custom dirs (repo-relative)
 #
@@ -46,7 +46,7 @@ say "Test deps"
 # --python pins the venv: the Kaggle image presets UV_SYSTEM_PYTHON=true.
 # SGLang's full [test] extra pulls heavy packages (lm-eval, ...); install only what's needed.
 # shellcheck disable=SC2086
-UV_SYSTEM_PYTHON=false uv pip install --python "$PY" -q pytest expecttest ${EXTRA_DEPS:-}
+UV_SYSTEM_PYTHON=false uv pip install --python "$PY" -q pytest expecttest parameterized ${EXTRA_DEPS:-}
 
 args=(--hw cpu --suite base-a-test-cpu --continue-on-error)
 if [ "$SCOPE" = "full" ]; then
