@@ -148,6 +148,73 @@ What each test file covers, plus this week's results and error analysis: [vllm_c
 Then decide: an environment cause (T4/sm_75, missing optional dep) goes in `LOG.md`. A real bug that reproduces on current `main` is a `good first issue` candidate: search existing issues before filing.
 Copy `results/` and `~/lab/logs/` back into this repo and commit them. **Shut the session down afterwards**, or it keeps using quota.
 
+## Full rerun on a fresh Kaggle session (background run)
+Use this to rerun everything end to end in one go: setup, tests, smoke test and benchmarks. It also captures the raw results. Run it as a **background commit** rather than cell by cell in an interactive session:
+- **No idle disconnects.** Interactive sessions were reset twice mid-run. A background run lasts up to 12 hours and keeps going after you close the page.
+- **`/kaggle/working` is saved as the run's Output**, which you can download from the Output panel. In an interactive session those files disappear when the session resets.
+
+### 1. Notebook cells
+Settings: **Accelerator = GPU T4 x2**, **Internet = On**. Each cell starts with `%%bash`.
+
+**Cell 1: full setup.** vLLM install, `libcuda` fix, JIT warm-up, `tests/v1/core`, and the SGLang install.
+```bash
+%%bash
+set -o pipefail
+rm -rf /kaggle/working/inference-lab
+git clone -q https://github.com/jjzz888/inference-lab.git /kaggle/working/inference-lab
+bash /kaggle/working/inference-lab/week01/kaggle_setup.sh 2>&1 | tee /kaggle/working/setup_full.log | grep -E "==>|created:|ok: -lcuda|warm-up|WARN|ERROR|passed|failed|installed at|falling back|in venv"
+```
+
+**Cell 2: smoke test.**
+```bash
+%%bash
+set -o pipefail
+mkdir -p /kaggle/working/results/week01
+/root/lab/vllm/.venv/bin/python /kaggle/working/inference-lab/week01/smoke_offline.py 2>&1 | tee /kaggle/working/results/week01/smoke_offline.txt | grep -E "PROMPT|OUTPUT|device:|Error"
+```
+
+**Cell 3: benchmarks for both engines.**
+```bash
+%%bash
+set -o pipefail
+bash /kaggle/working/inference-lab/week01/run_bench.sh both 2>&1 | grep -E "==>|server ready|timeout|exited|WARN|results:|Successful requests|Request throughput|Output token throughput|Mean TTFT|Mean TPOT|Median ITL"
+```
+
+**Cell 4: put the logs in the Output too.** `~/lab/logs` is outside `/kaggle/working`, so it isn't saved unless you copy it.
+```bash
+%%bash
+mkdir -p /kaggle/working/results/week01/logs
+cp /root/lab/logs/*.log /kaggle/working/results/week01/logs/ 2>/dev/null
+cp /kaggle/working/setup_full.log /kaggle/working/results/week01/logs/
+git -C /root/lab/vllm log -1 --format='vllm   %H %ci' > /kaggle/working/results/week01/commits.txt
+git -C /root/lab/sglang log -1 --format='sglang %H %ci' >> /kaggle/working/results/week01/commits.txt
+find /kaggle/working/results/week01 -type f | sort | xargs ls -la
+```
+
+Every cell sets `set -o pipefail`. If a command fails, the cell errors and the background run stops there instead of running later cells on a broken environment.
+
+### 2. Run in the background
+Click **Save Version** → **Save & Run All (Commit)** → **Save**.
+
+Expect a bit over an hour:
+- setup about 55 min, of which the tests take about 26 min
+- benchmarks about 10 min
+
+You can close the page while it runs.
+
+### 3. What to check (Cell 1 output)
+- `falling back to <sha>`: if it appears, the wheel fallback worked. If the latest `main` already has a wheel, this line won't appear.
+- `vLLM installed at <sha>`: the commit actually installed. Use it when recording results.
+- `warm-up done in N s`: the warm-up finished. On a cold start N is roughly 400–550.
+- The test summary line: only the diffusion test should still fail (`1 failed, … passed`, no errors). The total can differ slightly by commit.
+
+### 4. Download and commit the raw results
+1. When the run finishes, open the notebook version's **Output** tab and download the whole `results/week01` folder. Kaggle zips it.
+2. Unzip it into this repo as `results/week01/`. Check the contents and file sizes first, and commit no tokens or credentials.
+3. From `logs/vllm_tests.log` and `logs/vllm_warmup.log`, confirm the warm-up effect. Update Next Steps item 2 in [vllm_core_tests.md](vllm_core_tests.md).
+4. Compare the new benchmark numbers with the earlier runs. Update `LOG.md`, and tick the "commit the raw `results/week01/` folders" item under "Done when".
+5. Commit and push.
+
 ## Known pitfalls
 ✅ = the scripts handle it automatically; the note is for when it shows up anyway, or in your own commands.
 
