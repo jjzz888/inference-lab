@@ -148,6 +148,23 @@ What each test file covers, plus this week's results and error analysis: [vllm_c
 Then decide: an environment cause (T4/sm_75, missing optional dep) goes in `LOG.md`. A real bug that reproduces on current `main` is a `good first issue` candidate: search existing issues before filing.
 Copy `results/` and `~/lab/logs/` back into this repo and commit them. **Shut the session down afterwards**, or it keeps using quota.
 
+### SGLang tests (optional, not part of setup)
+[sglang_tests.sh](sglang_tests.sh) runs SGLang's CPU unit tests through its own CI runner (`test/run_suite.py`). Run it after `kaggle_setup.sh` in the same session.
+
+It isn't in setup because setup already runs vLLM's tests (~34 min) and the JIT warm-up. Run it occasionally: the first time, after a new SGLang commit, or before an SGLang PR.
+
+```python
+!bash /kaggle/working/inference-lab/week01/sglang_tests.sh        # ~45 min
+```
+- **Default scope** mirrors vLLM's `tests/v1/core`:
+  - `test/registered/unit/managers`: the scheduler, 95 files, ~18 min.
+  - `test/registered/unit/mem_cache`: KV/radix cache, 158 files, ~26 min.
+  - Only files registered in `base-a-test-cpu` run.
+- **Full scope.** `SCOPE=full` runs all of `base-a-test-cpu`: ~1,160 files, ~4.8 h estimated, with `--fork-worker-batch-size 8`. Use a background run for it. `DIRS="..."` picks custom dirs.
+- **Not run: SGLang's GPU pre-flight suite** (`base-a-test-1-gpu-small`). It launches gated `meta-llama/Llama-3.1-8B-Instruct`, whose FP16 weights (~16 GB) don't fit a 15 GB T4.
+- **Dependencies.** Installs only `pytest expecttest`, not SGLang's heavy `[test]` extra. If a test reports `ModuleNotFoundError`, add the package with `EXTRA_DEPS="pkg"`.
+- **Output.** The full log is `~/lab/logs/sglang_tests.log`, and the script prints the last 40 lines (run_suite's summary).
+
 ## Full rerun on a fresh Kaggle session (background run)
 Use this to rerun everything end to end in one go: setup, tests, smoke test and benchmarks. It also captures the raw results. Run it as a **background commit** rather than cell by cell in an interactive session:
 - **No idle disconnects.** Interactive sessions were reset twice mid-run. A background run lasts up to 12 hours and keeps going after you close the page.
