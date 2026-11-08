@@ -115,4 +115,5 @@ Caveats before drawing conclusions:
 
 ### Notes / possible first issues
 - vLLM `test_diffusion_read_deferral_keeps_a_longer_pp_wait` fails on any CUDA host with < 3 GPUs (`World size (3) is larger than the number of available GPUs (2)`). Week 2 PR candidate.
-- SGLang `pool_host/common.py` passes an `int` to `torch.cuda.cudart().cudaGetErrorString`, which expects a `cudaError` enum, so CUDA host-register/unregister failures raise `TypeError` instead of the intended warning or `RuntimeError`. SGLang PR candidate (see [week01/sglang_tests.md](week01/sglang_tests.md)).
+- SGLang `pool_host/common.py` passes an `int` to `torch.cuda.cudart().cudaGetErrorString`, which expects a `cudaError` enum, so CUDA host-register/unregister failures raise `TypeError` instead of the intended warning or `RuntimeError`. Already reported upstream ([#40926](https://github.com/sgl-project/sglang/issues/40926)) with open fix PRs, so not our PR.
+- SGLang `TestPageInterleaveIndexer` (DSA indexer sharding) runs an FP8 E4M3 Triton kernel on 2× T4 without a capability check. No existing issue or PR: first SGLang PR candidate, planned in [week02/sglang_first_pr_plan.md](week02/sglang_first_pr_plan.md).
