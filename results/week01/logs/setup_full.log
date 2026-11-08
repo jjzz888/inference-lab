@@ -1,0 +1,1422 @@
+
+[1;36m==> GPU / driver[0m
+Sun Nov  8 01:02:12 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.178.04             Driver Version: 580.178.04     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Tesla T4                       Off |   00000000:00:04.0 Off |                    0 |
+| N/A   41C    P8             10W /   70W |       0MiB /  15360MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   1  Tesla T4                       Off |   00000000:00:05.0 Off |                    0 |
+| N/A   42C    P8              9W /   70W |       0MiB /  15360MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+name, compute_cap, driver_version, memory.total [MiB]
+Tesla T4, 7.5, 580.178.04, 15360 MiB
+Tesla T4, 7.5, 580.178.04, 15360 MiB
+Driver supports CUDA up to major version: 13
+
+[1;36m==> libcuda.so link stub for FlashInfer JIT[0m
+created: /usr/local/lib/libcuda.so -> /usr/local/nvidia/lib64/libcuda.so.1 (verified: -lcuda links)
+
+[1;36m==> Installing / upgrading uv[0m
+uv 0.13.7 (x86_64-unknown-linux-gnu)
+
+[1;36m==> uv settings preset by the image (if any)[0m
+UV_BUILD_CONSTRAINT=
+UV_SYSTEM_PYTHON=true
+UV_INSTALL_DIR=/usr/local/bin
+UV_BREAK_SYSTEM_PACKAGES=false
+UV_CONSTRAINT=
+
+[1;36m==> vLLM: clone (main)[0m
+Cloning into '/root/lab/vllm'...
+Updating files:  79% (7145/9028)Updating files:  80% (7223/9028)Updating files:  81% (7313/9028)Updating files:  82% (7403/9028)Updating files:  83% (7494/9028)Updating files:  84% (7584/9028)Updating files:  85% (7674/9028)Updating files:  86% (7765/9028)Updating files:  87% (7855/9028)Updating files:  88% (7945/9028)Updating files:  89% (8035/9028)Updating files:  90% (8126/9028)Updating files:  91% (8216/9028)Updating files:  92% (8306/9028)Updating files:  93% (8397/9028)Updating files:  94% (8487/9028)Updating files:  95% (8577/9028)Updating files:  96% (8667/9028)Updating files:  97% (8758/9028)Updating files:  98% (8848/9028)Updating files:  99% (8938/9028)Updating files: 100% (9028/9028)Updating files: 100% (9028/9028), done.
+vllm @ fd8f3f398e (main)
+
+[1;36m==> vLLM: venv[0m
+warning: The `--system` flag has no effect, `uv venv` always ignores virtual environments when finding a Python interpreter; did you mean `--no-managed-python`?
+Downloading cpython-3.12.16-linux-x86_64-gnu (download) (32.9MiB)
+ Downloaded cpython-3.12.16-linux-x86_64-gnu (download)
+Using CPython 3.12.16
+Creating virtual environment with seed packages at: .venv
+ + pip==26.3
+Activate with: source .venv/bin/activate
+
+[1;36m==> vLLM: Python-only editable build with precompiled kernels[0m
+Resolved 199 packages in 57.17s
+   Building vllm @ file:///root/lab/vllm
+Downloading torchcodec (9.7MiB)
+Downloading torchvision (7.2MiB)
+Downloading tokenizers (3.2MiB)
+Downloading openai (2.3MiB)
+Downloading anthropic (2.3MiB)
+Downloading pydantic-core (2.2MiB)
+Downloading aiohttp (1.8MiB)
+Downloading sentencepiece (1.6MiB)
+Downloading pygments (1.2MiB)
+Downloading tiktoken (1.1MiB)
+Downloading pycountry (7.7MiB)
+Downloading hf-xet (4.1MiB)
+Downloading xgrammar (1.3MiB)
+Downloading cryptography (4.5MiB)
+Downloading numpy (15.8MiB)
+Downloading grpcio (7.0MiB)
+Downloading tilelang (48.2MiB)
+Downloading uvloop (4.3MiB)
+Downloading z3-solver (27.9MiB)
+Downloading transformers (12.4MiB)
+Downloading opencv-python-headless (58.4MiB)
+Downloading nvidia-cuda-cccl (3.9MiB)
+Downloading pillow (6.8MiB)
+Downloading nvidia-nvvm (71.7MiB)
+Downloading pynvvideocodec (41.2MiB)
+Downloading cuda-core (6.3MiB)
+Downloading nvidia-cutlass-dsl-libs-core (1.6MiB)
+Downloading outlines-core (2.2MiB)
+Downloading nvidia-cutlass-dsl-libs-cu12 (87.5MiB)
+Downloading nvidia-cutlass-dsl-libs-base (2.9MiB)
+Downloading apache-tvm-ffi (2.6MiB)
+Downloading numba (3.6MiB)
+Downloading fastsafetensors (2.6MiB)
+Downloading nccl4py (3.5MiB)
+Downloading nvidia-cutlass-dsl-libs-cu13 (87.7MiB)
+Downloading instanttensor (6.2MiB)
+Downloading oss-harmony (3.4MiB)
+Downloading mistral-common (6.3MiB)
+Downloading nvidia-cudnn-frontend (11.1MiB)
+Downloading flashinfer-python (76.1MiB)
+Downloading llvmlite (53.7MiB)
+Downloading llguidance (2.9MiB)
+Downloading nvidia-cuda-nvcc (44.8MiB)
+Downloading nccl-extensions (21.5MiB)
+Downloading tokenspeed-triton (90.5MiB)
+ Downloaded torchvision
+ Downloaded torchcodec
+ Downloaded pygments
+ Downloaded tiktoken
+ Downloaded xgrammar
+ Downloaded nvidia-cutlass-dsl-libs-core
+ Downloaded sentencepiece
+ Downloaded aiohttp
+ Downloaded pydantic-core
+ Downloaded outlines-core
+ Downloaded anthropic
+ Downloaded openai
+ Downloaded fastsafetensors
+ Downloaded apache-tvm-ffi
+ Downloaded llguidance
+ Downloaded nvidia-cutlass-dsl-libs-base
+ Downloaded tokenizers
+ Downloaded oss-harmony
+ Downloaded nccl4py
+ Downloaded numba
+ Downloaded nvidia-cuda-cccl
+ Downloaded hf-xet
+ Downloaded uvloop
+ Downloaded cryptography
+ Downloaded mistral-common
+ Downloaded instanttensor
+ Downloaded cuda-core
+ Downloaded pillow
+ Downloaded grpcio
+ Downloaded pycountry
+ Downloaded transformers
+ Downloaded nvidia-cudnn-frontend
+ Downloaded numpy
+ Downloaded nccl-extensions
+ Downloaded z3-solver
+      Built vllm @ file:///root/lab/vllm
+ Downloaded pynvvideocodec
+ Downloaded nvidia-cuda-nvcc
+ Downloaded tilelang
+ Downloaded llvmlite
+ Downloaded opencv-python-headless
+ Downloaded nvidia-nvvm
+ Downloaded flashinfer-python
+ Downloaded nvidia-cutlass-dsl-libs-cu13
+ Downloaded nvidia-cutlass-dsl-libs-cu12
+ Downloaded tokenspeed-triton
+Prepared 169 packages in 53.21s
+Installed 198 packages in 605ms
+Prepared 1 package without build isolation in 0.15ms
+Installed 1 package in 260ms
+ + agent-detector==2.0.0
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.5
+ + aiosignal==1.4.0
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anthropic==2.6.0
+ + anyio==4.16.0
+ + apache-tvm-ffi==0.1.11
+ + astor==0.8.1
+ + attrs==26.1.0
+ + blake3==1.0.11
+ + cachetools==8.0.0
+ + cbor2==6.2.1
+ + certifi==2026.10.23
+ + cffi==2.1.1
+ + charset-normalizer==3.5.2
+ + click==8.5.1
+ + cloudpickle==3.1.2
+ + compressed-tensors==0.17.0
+ + cryptography==50.0.2
+ + cuda-bindings==13.5.0
+ + cuda-core==1.2.2
+ + cuda-pathfinder==1.8.6
+ + cuda-python==13.5.0
+ + cuda-tile==1.8.0
+ + cuda-toolkit==13.2.1
+ + depyf==0.20.0
+ + detect-installer==0.2.1
+ + dill==0.4.1
+ + dnspython==2.9.2
+ + docstring-parser==0.18.0
+ + einops==0.8.2
+ + email-validator==2.3.0
+ + fastapi==0.136.3
+ + fastapi-cli==0.0.32
+ + fastapi-cloud-cli==0.26.0
+ + fastar==0.12.0
+ + fastsafetensors==0.5.0
+ + filelock==4.2.9
+ + flashinfer-python==0.7.3
+ + frozenlist==1.8.0
+ + fsspec==2026.9.0
+ + googleapis-common-protos==1.76.0
+ + grpcio==1.85.1
+ + h11==0.16.0
+ + hf-xet==1.8.0
+ + httpcore==1.0.9
+ + httpcore2==2.16.0
+ + httptools==0.9.0
+ + httpx==0.28.1
+ + httpx2==2.16.0
+ + huggingface-hub==2.4.0
+ + humming-kernels==0.1.19
+ + idna==3.20
+ + ijson==3.6.0
+ + instanttensor==0.2.2
+ + interegular==0.3.3
+ + jinja2==3.1.6
+ + jiter==0.19.0
+ + jmespath==1.1.0
+ + jsonschema==4.26.0
+ + jsonschema-specifications==2025.9.1
+ + lark==1.2.2
+ + llguidance==1.7.6
+ + llvmlite==0.47.0
+ + lm-format-enforcer==0.11.3
+ + loguru==0.7.3
+ + markdown-it-py==4.2.0
+ + markupsafe==3.0.4
+ + mcp==2.3.0
+ + mcp-types==2.3.0
+ + mdurl==0.1.2
+ + mistral-common==1.13.1
+ + ml-dtypes==0.6.0
+ + model-hosting-container-standards==0.1.16
+ + mpmath==1.3.0
+ + msgspec==0.22.0
+ + multidict==7.2.1
+ + nccl-extensions==0.1.0
+ + nccl4py==0.6.0
+ + networkx==3.7
+ + ninja==1.13.2
+ + numba==0.65.0
+ + numpy==2.3.5
+ + nvidia-cublas==13.4.0.1
+ + nvidia-cuda-cccl==13.3.5.0.6
+ + nvidia-cuda-crt==13.5.37
+ + nvidia-cuda-cupti==13.2.75
+ + nvidia-cuda-nvcc==13.5.37
+ + nvidia-cuda-nvrtc==13.2.78
+ + nvidia-cuda-runtime==13.2.75
+ + nvidia-cudnn-cu13==9.24.0.43
+ + nvidia-cudnn-frontend==1.32.2
+ + nvidia-cufft==12.2.0.46
+ + nvidia-cufile==1.17.1.22
+ + nvidia-curand==10.4.2.55
+ + nvidia-cusolver==12.2.0.1
+ + nvidia-cusparse==12.7.10.1
+ + nvidia-cusparselt-cu13==0.8.1
+ + nvidia-cutlass-dsl==4.8.0
+ + nvidia-cutlass-dsl-libs-base==4.8.0
+ + nvidia-cutlass-dsl-libs-core==4.8.0
+ + nvidia-cutlass-dsl-libs-cu12==4.8.0
+ + nvidia-cutlass-dsl-libs-cu13==4.8.0
+ + nvidia-ml-py==13.615.71
+ + nvidia-nccl-cu13==2.30.7
+ + nvidia-nvjitlink==13.5.37
+ + nvidia-nvshmem-cu13==3.4.5
+ + nvidia-nvtx==13.2.75
+ + nvidia-nvvm==13.5.37
+ + nvtx==0.2.15
+ + openai==3.46.0
+ + opencv-python-headless==5.0.0.93
+ + opentelemetry-api==1.45.2
+ + opentelemetry-exporter-http-transport==0.66b2
+ + opentelemetry-exporter-otlp==1.45.2
+ + opentelemetry-exporter-otlp-common==0.66b2
+ + opentelemetry-exporter-otlp-proto-common==1.45.2
+ + opentelemetry-exporter-otlp-proto-grpc==1.45.2
+ + opentelemetry-exporter-otlp-proto-http==1.45.2
+ + opentelemetry-proto==1.45.2
+ + opentelemetry-sdk==1.45.2
+ + opentelemetry-semantic-conventions==0.66b2
+ + opentelemetry-semantic-conventions-ai==0.5.1
+ + orjson==3.13.0
+ + oss-harmony==0.0.12
+ + outlines-core==0.2.14
+ + packaging==26.3
+ + partial-json-parser==0.2.1.1.post7
+ + pillow==13.0.0
+ + prometheus-client==0.26.0
+ + prometheus-fastapi-instrumentator==8.1.0
+ + propcache==0.5.4
+ + protobuf==7.36.2
+ + psutil==7.2.2
+ + py-cpuinfo==9.0.0
+ + pybase64==1.5.1
+ + pycountry==26.2.16
+ + pycparser==3.12
+ + pydantic==2.14.3
+ + pydantic-core==2.50.4
+ + pydantic-extra-types==2.11.1
+ + pydantic-settings==2.16.2
+ + pygments==2.21.0
+ + pyjwt==2.15.1
+ + pynvvideocodec==2.0.4
+ + python-dotenv==1.2.4
+ + python-json-logger==4.2.0
+ + python-multipart==0.0.33
+ + pyyaml==6.0.3
+ + pyzmq==27.3.0
+ + quack-kernels==0.6.5
+ + referencing==0.37.0
+ + regex==2026.11.7
+ + requests==2.34.2
+ + rich==15.0.0
+ + rich-toolkit==0.20.6
+ + rignore==0.8.1
+ + rpds-py==2026.9.1
+ + safetensors==0.8.0
+ + sentencepiece==0.2.3
+ + sentry-sdk==2.74.0
+ + setproctitle==1.3.8
+ + setuptools==80.10.2
+ + shellingham==1.5.4
+ + six==1.17.0
+ + sniffio==1.3.1
+ + sse-starlette==3.7.0
+ + starlette==1.10.0
+ + supervisor==4.3.0
+ + sympy==1.14.0
+ + tabulate==0.10.0
+ + tiktoken==0.14.0
+ + tilelang==0.1.12
+ + tokenizers==0.23.3
+ + tokenspeed-mla==2.0.3
+ + tokenspeed-triton==3.9.10.post20261028
+ + torch==2.14.0+cu132
+ + torch-c-dlpack-ext==0.1.5
+ + torchaudio==2.11.0+cpu
+ + torchcodec==0.17.0+cu132
+ + torchvision==0.29.0+cu132
+ + tqdm==4.70.1
+ + transformers==5.22.2
+ + triton==3.8.0
+ + truststore==0.10.5
+ + typer==0.28.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.5
+ + urllib3==2.8.0
+ + uvicorn==0.54.0
+ + uvloop==0.23.0
+ + vllm==0.33.0rc1.dev1021+gfd8f3f398.precompiled (from file:///root/lab/vllm)
+ + watchfiles==1.3.0
+ + websockets==17.4
+ + xgrammar==0.2.8
+ + yarl==1.25.1
+ + z3-solver==4.15.4.0
+vLLM installed at fd8f3f398e
+W1108 01:04:45.451000 466 torch/_opaque_base.py:6] torch._opaque_base is deprecated, use torch._custom_class_base instead
+W1108 01:04:45.453000 466 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1108 01:04:45.453000 466 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+=== Cubin Wheel Install ===
+FlashInfer version: 0.7.3
+Wheel index: https://flashinfer.ai/whl
+Requirement: flashinfer-cubin==0.7.3
+Command: /usr/local/bin/uv pip install --python /root/lab/vllm/.venv/bin/python --upgrade --no-deps --index-url https://flashinfer.ai/whl flashinfer-cubin==0.7.3
+Resolved 1 package in 154ms
+Downloading flashinfer-cubin (1.6GiB)
+ Downloaded flashinfer-cubin
+Prepared 1 package in 56.32s
+Installed 1 package in 1.19s
+ + flashinfer-cubin==0.7.3
+✅ flashinfer-cubin installed successfully.
+=== JIT Cache Wheel Install ===
+FlashInfer version: 0.7.3
+CUDA version: 13.2
+Wheel CUDA label: cu130
+Install mode: all
+Wheel index: https://flashinfer.ai/whl/cu130
+Requirement: flashinfer-jit-cache==0.7.3+cu130
+Command: /usr/local/bin/uv pip install --python /root/lab/vllm/.venv/bin/python --upgrade --index-url https://flashinfer.ai/whl/cu130 flashinfer-jit-cache==0.7.3+cu130
+Resolved 7 packages in 17.85s
+Downloading flashinfer-jit-cache-sm89 (151.5MiB)
+Downloading flashinfer-jit-cache-sm100a (321.1MiB)
+Downloading flashinfer-jit-cache-sm80 (153.2MiB)
+Downloading flashinfer-jit-cache-sm120f (235.7MiB)
+Downloading flashinfer-jit-cache-sm90a (327.8MiB)
+Downloading flashinfer-jit-cache-sm103a (325.0MiB)
+ Downloaded flashinfer-jit-cache-sm89
+ Downloaded flashinfer-jit-cache-sm80
+ Downloaded flashinfer-jit-cache-sm120f
+ Downloaded flashinfer-jit-cache-sm100a
+ Downloaded flashinfer-jit-cache-sm103a
+ Downloaded flashinfer-jit-cache-sm90a
+Prepared 7 packages in 28.91s
+Installed 7 packages in 501ms
+ + flashinfer-jit-cache==0.7.3+cu130
+ + flashinfer-jit-cache-sm100a==0.7.3+cu130
+ + flashinfer-jit-cache-sm103a==0.7.3+cu130
+ + flashinfer-jit-cache-sm120f==0.7.3+cu130
+ + flashinfer-jit-cache-sm80==0.7.3+cu130
+ + flashinfer-jit-cache-sm89==0.7.3+cu130
+ + flashinfer-jit-cache-sm90a==0.7.3+cu130
+✅ flashinfer-jit-cache installed successfully.
+
+[1;36m==> vLLM: sanity check[0m
+python /root/lab/vllm/.venv/bin/python | in venv: True
+vllm 0.33.0rc1.dev1021+gfd8f3f398 | file /root/lab/vllm/vllm/__init__.py
+torch 2.14.0+cu132 | cuda 13.2 | gpus 2
+capability (7, 5)
+
+[1;36m==> vLLM: quick tests (tests/v1/core: scheduler + KV cache manager)[0m
+
+[1;36m==> vLLM: warming JIT caches with Qwen/Qwen3.5-0.8B (cold start can take ~8 min)[0m
+WARN: warm-up failed after 66 s; see /root/lab/logs/vllm_warmup.log (the hybrid test may time out)
+/root/lab/vllm/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:300: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the "fixture" caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to "function" scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+E....................................................................... [  5%]
+........................................................................ [ 11%]
+........................................................................ [ 16%]
+........................................................................ [ 22%]
+........................................................................ [ 28%]
+........................................................................ [ 33%]
+........................................................................ [ 39%]
+........................................................................ [ 45%]
+........................................................................ [ 50%]
+........................................................................ [ 56%]
+........................................................................ [ 61%]
+........................................................................ [ 67%]
+........................................................................ [ 73%]
+........................................................................ [ 78%]
+........................................................................ [ 84%]
+........................................................................ [ 90%]
+.......................................................F................ [ 95%]
+......................................................                   [100%]
+==================================== ERRORS ====================================
+______________ ERROR at setup of test_prefix_cache_hit_rate[base] ______________
+
+request = <SubRequest 'server' for <Coroutine test_prefix_cache_hit_rate[base]>>
+
+    @pytest.fixture(scope="module")
+    def server(request):
+        args = ["--enable-prompt-tokens-details"]
+        if request.param:
+            args += [
+                "--speculative-config",
+                json.dumps({"method": "mtp", "num_speculative_tokens": 1}),
+            ]
+>       with RemoteOpenAIServer(MODEL, args) as remote_server:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py:105: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/utils.py:293: in __init__
+    self._wait_for_server(url=self.url_for("health"), timeout=max_wait_seconds)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tests.utils.RemoteOpenAIServer object at 0x7a914b27da30>
+url = 'http://127.0.0.1:57051/health', timeout = 480
+
+    def _wait_for_server(self, *, url: str, timeout: float):
+        # run health check
+        start = time.time()
+        client = (
+            httpx.Client(transport=httpx.HTTPTransport(uds=self.uds))
+            if self.uds
+            else requests
+        )
+        while True:
+            try:
+                if client.get(url).status_code == 200:
+                    break
+            except Exception:
+                # this exception can only be raised by requests.get,
+                # which means the server is not ready yet.
+                # the stack trace is not useful, so we suppress it
+                # by using `raise from None`.
+                result = self._poll()
+                if result is not None and result != 0:
+                    raise RuntimeError("Server exited unexpectedly.") from None
+    
+                time.sleep(0.5)
+                if time.time() - start > timeout:
+>                   raise RuntimeError("Server failed to start in time.") from None
+E                   RuntimeError: Server failed to start in time.
+
+tests/utils.py:686: RuntimeError
+---------------------------- Captured stdout setup -----------------------------
+[RemoteOpenAIServer] GPU memory before server start: 0.95 GB
+Launching RemoteOpenAIServer with: vllm serve Qwen/Qwen3.5-0.8B --enable-prompt-tokens-details --port 57051 --seed 0
+(APIServer pid=674) INFO 11-08 01:09:08 [startup.py:38] 
+(APIServer pid=674) INFO 11-08 01:09:08 [startup.py:38]        █     █     █▄   ▄█
+(APIServer pid=674) INFO 11-08 01:09:08 [startup.py:38]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.33.0rc1.dev1021+gfd8f3f398
+(APIServer pid=674) INFO 11-08 01:09:08 [startup.py:38]   █▄█▀ █     █     █     █  model   Qwen/Qwen3.5-0.8B
+(APIServer pid=674) INFO 11-08 01:09:08 [startup.py:38]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=674) INFO 11-08 01:09:08 [startup.py:38] 
+(APIServer pid=674) INFO 11-08 01:09:08 [startup.py:96] non-default args: {'model_tag': 'Qwen/Qwen3.5-0.8B', 'enable_prompt_tokens_details': True, 'port': 57051, 'model': 'Qwen/Qwen3.5-0.8B'}
+(APIServer pid=674) INFO 11-08 01:09:09 [model.py:761] Resolved architecture: Qwen3_5ForConditionalGeneration
+(APIServer pid=674) WARNING 11-08 01:09:09 [model.py:2501] Your device 'Tesla T4' (with compute capability 7.5) doesn't support torch.bfloat16. Falling back to torch.float16 for compatibility.
+(APIServer pid=674) WARNING 11-08 01:09:09 [model.py:2560] Casting torch.bfloat16 to torch.float16.
+(APIServer pid=674) INFO 11-08 01:09:09 [model.py:2214] Using max model len 262144
+(APIServer pid=674) INFO 11-08 01:09:13 [config.py:1055] Mamba cache mode is set to 'align' for Qwen3_5ForConditionalGeneration by default when prefix caching is enabled
+(APIServer pid=674) INFO 11-08 01:09:13 [vllm.py:811] Auto-enabling VLLM_USE_BREAKABLE_CUDAGRAPH=1. Set VLLM_USE_BREAKABLE_CUDAGRAPH=0 to opt out.
+(APIServer pid=674) INFO 11-08 01:09:13 [kernel.py:517] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native'], gelu_and_mul_sparse=['triton', 'native'])
+(APIServer pid=674) INFO 11-08 01:09:13 [compilation.py:393] Enabled custom fusions: norm_quant, act_quant
+(APIServer pid=674) INFO 11-08 01:09:25 [numa_utils.py:575] Automatic NUMA binding unavailable on this host; starting unbound. Enable debug logging for the skip reason.
+(EngineCore pid=706) INFO 11-08 01:09:34 [core.py:153] Initializing a V1 LLM engine (v0.33.0rc1.dev1021+gfd8f3f398) with config: model='Qwen/Qwen3.5-0.8B', speculative_config=None, tokenizer='Qwen/Qwen3.5-0.8B', skip_tokenizer_init=False, tokenizer_mode=auto, revision=main, tokenizer_revision=main, trust_remote_code=False, dtype=torch.float16, max_seq_len=262144, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=False, aux_output_config=AuxOutputConfig(enable_return_routed_experts=False, max_bytes=None), kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, custom_histogram_buckets=None, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=Qwen/Qwen3.5-0.8B, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'ir_enable_torch_wrap': False, 'splitting_ops': [], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'cudagraph_decoder_replay': True, 'decoder_replay_cudagraph_capture_sizes': [], 'decoder_replay_trim_threshold': 768, 'compile_sizes': [], 'compile_ranges_endpoints': [2048], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'use_breakable_cudagraph': True, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'prefill_cudagraph_capture_token_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'max_prefill_cudagraph_capture_tokens': 512, 'decode_cudagraph_capture_request_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256], 'max_decode_cudagraph_capture_requests': 256, 'max_decode_cudagraph_capture_tokens': None, 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_rocm_segmented_attn_autotune=False, enable_rocm_aiter_gemm_warmup=False, enable_cutedsl_warmup=True, enable_jit_warmup=True, monokernel=False, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None, rdna_hybrid_w4a16_prefill_dequant='disable')
+(EngineCore pid=706) INFO 11-08 01:09:36 [parallel_state.py:1935] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_46bb8411273a4dbe9f6c649c356643e8 backend=nccl
+(EngineCore pid=706) INFO 11-08 01:09:36 [parallel_state.py:2391] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=706) INFO 11-08 01:09:39 [model_runner.py:405] Loading model from scratch...
+(EngineCore pid=706) ERROR 11-08 01:09:40 [fa_utils.py:212] Cannot use FA version 2 is not supported due to FA2 is only supported on devices with compute capability >= 8
+(EngineCore pid=706) INFO 11-08 01:09:40 [mm_encoder_attention.py:372] Using AttentionBackendEnum.TORCH_SDPA for MMEncoderAttention.
+(EngineCore pid=706) INFO 11-08 01:09:40 [qwen_gdn_linear_attn.py:379] Using Triton/FLA GDN prefill kernel (requested=auto, head_k_dim=128).
+(EngineCore pid=706) INFO 11-08 01:09:40 [cuda.py:507] Using TRITON_ATTN attention backend out of potential backends: ['TRITON_ATTN', 'FLEX_ATTENTION'].
+(EngineCore pid=706) INFO 11-08 01:09:40 [base_loader.py:95] Initializing model took 1.783921 seconds
+(EngineCore pid=706) INFO 11-08 01:09:41 [weight_utils.py:1154] Filesystem type for checkpoints: OVERLAY. Checkpoint size: 1.63 GiB. Available RAM: 4.74 GiB.
+(EngineCore pid=706) INFO 11-08 01:09:41 [weight_utils.py:1177] Auto-prefetch is disabled because the filesystem (OVERLAY) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight embed_tokens.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.0.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.0.linear_attn.conv1d.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.0.linear_attn.dt_bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.0.linear_attn.norm.weight with dtype torch.float32 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.0.linear_attn.out_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.0.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.0.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.1.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.1.linear_attn.conv1d.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.1.linear_attn.dt_bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.1.linear_attn.norm.weight with dtype torch.float32 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.1.linear_attn.out_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.1.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.1.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.10.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.10.linear_attn.conv1d.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.10.linear_attn.dt_bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.10.linear_attn.norm.weight with dtype torch.float32 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.10.linear_attn.out_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.10.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.10.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.11.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.11.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.11.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.11.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.11.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.11.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.12.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.12.linear_attn.conv1d.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.12.linear_attn.dt_bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.12.linear_attn.norm.weight with dtype torch.float32 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.12.linear_attn.out_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.12.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.12.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.13.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.13.linear_attn.conv1d.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.13.linear_attn.dt_bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.13.linear_attn.norm.weight with dtype torch.float32 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.13.linear_attn.out_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.13.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.13.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.14.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.14.linear_attn.conv1d.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.14.linear_attn.dt_bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.14.linear_attn.norm.weight with dtype torch.float32 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.14.linear_attn.out_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:41 [utils.py:345] Attempted to load weight layers.14.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.14.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.15.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.15.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.15.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.15.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.15.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.15.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.16.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.16.linear_attn.conv1d.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.16.linear_attn.dt_bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.16.linear_attn.norm.weight with dtype torch.float32 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.16.linear_attn.out_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.16.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.16.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.17.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.17.linear_attn.conv1d.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.17.linear_attn.dt_bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.17.linear_attn.norm.weight with dtype torch.float32 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.17.linear_attn.out_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.17.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.17.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.18.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.18.linear_attn.conv1d.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.18.linear_attn.dt_bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.18.linear_attn.norm.weight with dtype torch.float32 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.18.linear_attn.out_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.18.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.18.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.19.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.19.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.19.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.19.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.19.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.19.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.2.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.2.linear_attn.conv1d.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.2.linear_attn.dt_bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.2.linear_attn.norm.weight with dtype torch.float32 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.2.linear_attn.out_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.2.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.2.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.20.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.20.linear_attn.conv1d.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.20.linear_attn.dt_bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.20.linear_attn.norm.weight with dtype torch.float32 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.20.linear_attn.out_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.20.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.20.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.21.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.21.linear_attn.conv1d.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.21.linear_attn.dt_bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.21.linear_attn.norm.weight with dtype torch.float32 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.21.linear_attn.out_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.21.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.21.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.22.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.22.linear_attn.conv1d.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.22.linear_attn.dt_bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.22.linear_attn.norm.weight with dtype torch.float32 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.22.linear_attn.out_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.22.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.22.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.23.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.23.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.23.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.23.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.23.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.23.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.3.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.3.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.3.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.3.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.3.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.3.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.4.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.4.linear_attn.conv1d.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.4.linear_attn.dt_bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.4.linear_attn.norm.weight with dtype torch.float32 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.4.linear_attn.out_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.4.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.4.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.5.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.5.linear_attn.conv1d.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.5.linear_attn.dt_bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.5.linear_attn.norm.weight with dtype torch.float32 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.5.linear_attn.out_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.5.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.5.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.6.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.6.linear_attn.conv1d.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.6.linear_attn.dt_bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.6.linear_attn.norm.weight with dtype torch.float32 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.6.linear_attn.out_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.6.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.6.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.7.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.7.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.7.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.7.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.7.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.7.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.8.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.8.linear_attn.conv1d.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.8.linear_attn.dt_bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.8.linear_attn.norm.weight with dtype torch.float32 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.8.linear_attn.out_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.8.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.8.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.9.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.9.linear_attn.conv1d.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.9.linear_attn.dt_bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.9.linear_attn.norm.weight with dtype torch.float32 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.9.linear_attn.out_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.9.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight layers.9.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.0.attn.proj.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.0.attn.proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.0.mlp.linear_fc1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.0.mlp.linear_fc1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.0.mlp.linear_fc2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.0.mlp.linear_fc2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.0.norm1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.0.norm1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.0.norm2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.0.norm2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.1.attn.proj.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.1.attn.proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.1.mlp.linear_fc1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.1.mlp.linear_fc1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.1.mlp.linear_fc2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.1.mlp.linear_fc2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.1.norm1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.1.norm1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.1.norm2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.1.norm2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.10.attn.proj.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.10.attn.proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.10.mlp.linear_fc1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.10.mlp.linear_fc1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.10.mlp.linear_fc2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.10.mlp.linear_fc2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.10.norm1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.10.norm1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.10.norm2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.10.norm2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.11.attn.proj.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.11.attn.proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.11.mlp.linear_fc1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.11.mlp.linear_fc1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.11.mlp.linear_fc2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.11.mlp.linear_fc2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.11.norm1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.11.norm1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.11.norm2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.11.norm2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.2.attn.proj.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.2.attn.proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.2.mlp.linear_fc1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.2.mlp.linear_fc1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.2.mlp.linear_fc2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.2.mlp.linear_fc2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.2.norm1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.2.norm1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.2.norm2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.2.norm2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.3.attn.proj.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.3.attn.proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.3.mlp.linear_fc1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.3.mlp.linear_fc1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.3.mlp.linear_fc2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.3.mlp.linear_fc2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.3.norm1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.3.norm1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.3.norm2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.3.norm2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.4.attn.proj.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.4.attn.proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.4.mlp.linear_fc1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.4.mlp.linear_fc1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.4.mlp.linear_fc2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.4.mlp.linear_fc2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.4.norm1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.4.norm1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.4.norm2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.4.norm2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.5.attn.proj.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.5.attn.proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.5.mlp.linear_fc1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.5.mlp.linear_fc1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.5.mlp.linear_fc2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.5.mlp.linear_fc2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.5.norm1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.5.norm1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.5.norm2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.5.norm2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.6.attn.proj.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.6.attn.proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.6.mlp.linear_fc1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.6.mlp.linear_fc1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.6.mlp.linear_fc2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.6.mlp.linear_fc2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.6.norm1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.6.norm1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.6.norm2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.6.norm2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.7.attn.proj.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.7.attn.proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.7.mlp.linear_fc1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.7.mlp.linear_fc1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.7.mlp.linear_fc2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.7.mlp.linear_fc2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.7.norm1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.7.norm1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.7.norm2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.7.norm2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.8.attn.proj.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.8.attn.proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.8.mlp.linear_fc1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.8.mlp.linear_fc1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.8.mlp.linear_fc2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.8.mlp.linear_fc2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.8.norm1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.8.norm1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.8.norm2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.8.norm2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.9.attn.proj.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.9.attn.proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.9.mlp.linear_fc1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.9.mlp.linear_fc1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.9.mlp.linear_fc2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.9.mlp.linear_fc2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.9.norm1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.9.norm1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.9.norm2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight blocks.9.norm2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight merger.linear_fc1.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight merger.linear_fc1.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight merger.linear_fc2.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight merger.linear_fc2.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight merger.norm.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight merger.norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight patch_embed.proj.bias with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight patch_embed.proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) WARNING 11-08 01:09:42 [utils.py:345] Attempted to load weight pos_embed.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(EngineCore pid=706) INFO 11-08 01:09:42 [default_loader.py:543] Loading weights took 1.80 seconds
+(APIServer pid=674) INFO 11-08 01:09:42 [base.py:283] Multi-modal warmup completed in 17.914s
+(EngineCore pid=706) INFO 11-08 01:09:44 [model_runner.py:434] Model loading took 1.63 GiB memory and 5.838539 seconds
+(EngineCore pid=706) WARNING 11-08 01:09:45 [topk_topp_sampler.py:126] FlashInfer top-p/top-k sampling unavailable: unsupported compute capability 7.5; falling back. Set VLLM_USE_FLASHINFER_SAMPLER=0 to silence.
+(EngineCore pid=706) INFO 11-08 01:09:45 [torch_utils.py:301] Reducing Torch threads from 2 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(EngineCore pid=706) INFO 11-08 01:09:45 [interface.py:1114] Setting attention block size to 576 tokens to ensure that attention page size is >= mamba page size.
+(EngineCore pid=706) INFO 11-08 01:09:45 [interface.py:1138] Padding mamba page size by 8.68% to ensure that mamba page size and attention page size are exactly equal.
+(EngineCore pid=706) INFO 11-08 01:09:45 [utils.py:419] Using LBNHC KV cache layout.
+(EngineCore pid=706) INFO 11-08 01:09:52 [encoder_runner.py:131] Encoder cache will be initialized with a budget of 16384 tokens, and profiled with 1 image items of the maximum feature size.
+[RemoteOpenAIServer] Sent SIGTERM to process 674
+[RemoteOpenAIServer] Server 674 did not respond to SIGTERM, sending SIGKILL to process group
+[RemoteOpenAIServer] Server 674 killed
+[RemoteOpenAIServer] 2 process(es) still in pgid 674 after SIGKILL: [706, 932]
+[RemoteOpenAIServer] GPU memory released to 0.95 GB (target: 3.09 GB) in 0.0s
+---------------------------- Captured stderr setup -----------------------------
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 1539.62it/s]
+W1108 01:08:59.648000 674 torch/_opaque_base.py:6] torch._opaque_base is deprecated, use torch._custom_class_base instead
+W1108 01:08:59.649000 674 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1108 01:08:59.650000 674 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files:   8%|▊         | 1/12 [00:00<00:04,  2.27it/s]Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 27.09it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Parse safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]Parse safetensors files: 100%|██████████| 1/1 [00:00<00:00,  2.95it/s]Parse safetensors files: 100%|██████████| 1/1 [00:00<00:00,  2.95it/s]
+W1108 01:09:26.956000 706 torch/_opaque_base.py:6] torch._opaque_base is deprecated, use torch._custom_class_base instead
+W1108 01:09:26.956000 706 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1108 01:09:26.957000 706 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 1102.56it/s]
+Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+[transformers] Qwen3VL video processing does not apply the per-frame pixel cap the reference implementation (qwen-vl-utils) applies, so some videos cost far more tokens than they would there. In v5.22 the capped behavior will become the default and `cap_pixels_per_frame` will be removed. Pass `cap_pixels_per_frame=True` to adopt the reference behavior now, or `False` to keep the current behavior and silence this warning.
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.79s/it]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.79s/it]
+
+2026-11-08 01:10:09,530 - INFO - core.py:635 - flashinfer.jit: Building JIT module norm; this can take several minutes on first use.
+------------------------------ Captured log setup ------------------------------
+WARNING  vllm.config.model:model.py:2501 Your device 'Tesla T4' (with compute capability 7.5) doesn't support torch.bfloat16. Falling back to torch.float16 for compatibility.
+WARNING  vllm.config.model:model.py:2560 Casting torch.bfloat16 to torch.float16.
+=================================== FAILURES ===================================
+_____________ test_diffusion_read_deferral_keeps_a_longer_pp_wait ______________
+
+    def test_diffusion_read_deferral_keeps_a_longer_pp_wait():
+>       scheduler = _diffusion_scheduler(pipeline_parallel_size=3)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/v1/core/test_scheduler.py:8913: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/v1/core/test_scheduler.py:8798: in _diffusion_scheduler
+    scheduler = create_scheduler(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'facebook/opt-125m', max_num_seqs = 16, max_num_active_seqs = None
+max_num_batched_tokens = 8192, enable_chunked_prefill = True
+enable_prefix_caching = False, long_prefill_token_threshold = 0
+long_prefill_token_threshold_adaptive = False, disable_chunked_mm_input = False
+mm_encoder_only = False, use_kv_connector = None, kv_role = 'kv_both'
+num_blocks = 10000, block_size = 16, max_model_len = 8192
+num_speculative_tokens = None, speculative_method = None
+skip_tokenizer_init = False, async_scheduling = True, pipeline_parallel_size = 3
+data_parallel_size = 1, num_speculative_tokens_per_batch_size = None
+use_ec_connector = False, ec_role = None, kv_cache_spec = None, runner = 'auto'
+per_request_spec_decode_metrics = 'none', cache_aware_admission_window = 0
+cache_aware_admission_threshold = 0.5, prefill_schedule_interval = 1
+scheduling_policy = 'fcfs', diffusion_canvas_length = 8
+scheduler_cls = <class 'vllm.v1.core.sched.diffusion_scheduler.DiffusionAsyncScheduler'>
+lora_config = None, speculative_config = None
+
+    def create_scheduler(
+        model: str = "facebook/opt-125m",
+        max_num_seqs: int = 16,
+        max_num_active_seqs: int | None = None,
+        max_num_batched_tokens: int = 8192,
+        enable_chunked_prefill: bool = True,
+        enable_prefix_caching: bool = False,
+        long_prefill_token_threshold: int = 0,
+        long_prefill_token_threshold_adaptive: bool = False,
+        disable_chunked_mm_input: bool = False,
+        mm_encoder_only: bool = False,
+        use_kv_connector: None | bool | str | MockKVConfig = None,
+        kv_role: str = "kv_both",
+        num_blocks: int = 10000,
+        block_size: int = 16,
+        max_model_len: int | None = None,
+        num_speculative_tokens: int | None = None,
+        speculative_method: str | None = None,
+        skip_tokenizer_init: bool = False,
+        async_scheduling: bool = False,
+        pipeline_parallel_size: int = 1,
+        data_parallel_size: int = 1,
+        num_speculative_tokens_per_batch_size: list[tuple[int, int, int]] | None = None,
+        use_ec_connector: bool = False,
+        ec_role: str | None = None,
+        kv_cache_spec: KVCacheSpec | None = None,
+        runner: RunnerOption = "auto",
+        per_request_spec_decode_metrics: str = "none",
+        cache_aware_admission_window: int = 0,
+        cache_aware_admission_threshold: float = 0.5,
+        prefill_schedule_interval: int = 1,
+        scheduling_policy: SchedulerPolicy = "fcfs",
+        diffusion_canvas_length: int | None = None,
+        scheduler_cls: type[Scheduler] | None = None,
+        lora_config: LoRAConfig | None = None,
+        speculative_config: SpeculativeConfig | None = None,
+    ) -> Scheduler | AsyncScheduler:
+        """Create scheduler under test.
+    
+        Args:
+          model: model under test
+          max_num_seqs: max sequences to schedule
+          max_num_batch_tokens: max num tokens to batch
+          enable_prefix_caching: optionally force APC config
+                                 (True/False) or use default
+                                 (False)
+          long_prefill_token_threshold: cap on prefill chunk size
+          long_prefill_token_threshold_adaptive: floor the cap at a
+                                 fair share of the token budget
+    
+        Returns:
+          {class}`Scheduler` instance
+    
+        """
+        model_config = ModelConfig(
+            model=model,
+            trust_remote_code=True,
+            dtype="float16",
+            seed=42,
+            skip_tokenizer_init=skip_tokenizer_init,
+            # The scheduler reads model_config.max_model_len, not the
+            # SchedulerConfig one, so both must agree.
+            max_model_len=max_model_len,
+            runner=runner,
+        )
+        if mm_encoder_only:
+            model_config.multimodal_config.mm_encoder_only = True
+        if use_ec_connector and ec_role == "ec_producer":
+            model_config.multimodal_config = MultiModalConfig()
+        if max_model_len is None:
+            max_model_len = max_num_batched_tokens
+        scheduler_config = SchedulerConfig(
+            max_num_seqs=max_num_seqs,
+            max_num_active_seqs=max_num_active_seqs,
+            max_num_batched_tokens=max_num_batched_tokens,
+            max_model_len=max_model_len,
+            long_prefill_token_threshold=long_prefill_token_threshold,
+            long_prefill_token_threshold_adaptive=(long_prefill_token_threshold_adaptive),
+            disable_chunked_mm_input=disable_chunked_mm_input,
+            enable_chunked_prefill=enable_chunked_prefill,
+            async_scheduling=async_scheduling,
+            is_encoder_decoder=model_config.is_encoder_decoder,
+            cache_aware_admission_window=cache_aware_admission_window,
+            cache_aware_admission_threshold=cache_aware_admission_threshold,
+            prefill_schedule_interval=prefill_schedule_interval,
+            # Ensure admission/preemption mechanics are deterministic
+            watermark=0.0,
+            policy=scheduling_policy,
+        )
+        # Cache config, optionally force APC
+        cache_config = CacheConfig(
+            block_size=block_size,
+            gpu_memory_utilization=0.9,
+            cache_dtype="auto",
+            enable_prefix_caching=enable_prefix_caching,
+        )
+        kv_transfer_config = None
+        if isinstance(use_kv_connector, MockKVConfig):
+            kv_transfer_config = KVTransferConfig(
+                kv_connector="MockKVConnector",
+                kv_role=kv_role,
+                kv_connector_extra_config={
+                    "matched_tokens": use_kv_connector.matched_tokens,
+                    "is_async": use_kv_connector.is_async,
+                    "num_defers_before_matching": (
+                        use_kv_connector.num_defers_before_matching
+                    ),
+                },
+            )
+        elif isinstance(use_kv_connector, str):
+            kv_transfer_config = KVTransferConfig(
+                kv_connector=use_kv_connector,
+                kv_role=kv_role,
+            )
+        elif use_kv_connector:
+            kv_transfer_config = KVTransferConfig(
+                kv_connector="ExampleConnector",
+                kv_role=kv_role,
+                kv_connector_extra_config={"shared_storage_path": "local_storage"},
+            )
+    
+        if num_speculative_tokens is not None:
+            assert speculative_config is None
+            spec_kwargs: dict = dict(
+                model="ngram", num_speculative_tokens=num_speculative_tokens
+            )
+            if num_speculative_tokens_per_batch_size is not None:
+                spec_kwargs["num_speculative_tokens_per_batch_size"] = (
+                    num_speculative_tokens_per_batch_size
+                )
+            if speculative_method is not None:
+                spec_kwargs["method"] = speculative_method
+                spec_kwargs["prompt_lookup_max"] = num_speculative_tokens
+                spec_kwargs["prompt_lookup_min"] = 1
+            speculative_config = SpeculativeConfig(**spec_kwargs)
+    
+        ec_transfer_config = (
+            ECTransferConfig(
+                ec_connector="ECExampleConnector",
+                ec_role=ec_role,
+                ec_connector_extra_config={"shared_storage_path": "/tmp/ec_test"},
+            )
+            if use_ec_connector
+            else None
+        )
+    
+        diffusion_config: DiffusionConfig | None = None
+        if diffusion_canvas_length is not None:
+            # A diffusion checkpoint declares its canvas in the HF config.
+            model_config.hf_config.canvas_length = diffusion_canvas_length
+            diffusion_config = DiffusionConfig(canvas_length=diffusion_canvas_length)
+    
+        vllm_config = VllmConfig(
+            scheduler_config=scheduler_config,
+            model_config=model_config,
+            cache_config=cache_config,
+>           parallel_config=ParallelConfig(
+                pipeline_parallel_size=pipeline_parallel_size,
+                data_parallel_size=data_parallel_size,
+            ),
+            kv_transfer_config=kv_transfer_config,
+            speculative_config=speculative_config,
+            diffusion_config=diffusion_config,
+            ec_transfer_config=ec_transfer_config,
+            lora_config=lora_config,
+            observability_config=ObservabilityConfig(
+                per_request_spec_decode_metrics=per_request_spec_decode_metrics,
+            ),
+        )
+E       pydantic_core._pydantic_core.ValidationError: 1 validation error for ParallelConfig
+E         Value error, World size (3) is larger than the number of available GPUs (2) in this node. If this is intentional and you are using:
+E       - ray, set '--distributed-executor-backend ray'.
+E       - multiprocessing, set '--nnodes' appropriately. [type=value_error, input_value=ArgsKwargs((), {'pipeline...data_parallel_size': 1}), input_type=ArgsKwargs]
+E           For further information visit https://errors.pydantic.dev/2.14/v/value_error
+
+tests/v1/core/utils.py:215: ValidationError
+----------------------------- Captured stdout call -----------------------------
+(MainProcess pid=625) INFO 11-08 01:40:55 [model.py:761] Resolved architecture: OPTForCausalLM
+(MainProcess pid=625) INFO 11-08 01:40:55 [model.py:2214] Using max model len 2048
+------------------------------ Captured log call -------------------------------
+INFO     vllm.config.model:model.py:761 Resolved architecture: OPTForCausalLM
+INFO     vllm.config.model:model.py:2214 Using max model len 2048
+=============================== warnings summary ===============================
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+  /root/lab/vllm/.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/blackwell/blockscaled_contiguous_gather_grouped_gemm_act_fusion.py:3459: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    c_layout: utils.LayoutEnum,
+
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+  /root/lab/vllm/.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/blackwell/moe_w4a16_kernel.py:2639: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    c_layout: utils.LayoutEnum,
+
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+  /root/lab/vllm/.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/hopper/utils.py:29: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    a_layout: utils.LayoutEnum,
+
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+  /root/lab/vllm/.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/hopper/utils.py:31: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    b_layout: utils.LayoutEnum,
+
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+  /root/lab/vllm/.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/hopper/utils.py:34: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    c_layout: utils.LayoutEnum,
+
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+  /root/lab/vllm/.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/hopper/contiguous_grouped_gemm_finalize_fusion.py:968: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    a_layout: utils.LayoutEnum,
+
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+  /root/lab/vllm/.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/hopper/contiguous_grouped_gemm_finalize_fusion.py:970: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    b_layout: utils.LayoutEnum,
+
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+  /root/lab/vllm/.venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/grouped_gemm_masked_blackwell.py:427: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    epi_layout: utils.LayoutEnum,
+
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+  /root/lab/vllm/.venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/grouped_gemm_masked_blackwell.py:2391: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    c_layout: utils.LayoutEnum,
+
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+  /root/lab/vllm/.venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/cute_dsl/low_latency_blockscaled_gemm.py:103: DeprecationWarning: cutlass.utils.smem_allocator.get_smem_capacity_in_bytes is deprecated; use cutlass.memory.get_smem_capacity_in_bytes instead. It will be removed in a future release.
+    _SMEM_CAPACITY_BYTES = cutlass.utils.get_smem_capacity_in_bytes("sm_100")
+
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+  /root/lab/vllm/.venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/grouped_gemm_masked_rubin.py:218: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    c_layout: utils.LayoutEnum,
+
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+  /root/lab/vllm/.venv/lib/python3.12/site-packages/flashinfer/gdn_kernels/blackwell/gated_delta_net_chunked.py:95: DeprecationWarning: cutlass.utils.TensorMapUpdateMode is deprecated; use cutlass.tensor_utils.TensorMapUpdateMode instead. It will be removed in a future release.
+    from cutlass.utils import TensorMapManager, TensorMapUpdateMode
+
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+  /root/lab/vllm/.venv/lib/python3.12/site-packages/flashinfer/gdn_kernels/delta_rule_dsl/collective_store_tma.py:6: DeprecationWarning: cutlass.utils.tensormap_manager.TensorMapUpdateMode is deprecated; use cutlass.tensor_utils.TensorMapUpdateMode instead. It will be removed in a future release.
+    from cutlass.utils.tensormap_manager import TensorMapManager, TensorMapUpdateMode
+
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+  /root/lab/vllm/.venv/lib/python3.12/site-packages/flashinfer/gdn_kernels/blackwell/gated_delta_net_cp_prefill.py:55: DeprecationWarning: cutlass.utils.TensorMapUpdateMode is deprecated; use cutlass.tensor_utils.TensorMapUpdateMode instead. It will be removed in a future release.
+    from cutlass.utils import TensorMapManager, TensorMapUpdateMode
+
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+  /root/lab/vllm/.venv/lib/python3.12/site-packages/flashinfer/cute_dsl/availability.py:136: DeprecationWarning: Arch from arch.py is deprecated. Use Arch from enums.py instead.
+    from cutlass.base_dsl.arch import Arch
+
+tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+  /root/lab/vllm/.venv/lib/python3.12/site-packages/flashinfer/cute_dsl/availability.py:173: DeprecationWarning: Arch from arch.py is deprecated. Use Arch from enums.py instead.
+    from cutlass.base_dsl.arch import Arch
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/v1/core/test_scheduler.py::test_diffusion_read_deferral_keeps_a_longer_pp_wait
+ERROR tests/v1/core/prefix_cache/test_hybrid_prefix_cache_hit_rate.py::test_prefix_cache_hit_rate[base]
+1 failed, 1276 passed, 18 warnings, 1 error in 2041.55s (0:34:01)
+WARN: some vLLM tests failed; see /root/lab/logs/vllm_tests.log
+
+[1;36m==> SGLang: clone (main)[0m
+Cloning into '/root/lab/sglang'...
+Updating files:  63% (7705/12098)Updating files:  64% (7743/12098)Updating files:  65% (7864/12098)Updating files:  66% (7985/12098)Updating files:  67% (8106/12098)Updating files:  68% (8227/12098)Updating files:  69% (8348/12098)Updating files:  70% (8469/12098)Updating files:  71% (8590/12098)Updating files:  72% (8711/12098)Updating files:  73% (8832/12098)Updating files:  74% (8953/12098)Updating files:  75% (9074/12098)Updating files:  76% (9195/12098)Updating files:  77% (9316/12098)Updating files:  78% (9437/12098)Updating files:  79% (9558/12098)Updating files:  80% (9679/12098)Updating files:  81% (9800/12098)Updating files:  82% (9921/12098)Updating files:  83% (10042/12098)Updating files:  84% (10163/12098)Updating files:  85% (10284/12098)Updating files:  86% (10405/12098)Updating files:  87% (10526/12098)Updating files:  88% (10647/12098)Updating files:  89% (10768/12098)Updating files:  90% (10889/12098)Updating files:  91% (11010/12098)Updating files:  92% (11131/12098)Updating files:  93% (11252/12098)Updating files:  94% (11373/12098)Updating files:  95% (11494/12098)Updating files:  96% (11615/12098)Updating files:  97% (11736/12098)Updating files:  98% (11857/12098)Updating files:  99% (11978/12098)Updating files: 100% (12098/12098)Updating files: 100% (12098/12098), done.
+sglang @ cbbc6b67f4 (main)
+
+[1;36m==> SGLang: venv + editable install[0m
+Using CPython 3.12.16
+Creating virtual environment with seed packages at: .venv
+ + pip==26.3
+Activate with: source .venv/bin/activate
+SGLANG_BUILD_RUST_EXTS=none
+Resolved 204 packages in 34.20s
+   Building sglang @ file:///root/lab/sglang/python
+Downloading pillow (6.6MiB)
+Downloading jedi (4.7MiB)
+Downloading lxml (5.0MiB)
+Downloading pyarrow (52.5MiB)
+Downloading scipy (33.7MiB)
+Downloading cython (3.3MiB)
+Downloading pycryptodomex (2.2MiB)
+Downloading sgl-flash-mla (9.4MiB)
+Downloading zstandard (5.3MiB)
+Downloading sgl-deep-gemm (4.9MiB)
+Downloading torchaudio (1.7MiB)
+Downloading nvidia-mathdx (21.9MiB)
+Downloading tokenizers (3.2MiB)
+Downloading timm (2.4MiB)
+Downloading openai-harmony (2.9MiB)
+Downloading nvshmem4py-cu13 (4.8MiB)
+Downloading soundfile (1.3MiB)
+Downloading tml-renderers (4.5MiB)
+Downloading sentencepiece (1.3MiB)
+Downloading transformers (12.0MiB)
+Downloading deepseek-recipe (12.3MiB)
+Downloading torchvision (7.2MiB)
+Downloading modelscope (5.8MiB)
+Downloading py-spy (2.8MiB)
+Downloading torchcodec (9.5MiB)
+Downloading sgl-deep-ep (14.7MiB)
+Downloading numba (3.6MiB)
+Downloading pandas (11.5MiB)
+Downloading xgrammar (1.2MiB)
+Downloading torch-memory-saver (2.5MiB)
+Downloading llguidance (2.9MiB)
+Downloading sglang-kernel (355.7MiB)
+ Downloaded xgrammar
+ Downloaded soundfile
+ Downloaded sentencepiece
+ Downloaded torchaudio
+ Downloaded pycryptodomex
+ Downloaded timm
+ Downloaded torch-memory-saver
+ Downloaded py-spy
+ Downloaded openai-harmony
+ Downloaded llguidance
+ Downloaded tokenizers
+ Downloaded cython
+ Downloaded numba
+ Downloaded jedi
+ Downloaded tml-renderers
+ Downloaded lxml
+ Downloaded nvshmem4py-cu13
+ Downloaded sgl-deep-gemm
+ Downloaded zstandard
+ Downloaded pillow
+ Downloaded torchvision
+ Downloaded modelscope
+ Downloaded sgl-flash-mla
+ Downloaded torchcodec
+ Downloaded pandas
+ Downloaded transformers
+ Downloaded deepseek-recipe
+ Downloaded sgl-deep-ep
+ Downloaded nvidia-mathdx
+ Downloaded pyarrow
+ Downloaded scipy
+      Built sglang @ file:///root/lab/sglang/python
+ Downloaded sglang-kernel
+Prepared 73 packages in 13.57s
+Installed 204 packages in 1.00s
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.5
+ + aiosignal==1.4.0
+ + airportsdata==20261103
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anthropic==2.6.0
+ + anyio==4.16.0
+ + apache-tvm-ffi==0.1.11
+ + asttokens==3.0.2
+ + attrs==26.1.0
+ + blake3==1.0.11
+ + blobfile==3.0.0
+ + build==1.6.1
+ + certifi==2026.10.23
+ + cffi==2.1.1
+ + charset-normalizer==3.5.2
+ + click==8.5.1
+ + cloudpickle==3.1.2
+ + compressed-tensors==0.18.0
+ + cryptography==50.0.2
+ + cuda-bindings==13.5.0
+ + cuda-core==1.2.2
+ + cuda-pathfinder==1.8.6
+ + cuda-python==13.5.0
+ + cuda-tile==1.8.0
+ + cuda-toolkit==13.0.3.0
+ + cython==3.3.1
+ + datasets==5.1.0
+ + deepseek-recipe==0.2.0
+ + dill==0.4.1
+ + diskcache==5.6.3
+ + distro==1.9.0
+ + docstring-parser==0.18.0
+ + easydict==1.13
+ + einops==0.8.2
+ + executing==2.3.0
+ + fastapi==0.162.2
+ + filelock==4.2.9
+ + flashinfer-python==0.7.3
+ + frozenlist==1.8.0
+ + fsspec==2026.7.0
+ + gguf==0.19.0
+ + grpcio==1.85.1
+ + grpcio-health-checking==1.85.1
+ + grpcio-reflection==1.85.1
+ + h11==0.16.0
+ + hf-xet==1.8.0
+ + httpcore==1.0.9
+ + httpcore2==2.16.0
+ + httpx==0.28.1
+ + httpx2==2.16.0
+ + huggingface-hub==1.33.0
+ + humming-kernels==0.1.18
+ + idna==3.20
+ + interegular==0.3.3
+ + ipython==9.18.1
+ + ipython-pygments-lexers==1.1.1
+ + jedi==0.20.1
+ + jinja2==3.1.6
+ + jiter==0.19.0
+ + jsonschema==4.26.0
+ + jsonschema-specifications==2025.9.1
+ + lark==1.3.1
+ + llguidance==1.9.1
+ + llvmlite==0.47.0
+ + loguru==0.7.3
+ + lxml==6.1.3
+ + markdown-it-py==4.2.0
+ + markupsafe==3.0.4
+ + matplotlib-inline==0.2.2
+ + mdurl==0.1.2
+ + mistral-common==1.13.1
+ + ml-dtypes==0.6.0
+ + modelscope==1.40.2
+ + modelscope-hub==0.6.1
+ + mpmath==1.3.0
+ + msgspec==0.22.0
+ + multidict==7.2.1
+ + multiprocess==0.70.19
+ + nccl-extensions==0.1.0
+ + nccl4py==0.6.0
+ + nest-asyncio==1.6.0
+ + networkx==3.7
+ + ninja==1.13.2
+ + numba==0.65.1
+ + numpy==2.3.5
+ + nvidia-cublas==13.1.1.3
+ + nvidia-cuda-cccl==13.3.5.0.6
+ + nvidia-cuda-crt==13.5.37
+ + nvidia-cuda-cupti==13.0.85
+ + nvidia-cuda-nvcc==13.5.37
+ + nvidia-cuda-nvrtc==13.0.88
+ + nvidia-cuda-runtime==13.0.96
+ + nvidia-cudnn-cu13==9.24.0.43
+ + nvidia-cudnn-frontend==1.32.2
+ + nvidia-cufft==12.0.0.61
+ + nvidia-cufile==1.15.1.6
+ + nvidia-curand==10.4.0.35
+ + nvidia-cusolver==12.0.4.66
+ + nvidia-cusparse==12.6.3.3
+ + nvidia-cusparselt-cu13==0.8.1
+ + nvidia-cutlass-dsl==4.8.0
+ + nvidia-cutlass-dsl-libs-base==4.8.0
+ + nvidia-cutlass-dsl-libs-core==4.8.0
+ + nvidia-cutlass-dsl-libs-cu12==4.8.0
+ + nvidia-cutlass-dsl-libs-cu13==4.8.0
+ + nvidia-mathdx==25.6.0
+ + nvidia-ml-py==13.615.71
+ + nvidia-nccl-cu13==2.30.7
+ + nvidia-nvjitlink==13.5.37
+ + nvidia-nvshmem-cu13==3.4.5
+ + nvidia-nvtx==13.0.85
+ + nvidia-nvvm==13.5.37
+ + nvshmem4py-cu13==0.4.1
+ + openai==2.8.0
+ + openai-harmony==0.0.4
+ + opentelemetry-api==1.45.2
+ + orjson==3.13.0
+ + outlines==0.1.11
+ + outlines-core==0.1.26
+ + packaging==26.3
+ + pandas==3.1.1
+ + parso==0.8.7
+ + partial-json-parser==0.2.1.1.post7
+ + pexpect==4.9.0
+ + pillow==12.3.0
+ + prometheus-client==0.26.0
+ + prompt-toolkit==3.0.53
+ + propcache==0.5.4
+ + protobuf==7.36.2
+ + psutil==7.2.2
+ + ptyprocess==0.7.0
+ + pure-eval==0.2.4
+ + py-spy==0.4.3
+ + pyarrow==26.0.1
+ + pybase64==1.5.1
+ + pycountry==26.2.16
+ + pycparser==3.12
+ + pycryptodomex==3.24.2
+ + pydantic==2.14.3
+ + pydantic-core==2.50.4
+ + pydantic-extra-types==2.11.1
+ + pygments==2.21.0
+ + pyproject-hooks==1.3.3
+ + python-dateutil==2.9.0.post0
+ + python-multipart==0.0.33
+ + pyyaml==6.0.3
+ + pyzmq==27.3.0
+ + quack-kernels==0.6.5
+ + referencing==0.37.0
+ + regex==2026.11.7
+ + requests==2.34.2
+ + rich==15.0.0
+ + rpds-py==2026.9.1
+ + safetensors==0.8.0
+ + scipy==1.18.1
+ + sentencepiece==0.2.1
+ + setproctitle==1.3.8
+ + setuptools==84.2.1
+ + sgl-deep-ep==0.1.2.post1
+ + sgl-deep-gemm==0.2.6
+ + sgl-flash-mla==1.0.2
+ + sglang==0.5.24.dev933+gcbbc6b67f (from file:///root/lab/sglang/python)
+ + sglang-kernel==0.4.10
+ + shellingham==1.5.4
+ + six==1.17.0
+ + smg-grpc-proto==0.4.28
+ + smg-grpc-servicer==0.15.0
+ + sniffio==1.3.1
+ + soundfile==0.13.1
+ + stack-data==0.6.3
+ + starlette==1.10.0
+ + sympy==1.14.0
+ + tabulate==0.10.0
+ + tiktoken==0.14.0
+ + tilelang==0.1.12
+ + timm==1.0.25
+ + tml-renderers==0.1.0
+ + tokenizers==0.23.2
+ + torch==2.14.1
+ + torch-c-dlpack-ext==0.1.5
+ + torch-memory-saver==0.0.10
+ + torchaudio==2.11.0
+ + torchcodec==0.17.0
+ + torchvision==0.29.2
+ + tqdm==4.70.1
+ + traitlets==5.16.1
+ + transformers==5.19.0
+ + triton==3.8.0
+ + truststore==0.10.5
+ + typer==0.28.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.5
+ + urllib3==2.8.0
+ + uvicorn==0.54.0
+ + uvloop==0.23.0
+ + watchfiles==1.3.0
+ + wcwidth==0.9.4
+ + xgrammar==0.2.7
+ + xxhash==4.0.2
+ + yarl==1.25.1
+ + z3-solver==4.15.4.0
+ + zstandard==0.25.0
+
+[1;36m==> SGLang: sanity check[0m
+python /root/lab/sglang/.venv/bin/python | in venv: True
+sglang 0.5.24.dev933+gcbbc6b67f | file /root/lab/sglang/python/sglang/__init__.py
+torch 2.14.1+cu130 | cuda 13.0 | gpus 2
+flashinfer 0.7.3
+
+[1;36m==> Done. Logs in /root/lab/logs[0m

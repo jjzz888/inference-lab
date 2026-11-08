@@ -1,0 +1,13 @@
+date: 2026-11-08T01:48:05Z
+engine_commit: cbbc6b67f48008a8b739f4667d7b14abb89088cf
+engine_ref: gateway-v0.3.1-13223-gcbbc6b67f4
+model: Qwen/Qwen2.5-0.5B-Instruct
+workload: random in=512 out=128 prompts=200 rate=inf
+gpu: Tesla T4, 580.178.04, 15360 MiB
+torch: 2.14.1+cu130 cuda 13.0
+--- backends picked (from server.log)
+[2026-11-08 01:48:31] Attention backend not specified. Use flashinfer backend by default.
+[2026-11-08 01:52:10] Using the Python TreeCore: the Rust TreeCore toolchain is unavailable (cargo --version --verbose)
+[2026-11-08 01:52:10] Init Unified Radix Cache. Components: (<ComponentType.FULL: 0>,). Tree Core: UnifiedTreeCore
+sglang_attention_backend_override: none
+sglang_bench_module: sglang.benchmark.serving

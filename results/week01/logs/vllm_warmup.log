@@ -1,0 +1,64 @@
+W1108 01:07:15.579000 551 torch/_opaque_base.py:6] torch._opaque_base is deprecated, use torch._custom_class_base instead
+W1108 01:07:15.580000 551 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1108 01:07:15.581000 551 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+(MainProcess pid=551) INFO 11-08 01:07:24 [startup.py:96] non-default args: {'disable_log_stats': True, 'model': 'Qwen/Qwen3.5-0.8B'}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+(MainProcess pid=551) INFO 11-08 01:07:42 [model.py:761] Resolved architecture: Qwen3_5ForConditionalGeneration
+(MainProcess pid=551) WARNING 11-08 01:07:42 [model.py:2501] Your device 'Tesla T4' (with compute capability 7.5) doesn't support torch.bfloat16. Falling back to torch.float16 for compatibility.
+(MainProcess pid=551) WARNING 11-08 01:07:42 [model.py:2560] Casting torch.bfloat16 to torch.float16.
+(MainProcess pid=551) INFO 11-08 01:07:42 [model.py:2214] Using max model len 262144
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files:  25%|██▌       | 3/12 [00:00<00:00, 20.73it/s]Fetching 12 files:  50%|█████     | 6/12 [00:00<00:00, 23.31it/s]Fetching 12 files:  92%|█████████▏| 11/12 [00:00<00:00, 31.63it/s]Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 12.94it/s]
+(MainProcess pid=551) INFO 11-08 01:07:47 [scheduler.py:354] Chunked prefill is enabled with max_num_batched_tokens=8192.
+(MainProcess pid=551) INFO 11-08 01:07:47 [config.py:1055] Mamba cache mode is set to 'align' for Qwen3_5ForConditionalGeneration by default when prefix caching is enabled
+Parse safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]Parse safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.96it/s]Parse safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.96it/s]
+(MainProcess pid=551) INFO 11-08 01:07:48 [vllm.py:811] Auto-enabling VLLM_USE_BREAKABLE_CUDAGRAPH=1. Set VLLM_USE_BREAKABLE_CUDAGRAPH=0 to opt out.
+(MainProcess pid=551) INFO 11-08 01:07:48 [kernel.py:517] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native'], gelu_and_mul_sparse=['triton', 'native'])
+(MainProcess pid=551) INFO 11-08 01:07:48 [compilation.py:393] Enabled custom fusions: norm_quant, act_quant
+(MainProcess pid=551) WARNING 11-08 01:07:59 [system_utils.py:157] We must use the `spawn` multiprocessing start method. Overriding VLLM_WORKER_MULTIPROC_METHOD to 'spawn'. See https://docs.vllm.ai/en/latest/usage/troubleshooting.html#python-multiprocessing for more information. Reasons: CUDA is initialized
+(MainProcess pid=551) INFO 11-08 01:07:59 [numa_utils.py:575] Automatic NUMA binding unavailable on this host; starting unbound. Enable debug logging for the skip reason.
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/root/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/multiprocessing/spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/multiprocessing/spawn.py", line 131, in _main
+    prepare(preparation_data)
+  File "/root/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/multiprocessing/spawn.py", line 246, in prepare
+    _fixup_main_from_path(data['init_main_from_path'])
+  File "/root/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/multiprocessing/spawn.py", line 297, in _fixup_main_from_path
+    main_content = runpy.run_path(main_path,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen runpy>", line 286, in run_path
+  File "<frozen runpy>", line 254, in _get_code_from_file
+FileNotFoundError: [Errno 2] No such file or directory: '/root/lab/vllm/<stdin>'
+Traceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+  File "/root/lab/vllm/vllm/entrypoints/llm.py", line 348, in __init__
+    self.llm_engine = LLMEngine.from_engine_args(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/lab/vllm/vllm/v1/engine/llm_engine.py", line 191, in from_engine_args
+    return cls(
+           ^^^^
+  File "/root/lab/vllm/vllm/v1/engine/llm_engine.py", line 116, in __init__
+    self.engine_core = EngineCoreClient.make_client(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/lab/vllm/vllm/v1/engine/core_client.py", line 142, in make_client
+    return SyncMPClient(
+           ^^^^^^^^^^^^^
+  File "/root/lab/vllm/vllm/tracing/otel.py", line 175, in sync_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/lab/vllm/vllm/v1/engine/core_client.py", line 990, in __init__
+    super().__init__(
+  File "/root/lab/vllm/vllm/v1/engine/core_client.py", line 723, in __init__
+    with launch_core_engines(
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "/root/lab/vllm/vllm/v1/engine/utils.py", line 1393, in launch_core_engines
+    wait_for_engine_startup(
+  File "/root/lab/vllm/vllm/v1/engine/utils.py", line 1477, in wait_for_engine_startup
+    raise RuntimeError(
+RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {'EngineCore': 1}
+[transformers] Qwen3VL video processing does not apply the per-frame pixel cap the reference implementation (qwen-vl-utils) applies, so some videos cost far more tokens than they would there. In v5.22 the capped behavior will become the default and `cap_pixels_per_frame` will be removed. Pass `cap_pixels_per_frame=True` to adopt the reference behavior now, or `False` to keep the current behavior and silence this warning.
+(MainProcess pid=551) INFO 11-08 01:08:16 [base.py:283] Multi-modal warmup completed in 16.548s
