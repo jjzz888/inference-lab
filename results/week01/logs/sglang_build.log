@@ -1,36 +1,36 @@
-Resolved 204 packages in 34.20s
+Resolved 204 packages in 10m 40s
    Building sglang @ file:///root/lab/sglang/python
-Downloading pillow (6.6MiB)
-Downloading jedi (4.7MiB)
-Downloading lxml (5.0MiB)
-Downloading pyarrow (52.5MiB)
-Downloading scipy (33.7MiB)
-Downloading cython (3.3MiB)
-Downloading pycryptodomex (2.2MiB)
-Downloading sgl-flash-mla (9.4MiB)
 Downloading zstandard (5.3MiB)
-Downloading sgl-deep-gemm (4.9MiB)
-Downloading torchaudio (1.7MiB)
-Downloading nvidia-mathdx (21.9MiB)
 Downloading tokenizers (3.2MiB)
-Downloading timm (2.4MiB)
-Downloading openai-harmony (2.9MiB)
-Downloading nvshmem4py-cu13 (4.8MiB)
-Downloading soundfile (1.3MiB)
-Downloading tml-renderers (4.5MiB)
-Downloading sentencepiece (1.3MiB)
-Downloading transformers (12.0MiB)
-Downloading deepseek-recipe (12.3MiB)
-Downloading torchvision (7.2MiB)
-Downloading modelscope (5.8MiB)
-Downloading py-spy (2.8MiB)
-Downloading torchcodec (9.5MiB)
-Downloading sgl-deep-ep (14.7MiB)
-Downloading numba (3.6MiB)
+Downloading jedi (4.7MiB)
 Downloading pandas (11.5MiB)
-Downloading xgrammar (1.2MiB)
-Downloading torch-memory-saver (2.5MiB)
+Downloading pillow (6.6MiB)
+Downloading openai-harmony (2.9MiB)
+Downloading pyarrow (52.5MiB)
+Downloading timm (2.4MiB)
+Downloading cython (3.3MiB)
+Downloading deepseek-recipe (12.3MiB)
+Downloading scipy (33.7MiB)
+Downloading lxml (5.0MiB)
+Downloading pycryptodomex (2.2MiB)
+Downloading soundfile (1.3MiB)
+Downloading torchvision (7.2MiB)
+Downloading sentencepiece (1.3MiB)
+Downloading sgl-flash-mla (9.4MiB)
+Downloading py-spy (2.8MiB)
 Downloading llguidance (2.9MiB)
+Downloading transformers (12.0MiB)
+Downloading torch-memory-saver (2.5MiB)
+Downloading torchcodec (9.5MiB)
+Downloading xgrammar (1.2MiB)
+Downloading tml-renderers (4.5MiB)
+Downloading modelscope (5.8MiB)
+Downloading sgl-deep-gemm (4.9MiB)
+Downloading nvshmem4py-cu13 (4.8MiB)
+Downloading torchaudio (1.7MiB)
+Downloading numba (3.6MiB)
+Downloading sgl-deep-ep (14.7MiB)
+Downloading nvidia-mathdx (21.9MiB)
 Downloading sglang-kernel (355.7MiB)
  Downloaded xgrammar
  Downloaded soundfile
@@ -42,31 +42,31 @@ Downloading sglang-kernel (355.7MiB)
  Downloaded py-spy
  Downloaded openai-harmony
  Downloaded llguidance
- Downloaded tokenizers
  Downloaded cython
+ Downloaded tokenizers
  Downloaded numba
- Downloaded jedi
  Downloaded tml-renderers
- Downloaded lxml
+ Downloaded jedi
  Downloaded nvshmem4py-cu13
  Downloaded sgl-deep-gemm
+ Downloaded lxml
  Downloaded zstandard
+ Downloaded modelscope
  Downloaded pillow
  Downloaded torchvision
- Downloaded modelscope
- Downloaded sgl-flash-mla
  Downloaded torchcodec
+ Downloaded sgl-flash-mla
  Downloaded pandas
  Downloaded transformers
  Downloaded deepseek-recipe
  Downloaded sgl-deep-ep
  Downloaded nvidia-mathdx
- Downloaded pyarrow
  Downloaded scipy
+ Downloaded pyarrow
       Built sglang @ file:///root/lab/sglang/python
  Downloaded sglang-kernel
-Prepared 73 packages in 13.57s
-Installed 204 packages in 1.00s
+Prepared 73 packages in 17.49s
+Installed 204 packages in 708ms
  + aiohappyeyeballs==2.7.1
  + aiohttp==3.14.5
  + aiosignal==1.4.0

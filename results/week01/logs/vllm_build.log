@@ -1,86 +1,86 @@
-Resolved 199 packages in 57.17s
+Resolved 199 packages in 2m 24s
    Building vllm @ file:///root/lab/vllm
 Downloading torchcodec (9.7MiB)
-Downloading torchvision (7.2MiB)
-Downloading tokenizers (3.2MiB)
-Downloading openai (2.3MiB)
-Downloading anthropic (2.3MiB)
-Downloading pydantic-core (2.2MiB)
-Downloading aiohttp (1.8MiB)
-Downloading sentencepiece (1.6MiB)
-Downloading pygments (1.2MiB)
-Downloading tiktoken (1.1MiB)
-Downloading pycountry (7.7MiB)
 Downloading hf-xet (4.1MiB)
-Downloading xgrammar (1.3MiB)
-Downloading cryptography (4.5MiB)
-Downloading numpy (15.8MiB)
-Downloading grpcio (7.0MiB)
-Downloading tilelang (48.2MiB)
-Downloading uvloop (4.3MiB)
-Downloading z3-solver (27.9MiB)
-Downloading transformers (12.4MiB)
-Downloading opencv-python-headless (58.4MiB)
-Downloading nvidia-cuda-cccl (3.9MiB)
+Downloading torchvision (7.2MiB)
 Downloading pillow (6.8MiB)
-Downloading nvidia-nvvm (71.7MiB)
-Downloading pynvvideocodec (41.2MiB)
-Downloading cuda-core (6.3MiB)
-Downloading nvidia-cutlass-dsl-libs-core (1.6MiB)
-Downloading outlines-core (2.2MiB)
-Downloading nvidia-cutlass-dsl-libs-cu12 (87.5MiB)
-Downloading nvidia-cutlass-dsl-libs-base (2.9MiB)
-Downloading apache-tvm-ffi (2.6MiB)
+Downloading cryptography (4.5MiB)
+Downloading tokenizers (3.2MiB)
+Downloading anthropic (2.3MiB)
+Downloading openai (2.3MiB)
+Downloading pydantic-core (2.2MiB)
+Downloading pygments (1.2MiB)
+Downloading transformers (12.4MiB)
+Downloading grpcio (7.0MiB)
+Downloading nvidia-cuda-cccl (3.9MiB)
 Downloading numba (3.6MiB)
-Downloading fastsafetensors (2.6MiB)
-Downloading nccl4py (3.5MiB)
-Downloading nvidia-cutlass-dsl-libs-cu13 (87.7MiB)
-Downloading instanttensor (6.2MiB)
-Downloading oss-harmony (3.4MiB)
-Downloading mistral-common (6.3MiB)
-Downloading nvidia-cudnn-frontend (11.1MiB)
-Downloading flashinfer-python (76.1MiB)
-Downloading llvmlite (53.7MiB)
 Downloading llguidance (2.9MiB)
-Downloading nvidia-cuda-nvcc (44.8MiB)
+Downloading outlines-core (2.2MiB)
 Downloading nccl-extensions (21.5MiB)
+Downloading nvidia-cutlass-dsl-libs-core (1.6MiB)
+Downloading apache-tvm-ffi (2.6MiB)
+Downloading sentencepiece (1.6MiB)
+Downloading nccl4py (3.5MiB)
+Downloading uvloop (4.3MiB)
+Downloading opencv-python-headless (58.4MiB)
+Downloading xgrammar (1.3MiB)
+Downloading z3-solver (27.9MiB)
 Downloading tokenspeed-triton (90.5MiB)
+Downloading numpy (15.8MiB)
+Downloading cuda-core (6.3MiB)
+Downloading llvmlite (53.7MiB)
+Downloading pycountry (7.7MiB)
+Downloading fastsafetensors (2.6MiB)
+Downloading mistral-common (6.3MiB)
+Downloading tiktoken (1.1MiB)
+Downloading nvidia-cutlass-dsl-libs-base (2.9MiB)
+Downloading nvidia-cuda-nvcc (44.8MiB)
+Downloading aiohttp (1.8MiB)
+Downloading tilelang (48.2MiB)
+Downloading oss-harmony (3.4MiB)
+Downloading nvidia-nvvm (71.7MiB)
+Downloading nvidia-cutlass-dsl-libs-cu12 (87.5MiB)
+Downloading instanttensor (6.2MiB)
+Downloading flashinfer-python (76.1MiB)
+Downloading nvidia-cudnn-frontend (11.1MiB)
+Downloading pynvvideocodec (41.2MiB)
+Downloading nvidia-cutlass-dsl-libs-cu13 (87.7MiB)
  Downloaded torchvision
  Downloaded torchcodec
- Downloaded pygments
  Downloaded tiktoken
+ Downloaded pygments
  Downloaded xgrammar
  Downloaded nvidia-cutlass-dsl-libs-core
  Downloaded sentencepiece
  Downloaded aiohttp
  Downloaded pydantic-core
- Downloaded outlines-core
  Downloaded anthropic
+ Downloaded outlines-core
  Downloaded openai
- Downloaded fastsafetensors
  Downloaded apache-tvm-ffi
- Downloaded llguidance
+ Downloaded fastsafetensors
  Downloaded nvidia-cutlass-dsl-libs-base
+ Downloaded llguidance
  Downloaded tokenizers
- Downloaded oss-harmony
  Downloaded nccl4py
+ Downloaded oss-harmony
  Downloaded numba
- Downloaded nvidia-cuda-cccl
+      Built vllm @ file:///root/lab/vllm
  Downloaded hf-xet
+ Downloaded nvidia-cuda-cccl
  Downloaded uvloop
  Downloaded cryptography
- Downloaded mistral-common
  Downloaded instanttensor
  Downloaded cuda-core
+ Downloaded mistral-common
  Downloaded pillow
  Downloaded grpcio
  Downloaded pycountry
- Downloaded transformers
  Downloaded nvidia-cudnn-frontend
+ Downloaded transformers
  Downloaded numpy
  Downloaded nccl-extensions
  Downloaded z3-solver
-      Built vllm @ file:///root/lab/vllm
  Downloaded pynvvideocodec
  Downloaded nvidia-cuda-nvcc
  Downloaded tilelang
@@ -91,10 +91,10 @@ Downloading tokenspeed-triton (90.5MiB)
  Downloaded nvidia-cutlass-dsl-libs-cu13
  Downloaded nvidia-cutlass-dsl-libs-cu12
  Downloaded tokenspeed-triton
-Prepared 169 packages in 53.21s
-Installed 198 packages in 605ms
+Prepared 169 packages in 4m 39s
+Installed 198 packages in 534ms
 Prepared 1 package without build isolation in 0.15ms
-Installed 1 package in 260ms
+Installed 1 package in 234ms
  + agent-detector==2.0.0
  + aiohappyeyeballs==2.7.1
  + aiohttp==3.14.5
@@ -288,7 +288,7 @@ Installed 1 package in 260ms
  + urllib3==2.8.0
  + uvicorn==0.54.0
  + uvloop==0.23.0
- + vllm==0.33.0rc1.dev1021+gfd8f3f398.precompiled (from file:///root/lab/vllm)
+ + vllm==0.33.0rc1.dev1023+gebc97ad8d.precompiled (from file:///root/lab/vllm)
  + watchfiles==1.3.0
  + websockets==17.4
  + xgrammar==0.2.8

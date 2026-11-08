@@ -115,7 +115,7 @@ After the environment fixes ([[#Error Analysis]]):
 
 Net result: 1,286 of 1,287 pass on Kaggle T4 once the environment is fixed, and the remaining failure is in the test, not in vLLM.
 
-**Rerun 2026-11-08** (background run on a fresh session, vLLM `fd8f3f398e`; raw log in `results/week01/logs/vllm_tests.log`):
+**Rerun 2026-11-08, first** (background run on a fresh session, vLLM `fd8f3f398e`; raw log in commit `da56775`, `results/week01/logs/vllm_tests.log`):
 
 | Item | Value |
 |---|---|
@@ -125,6 +125,17 @@ Net result: 1,286 of 1,287 pass on Kaggle T4 once the environment is fixed, and 
 | `[mtp]` | passed: it ran after `[base]` had already filled part of the cache |
 
 The total is 10 lower than on 11-07 because upstream changed the suite between commits.
+
+**Rerun 2026-11-08, second** (Kaggle Version #2, fresh session, vLLM `ebc97ad8d0`, with the fixed warm-up; raw log in `results/week01/logs/vllm_tests.log`):
+
+| Item | Value |
+|---|---|
+| Warm-up | `ENGINE READY` in 592 s (cold Triton cache, no time limit) |
+| Summary line | `1 failed, 1277 passed, 18 warnings in 1458.51s (0:24:18)` |
+| `F` | `test_diffusion_read_deferral_keeps_a_longer_pp_wait`: same portability bug |
+| Hybrid `[base]`, `[mtp]` | **both passed** |
+
+1,277 of 1,278 pass with no manual steps. The 18 warnings are `DeprecationWarning`s from FlashInfer's CUTLASS imports (`cutlass.utils.LayoutEnum`), not from vLLM. The suite is also 10 minutes faster than the first rerun, because the hybrid test no longer waits out its 480 s timeout.
 
 ## Error Analysis
 For each problem, record the test node id, the root cause from its traceback, and the category: environment (T4/sm_75, missing optional dependency, model download), or a real bug that reproduces on current `main`.
@@ -175,6 +186,6 @@ Draft, from this run:
      - ✅ The `libcuda.so` auto-fix worked: `created: ... (verified: -lcuda links)`.
      - ➖ The wheel fallback didn't trigger: `fd8f3f398e` already had a published wheel.
      - ❌ The warm-up crashed after 66 s with `FileNotFoundError: '/root/lab/vllm/<stdin>'`. It fed the script through stdin (`python - <<PY`), and vLLM starts EngineCore with multiprocessing `spawn`, which re-imports `__main__` from its path. `<stdin>` isn't a file. **Fixed:** the warm-up now uses `python -c`, which has no path, so spawn skips the re-import. Reproduced and verified with a plain-Python spawn test and a fake vLLM that spawns a child.
-   - _Next: rerun once more to confirm the hybrid `[base]` test passes with the fixed warm-up._
+   - ✅ **Confirmed (2026-11-08, second rerun):** the warm-up reached `ENGINE READY` in 592 s, and both hybrid tests passed (`1 failed, 1277 passed`). The only failure left is item 1.
 3. ~~**Benchmarks.** Run `run_bench.sh both` in a session where setup has finished.~~ **Done (2026-11-07).** Results, backend findings (vLLM `TRITON_ATTN` vs SGLang FlashInfer) and the follow-up `SGLANG_ATTN=triton` rerun are in [LOG.md](../LOG.md).
 4. **Read the scheduler through tests.** Step through `test_scheduler.py` and `test_prefix_caching.py` cases on the Mac (pytest is now in `~/code/vllm/.venv`), alongside the request-lifecycle diagram.

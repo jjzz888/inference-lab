@@ -1,0 +1,9 @@
+date: 2026-11-08T03:24:57Z
+engine_commit: ebc97ad8d00bcbeaa61dd9da331dd16cae0b3d53
+engine_ref: v0.33.0rc0-1023-gebc97ad8d0
+model: Qwen/Qwen2.5-0.5B-Instruct
+workload: random in=512 out=128 prompts=200 rate=inf
+gpu: Tesla T4, 580.178.04, 15360 MiB
+torch: 2.14.0+cu132 cuda 13.2
+--- backends picked (from server.log)
+(EngineCore pid=2242) INFO 11-08 03:25:25 [cuda.py:507] Using TRITON_ATTN attention backend out of potential backends: ['TRITON_ATTN', 'FLEX_ATTENTION'].

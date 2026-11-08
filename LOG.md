@@ -11,7 +11,8 @@
 
 ### Tests
 - vLLM `tests/v1/core` (Kaggle T4): `1 failed, 1284 passed, 2 errors` in 26 min. After the environment fixes, 1,286/1,287 pass. The remaining failure is a test portability bug (PP=3 on a 2-GPU host). Details: [week01/vllm_core_tests.md](week01/vllm_core_tests.md).
-- Rerun 2026-11-08 (background run, vLLM `fd8f3f398e`): `1 failed, 1276 passed, 1 error` in 34 min. The error is the hybrid test `[base]` timing out, because the new JIT warm-up crashed (stdin script + spawn bug, now fixed). `[mtp]` passed. Raw logs: `results/week01/logs/`.
+- Rerun 2026-11-08 (background run, vLLM `fd8f3f398e`): `1 failed, 1276 passed, 1 error` in 34 min. The error is the hybrid test `[base]` timing out, because the new JIT warm-up crashed (stdin script + spawn bug, now fixed). `[mtp]` passed. Raw logs: commit `da56775`.
+- Second rerun 2026-11-08 (Kaggle Version #2, vLLM `ebc97ad8d0`, fixed warm-up): warm-up `ENGINE READY` in 592 s, then `1 failed, 1277 passed` in 24 min. **Both hybrid tests pass with no manual steps.** The only failure is the diffusion PP=3 test (Week 2 PR). Raw logs: `results/week01/logs/`.
 - SGLang: not run yet. Script: [week01/sglang_tests.sh](week01/sglang_tests.sh). It runs the CPU unit tests for the scheduler (`unit/managers`) and KV cache (`unit/mem_cache`), ~253 files and ~45 min, via `test/run_suite.py`. Run it on Kaggle after setup.
 
 ### Serving benchmark (Qwen2.5-0.5B-Instruct, FP16, T4, random 512 in / 128 out, 200 prompts, rate=inf)
@@ -43,17 +44,21 @@ Run directories (2026-11-07; the raw files stayed on Kaggle and were lost with t
 - vLLM `vllm-20261108-014602`: commit `fd8f3f398e`, torch `2.14.0+cu132`, `TRITON_ATTN`.
 - SGLang `sglang-20261108-014805`: commit `cbbc6b67f`, torch `2.14.1+cu130`, FlashInfer, Python TreeCore.
 
-| Metric | vLLM 11-07 | vLLM 11-08 | SGLang 11-07 | SGLang 11-08 |
-|---|---|---|---|---|
-| Request throughput (req/s) | 13.41 | 13.37 | 22.63 | 22.90 |
-| Output token throughput (tok/s) | 1,716.97 | 1,711.94 | 2,897.28 | 2,930.56 |
-| Mean TTFT (ms) | 5,190.60 | 5,170.94 | 2,259.82 | 2,405.09 |
-| P99 TTFT (ms) | 9,470.35 | 9,465.03 | 4,118.24 | 4,534.62 |
-| Mean TPOT (ms) | 71.74 | 72.19 | 50.90 | 48.90 |
-| Median ITL (ms) | 50.73 | 51.21 | 34.55 | 29.01 |
-| P99 ITL (ms) | 347.98 | 345.43 | 176.41 | 183.41 |
+**Second rerun 2026-11-08 (Kaggle Version #2):**
+- vLLM `vllm-20261108-032457`: commit `ebc97ad8d0`, `TRITON_ATTN`.
+- SGLang `sglang-20261108-032649`: commit `cbbc6b67f` (same as the first rerun), FlashInfer, Python TreeCore.
 
-- **Reproducible.** On different days, sessions and newer commits, throughput moved by < 1.5% for both engines, and SGLang's lead stayed at **~1.7×** (22.90 / 13.37 = 1.71). With two runs, the gap is well outside run-to-run noise.
+| Metric | vLLM 11-07 | vLLM 11-08 #1 | vLLM 11-08 #2 | SGLang 11-07 | SGLang 11-08 #1 | SGLang 11-08 #2 |
+|---|---|---|---|---|---|---|
+| Request throughput (req/s) | 13.41 | 13.37 | 13.38 | 22.63 | 22.90 | 22.58 |
+| Output token throughput (tok/s) | 1,716.97 | 1,711.94 | 1,713.02 | 2,897.28 | 2,930.56 | 2,890.63 |
+| Mean TTFT (ms) | 5,190.60 | 5,170.94 | 5,166.75 | 2,259.82 | 2,405.09 | 2,401.25 |
+| P99 TTFT (ms) | 9,470.35 | 9,465.03 | 9,463.16 | 4,118.24 | 4,534.62 | 4,439.69 |
+| Mean TPOT (ms) | 71.74 | 72.19 | 72.15 | 50.90 | 48.90 | 50.15 |
+| Median ITL (ms) | 50.73 | 51.21 | 51.30 | 34.55 | 29.01 | 31.83 |
+| P99 ITL (ms) | 347.98 | 345.43 | 349.71 | 176.41 | 183.41 | 151.20 |
+
+- **Reproducible over 3 runs.** Throughput spread is < 0.3% for vLLM (13.37–13.41) and < 1.5% for SGLang (22.58–22.90). SGLang's lead stays at **~1.7×** (1.69, 1.71, 1.69).
 - vLLM is almost identical across runs. SGLang's TTFT varied more (+6% mean, +10% P99), while its median ITL improved (34.55 → 29.01 ms), possibly from the newer commit.
 
 Reading the numbers:
@@ -66,7 +71,7 @@ Caveats before drawing conclusions:
   - SGLang: FlashInfer (its default).
 - **CUDA graphs point the other way.** vLLM captured 51 PIECEWISE and 35 FULL CUDA graph sizes, so its 200-request decode most likely ran on a graph. SGLang's decode log shows `cuda graph: False`: 200 running requests exceed its default CUDA-graph batch-size cap. SGLang still had 1.4× lower TPOT without graphs, which points at the attention kernel (Triton vs FlashInfer) rather than graph capture. **Test:** rerun SGLang with `SGLANG_ATTN=triton` so both use Triton attention.
 - **Defaults differ.** Per-step token budget (`max_num_batched_tokens` vs SGLang's chunked prefill size), max sequences, and memory fraction are not aligned.
-- **One run each, on a shared cloud GPU.** Repeat at least 3× and report the spread before calling the gap real.
+- ~~**One run each, on a shared cloud GPU.** Repeat at least 3× and report the spread before calling the gap real.~~ Done: 3 runs each over two days (see the rerun table above), throughput spread < 1.5%.
 
 ### Next for the benchmark
 - ~~Record vLLM's attention backend and CUDA graph capture sizes~~: TRITON_ATTN, 51 PIECEWISE + 35 FULL graph sizes (see caveats).
