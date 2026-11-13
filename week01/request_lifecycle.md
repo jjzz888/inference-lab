@@ -26,11 +26,10 @@ vLLM v1 splits a request's life across three layers:
 The core loop is three calls in `EngineCore.step`: **schedule → execute → update**. Every iteration decides which requests run and how many tokens each gets, runs one forward pass over that batch, then folds the sampled tokens back into each request.
 
 ## Sequence Diagram
-One request, offline API, in-process engine (our debug setup). Numbers match the breakpoint table in the README.
+One request, offline API, in-process engine (our debug setup). Each arrow is one call or return, so the diagram has many more arrows than there are breakpoints. Arrows tagged **[BP n]** are where breakpoint n of the README's 10-row table stops; the rest are calls you pass through with `F11` (step into). The `#` column in [[#Stage by Stage]] uses the same numbers.
 
 ```mermaid
 sequenceDiagram
-    autonumber
     participant U as smoke_offline.py
     participant L as LLM<br/>(entrypoints)
     participant E as LLMEngine<br/>(frontend)
@@ -42,33 +41,33 @@ sequenceDiagram
     participant X as UniProcExecutor →<br/>Worker
     participant R as Model runner<br/>+ Sampler
 
-    U->>L: generate(prompts, SamplingParams)
-    L->>E: add_request(prompt, params)
+    U->>L: [BP1] generate(prompts, SamplingParams)
+    L->>E: [BP2] add_request(prompt, params)
     E->>IP: process_inputs → tokenize
     IP-->>E: EngineCoreRequest (prompt_token_ids)
     E->>OP: add_request (RequestState + detokenizer)
-    E->>C: add_request → preprocess_add_request → Request
+    E->>C: [BP3] add_request → preprocess_add_request → Request
     C->>S: add_request → waiting queue
 
     loop while has_unfinished_requests
         L->>E: step()
-        E->>C: get_output() → step_fn() = EngineCore.step
-        C->>S: schedule()
+        E->>C: [BP4] get_output() → step_fn() = EngineCore.step
+        C->>S: [BP5] schedule()
         S->>K: get_computed_blocks (prefix-cache hits, new requests)
-        S->>K: allocate_slots (blocks for the new tokens)
+        S->>K: [BP6] allocate_slots (blocks for the new tokens)
         K-->>S: block ids, or None → preempt / wait
         S-->>C: SchedulerOutput (num_scheduled_tokens per request)
         C->>X: execute_model(SchedulerOutput)
-        X->>R: execute_model → forward pass → logits
+        X->>R: [BP7] execute_model → forward pass → logits
         C->>X: sample_tokens()
-        X->>R: sample_tokens → CPUSampler / Sampler
+        X->>R: [BP8] sample_tokens → CPUSampler / Sampler
         R-->>C: ModelRunnerOutput (sampled token ids)
-        C->>S: update_from_output
+        C->>S: [BP9] update_from_output
         S->>S: append token, check_stop
         S->>K: free (if finished)
         S-->>C: EngineCoreOutputs
         C-->>E: EngineCoreOutputs
-        E->>OP: process_outputs → detokenizer.update
+        E->>OP: [BP10] process_outputs → detokenizer.update
         OP-->>E: RequestOutput (finished?)
         E-->>L: RequestOutputs
     end
@@ -94,19 +93,21 @@ stateDiagram-v2
 ```
 
 ## Stage by Stage
+`#` is the breakpoint number in the README table and the **[BP n]** tag in the diagram. In each row, the **bold** function is the one the breakpoint sits on; the others are the calls around it.
+
 | # | Stage | Where (`cef9a453b2`) | What happens |
 |---|---|---|---|
-| 1 | Entry | `vllm/entrypoints/llm.py:424` `LLM.generate` → `vllm/entrypoints/common/offline.py:340` `_run_completion` | Normalizes prompts and `SamplingParams`, adds every request, then runs the engine loop |
-| 2 | Tokenize | `vllm/v1/engine/llm_engine.py:229` `LLMEngine.add_request` → `input_processor.process_inputs` (line 271) | Prompt → `prompt_token_ids`, wrapped in an `EngineCoreRequest`. Registers a `RequestState` with the `OutputProcessor` (line 297), which holds the incremental detokenizer |
-| 3 | Enqueue | `vllm/v1/engine/core_client.py:434` `InprocClient.add_request` → `vllm/v1/engine/core.py:1258` `preprocess_add_request` → `core.py:564` `EngineCore.add_request` → `vllm/v1/core/sched/scheduler.py:3065` `Scheduler.add_request` | `EngineCoreRequest` → `Request` (computes block hashes for prefix caching). Status `WAITING`, appended to `scheduler.waiting` |
-| 4 | Engine loop | `offline.py:589` `_run_engine`: `while has_unfinished_requests(): llm_engine.step()` → `llm_engine.py:319` `step` → `core_client.py:424` `get_output` → `core.py:713` `EngineCore.step` | One iteration per call. `step_fn` is `step`, or `step_with_batch_queue` when pipelining is on |
-| 5 | Schedule | `scheduler.py:716` `Scheduler.schedule` | Starts from `token_budget = max_num_scheduled_tokens`. First loops over `self.running` (decodes and unfinished chunked prefills), then admits from `self.waiting` while budget and KV blocks last. Returns a `SchedulerOutput` (`scheduled_new_reqs`, cached reqs, `num_scheduled_tokens`) |
-| 6 | KV blocks | `vllm/v1/core/kv_cache_manager.py:288` `get_computed_blocks` (prefix-cache hits, new requests only), `:401` `allocate_slots` | PagedAttention's bookkeeping: hands out fixed-size block ids from the free pool. `None` means no room, so the scheduler preempts the lowest-priority running request (`_preempt_request`, `scheduler.py:1138`) or leaves the new one waiting |
-| 7 | Forward | `vllm/v1/executor/uniproc_executor.py:119` `execute_model` → `collective_rpc` → `Worker.execute_model` (`vllm/v1/worker/gpu_worker.py:1442`; `CPUWorker` inherits it) → `vllm/v1/worker/cpu/standalone_model_runner.py:996` `execute_model` | Applies the `SchedulerOutput` to the persistent input batch, builds flattened `input_ids` / positions / block tables, runs the model, keeps the logits |
-| 8 | Sample | `model_executor.sample_tokens` inside `EngineCore.step` → `uniproc_executor.py:134` → `standalone_model_runner.py:1173` `sample_tokens` → `vllm/v1/worker/cpu/sampler.py:543` `CPUSampler.__call__` | Logits → next token id per request (greedy with `temperature=0`). Returns a `ModelRunnerOutput` |
-| 9 | Update | `scheduler.py:2301` `update_from_output` → `:2879` `_update_request_with_output` → `vllm/v1/core/sched/utils.py:98` `check_stop` | Appends the token, advances `num_computed_tokens`, caches full blocks for prefix reuse, checks EOS / `max_tokens` / `max_model_len`. Finished requests go through `_free_request` → `_free_blocks` → `kv_cache_manager.free` (`scheduler.py:3229`). Emits one `EngineCoreOutput` per request |
-| 10 | Detokenize | `vllm/v1/engine/output_processor.py:731` `process_outputs` → `detokenizer.update` (line 828) | New token ids → incremental text, stop strings, logprobs. Builds a `RequestOutput`; `finished=True` once the engine reported a finish reason |
-| 11 | Return | `offline.py` `_run_engine` | Collects finished outputs, sorts them back into prompt order, returns them from `LLM.generate` |
+| 1 | Entry | `vllm/entrypoints/llm.py:424` **`LLM.generate`** → `vllm/entrypoints/common/offline.py:340` `_run_completion` | Normalizes prompts and `SamplingParams`, adds every request, then runs the engine loop |
+| 2 | Tokenize | `vllm/v1/engine/llm_engine.py:229` **`LLMEngine.add_request`** → `input_processor.process_inputs` (line 271) | Prompt → `prompt_token_ids`, wrapped in an `EngineCoreRequest`. Registers a `RequestState` with the `OutputProcessor` (line 297), which holds the incremental detokenizer |
+| 3 | Enqueue | `vllm/v1/engine/core_client.py:434` `InprocClient.add_request` → `vllm/v1/engine/core.py:1258` `preprocess_add_request` → `core.py:564` **`EngineCore.add_request`** → `vllm/v1/core/sched/scheduler.py:3065` `Scheduler.add_request` | `EngineCoreRequest` → `Request` (computes block hashes for prefix caching). Status `WAITING`, appended to `scheduler.waiting` |
+| 4 | Engine loop | `offline.py:589` `_run_engine`: `while has_unfinished_requests(): llm_engine.step()` → `llm_engine.py:319` `step` → `core_client.py:424` `get_output` → `core.py:713` **`EngineCore.step`** | One iteration per call. `step_fn` is `step`, or `step_with_batch_queue` when pipelining is on |
+| 5 | Schedule | `scheduler.py:716` **`Scheduler.schedule`** | Starts from `token_budget = max_num_scheduled_tokens`. First loops over `self.running` (decodes and unfinished chunked prefills), then admits from `self.waiting` while budget and KV blocks last. Returns a `SchedulerOutput` (`scheduled_new_reqs`, cached reqs, `num_scheduled_tokens`) |
+| 6 | KV blocks | `vllm/v1/core/kv_cache_manager.py:288` `get_computed_blocks` (prefix-cache hits, new requests only), `:401` **`allocate_slots`** | PagedAttention's bookkeeping: hands out fixed-size block ids from the free pool. `None` means no room, so the scheduler preempts the lowest-priority running request (`_preempt_request`, `scheduler.py:1138`) or leaves the new one waiting |
+| 7 | Forward | `vllm/v1/executor/uniproc_executor.py:119` `execute_model` → `collective_rpc` → `Worker.execute_model` (`vllm/v1/worker/gpu_worker.py:1442`; `CPUWorker` inherits it) → `vllm/v1/worker/cpu/standalone_model_runner.py:996` **`StandaloneCPUModelRunner.execute_model`** | Applies the `SchedulerOutput` to the persistent input batch, builds flattened `input_ids` / positions / block tables, runs the model, keeps the logits |
+| 8 | Sample | `model_executor.sample_tokens` inside `EngineCore.step` → `uniproc_executor.py:134` → `standalone_model_runner.py:1173` `sample_tokens` → `vllm/v1/worker/cpu/sampler.py:543` **`CPUSampler.__call__`** | Logits → next token id per request (greedy with `temperature=0`). Returns a `ModelRunnerOutput` |
+| 9 | Update | `scheduler.py:2301` **`Scheduler.update_from_output`** → `:2879` `_update_request_with_output` → `vllm/v1/core/sched/utils.py:98` `check_stop` | Appends the token, advances `num_computed_tokens`, caches full blocks for prefix reuse, checks EOS / `max_tokens` / `max_model_len`. Finished requests go through `_free_request` → `_free_blocks` → `kv_cache_manager.free` (`scheduler.py:3229`). Emits one `EngineCoreOutput` per request |
+| 10 | Detokenize | `vllm/v1/engine/output_processor.py:731` **`OutputProcessor.process_outputs`** → `detokenizer.update` (line 828) | New token ids → incremental text, stop strings, logprobs. Builds a `RequestOutput`; `finished=True` once the engine reported a finish reason |
+| — | Return (no breakpoint) | `offline.py` `_run_engine` | Collects finished outputs, sorts them back into prompt order, returns them from `LLM.generate` |
 
 On GPU (Kaggle), rows 7–8 are `GPUModelRunner.execute_model` / `sample_tokens` in `vllm/v1/worker/gpu_model_runner.py` and `Sampler.forward` in `vllm/v1/sample/sampler.py`. Everything else is the same code.
 
