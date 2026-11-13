@@ -1,0 +1,14 @@
+test_four_gpu (__main__.TestPageInterleaveIndexer.test_four_gpu) ... [CI Test Method] TestPageInterleaveIndexer.test_four_gpu
+skipped 'indexer KV sharding test requires 4 GPUs'
+test_two_gpu (__main__.TestPageInterleaveIndexer.test_two_gpu) ... [CI Test Method] TestPageInterleaveIndexer.test_two_gpu
+skipped 'DSA indexer K cache stores FP8 E4M3, which needs SM 8.9+'
+test_four_gpu_matches_unsharded_full_and_shared_layers (__main__.TestShardedDSAAttention.test_four_gpu_matches_unsharded_full_and_shared_layers) ... skipped 'requires four CUDA GPUs'
+test_cuda_writers_match_unsharded_bytes (__main__.TestShardedDSAIndexerWrite.test_cuda_writers_match_unsharded_bytes) ... ok
+test_cp_request_filtering_keeps_both_address_spaces_aligned (__main__.TestShardedDSAMetadata.test_cp_request_filtering_keeps_both_address_spaces_aligned) ... ok
+test_prefill_cp_shard_topk_route (__main__.TestShardedDSAMetadata.test_prefill_cp_shard_topk_route)
+The packed prefill top-k takes an unsharded batch, and a CP shard only ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 4.344s
+
+OK (skipped=3)

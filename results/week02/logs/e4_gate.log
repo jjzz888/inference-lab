@@ -1,0 +1,152 @@
+test_two_gpu (test_page_sharded_dsa_attention.TestPageInterleaveIndexer.test_two_gpu) ... [CI Test Method] TestPageInterleaveIndexer.test_two_gpu
+W1108 12:09:27.408000 865 torch/multiprocessing/spawn.py:165] Terminating process 878 via signal SIGTERM
+Traceback (most recent call last):
+  File "/root/lab/sglang/python/sglang/srt/utils/common.py", line 467, in retry
+    return fn()
+           ^^^^
+  File "/root/lab/sglang/python/sglang/test/test_utils.py", line 2513, in <lambda>
+    lambda: super(CustomTestCase, self)._callTestMethod(method),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/unittest/case.py", line 589, in _callTestMethod
+    if method() is not None:
+       ^^^^^^^^
+  File "/root/lab/sglang/test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py", line 562, in test_two_gpu
+    self._test_world(2)
+  File "/root/lab/sglang/test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py", line 554, in _test_world
+    mp.spawn(
+  File "/root/lab/sglang/.venv/lib/python3.12/site-packages/torch/multiprocessing/spawn.py", line 340, in spawn
+    return start_processes(fn, args, nprocs, join, daemon, start_method="spawn")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/lab/sglang/.venv/lib/python3.12/site-packages/torch/multiprocessing/spawn.py", line 296, in start_processes
+    while not context.join():
+              ^^^^^^^^^^^^^^
+  File "/root/lab/sglang/.venv/lib/python3.12/site-packages/torch/multiprocessing/spawn.py", line 211, in join
+    raise ProcessRaisedException(msg, error_index, failed_process.pid)
+torch.multiprocessing.spawn.ProcessRaisedException: 
+
+-- Process 0 terminated with the following error:
+Traceback (most recent call last):
+  File "/root/lab/sglang/.venv/lib/python3.12/site-packages/torch/multiprocessing/spawn.py", line 87, in _wrap
+    fn(i, *args)
+  File "/root/lab/sglang/test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py", line 503, in _run_indexer
+    check.seed(prefix, generation=1)
+  File "/root/lab/sglang/test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py", line 246, in seed
+    self.store(locs, layer_id, generation)
+  File "/root/lab/sglang/test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py", line 207, in store
+    pool.set_index_k_scale_buffer(layer_id, locs, keys, write_scales)
+  File "/root/lab/sglang/python/sglang/srt/mem_cache/memory_pool.py", line 5655, in set_index_k_scale_buffer
+    self.index_key_cache.store_quantized(layer_id, loc, index_k, index_k_scale)
+  File "/root/lab/sglang/python/sglang/srt/mem_cache/page_interleave_pool.py", line 931, in store_quantized
+    dsa_index_k_cache.SetKAndS.execute(
+  File "/root/lab/sglang/python/sglang/kernels/ops/kvcache/dsa_index_k_cache.py", line 121, in execute
+    cls.triton(*args, **kwargs, buf=buf)
+  File "/root/lab/sglang/python/sglang/kernels/ops/kvcache/dsa_index_k_cache.py", line 127, in triton
+    _set_k_and_s_triton(
+  File "/root/lab/sglang/python/sglang/kernels/ops/kvcache/dsa_index_k_cache.py", line 200, in _set_k_and_s_triton
+    _set_k_and_s_triton_kernel[(num_tokens_to_write,)](
+  File "/root/lab/sglang/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 374, in <lambda>
+    return lambda *args, **kwargs: self.run(grid=grid, warmup=False, *args, **kwargs)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/lab/sglang/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 757, in run
+    kernel = self._do_compile(key, signature, device, constexprs, options, attrs, warmup)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/lab/sglang/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 902, in _do_compile
+    kernel = self.compile(src, target=target, options=options.__dict__)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/lab/sglang/.venv/lib/python3.12/site-packages/triton/compiler/compiler.py", line 307, in compile
+    module = src.make_ir(target, options, codegen_fns, module_map, context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/lab/sglang/.venv/lib/python3.12/site-packages/triton/compiler/compiler.py", line 80, in make_ir
+    return ast_to_ttir(self.fn, self, context=context, options=options, codegen_fns=codegen_fns,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+triton.compiler.errors.CompilationError: at 1:0:
+def _set_k_and_s_triton_kernel(
+^
+ValueError("type fp8e4nv not supported in this architecture. The supported fp8 dtypes are ('fp8e4b15', 'fp8e5')")
+
+ERROR
+
+======================================================================
+ERROR: test_two_gpu (test_page_sharded_dsa_attention.TestPageInterleaveIndexer.test_two_gpu)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/lab/sglang/python/sglang/srt/utils/common.py", line 467, in retry
+    return fn()
+           ^^^^
+  File "/root/lab/sglang/python/sglang/test/test_utils.py", line 2513, in <lambda>
+    lambda: super(CustomTestCase, self)._callTestMethod(method),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/unittest/case.py", line 589, in _callTestMethod
+    if method() is not None:
+       ^^^^^^^^
+  File "/root/lab/sglang/test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py", line 562, in test_two_gpu
+    self._test_world(2)
+  File "/root/lab/sglang/test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py", line 554, in _test_world
+    mp.spawn(
+  File "/root/lab/sglang/.venv/lib/python3.12/site-packages/torch/multiprocessing/spawn.py", line 340, in spawn
+    return start_processes(fn, args, nprocs, join, daemon, start_method="spawn")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/lab/sglang/.venv/lib/python3.12/site-packages/torch/multiprocessing/spawn.py", line 296, in start_processes
+    while not context.join():
+              ^^^^^^^^^^^^^^
+  File "/root/lab/sglang/.venv/lib/python3.12/site-packages/torch/multiprocessing/spawn.py", line 211, in join
+    raise ProcessRaisedException(msg, error_index, failed_process.pid)
+torch.multiprocessing.spawn.ProcessRaisedException: 
+
+-- Process 0 terminated with the following error:
+Traceback (most recent call last):
+  File "/root/lab/sglang/.venv/lib/python3.12/site-packages/torch/multiprocessing/spawn.py", line 87, in _wrap
+    fn(i, *args)
+  File "/root/lab/sglang/test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py", line 503, in _run_indexer
+    check.seed(prefix, generation=1)
+  File "/root/lab/sglang/test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py", line 246, in seed
+    self.store(locs, layer_id, generation)
+  File "/root/lab/sglang/test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py", line 207, in store
+    pool.set_index_k_scale_buffer(layer_id, locs, keys, write_scales)
+  File "/root/lab/sglang/python/sglang/srt/mem_cache/memory_pool.py", line 5655, in set_index_k_scale_buffer
+    self.index_key_cache.store_quantized(layer_id, loc, index_k, index_k_scale)
+  File "/root/lab/sglang/python/sglang/srt/mem_cache/page_interleave_pool.py", line 931, in store_quantized
+    dsa_index_k_cache.SetKAndS.execute(
+  File "/root/lab/sglang/python/sglang/kernels/ops/kvcache/dsa_index_k_cache.py", line 121, in execute
+    cls.triton(*args, **kwargs, buf=buf)
+  File "/root/lab/sglang/python/sglang/kernels/ops/kvcache/dsa_index_k_cache.py", line 127, in triton
+    _set_k_and_s_triton(
+  File "/root/lab/sglang/python/sglang/kernels/ops/kvcache/dsa_index_k_cache.py", line 200, in _set_k_and_s_triton
+    _set_k_and_s_triton_kernel[(num_tokens_to_write,)](
+  File "/root/lab/sglang/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 374, in <lambda>
+    return lambda *args, **kwargs: self.run(grid=grid, warmup=False, *args, **kwargs)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/lab/sglang/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 757, in run
+    kernel = self._do_compile(key, signature, device, constexprs, options, attrs, warmup)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/lab/sglang/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 902, in _do_compile
+    kernel = self.compile(src, target=target, options=options.__dict__)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/lab/sglang/.venv/lib/python3.12/site-packages/triton/compiler/compiler.py", line 307, in compile
+    module = src.make_ir(target, options, codegen_fns, module_map, context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/lab/sglang/.venv/lib/python3.12/site-packages/triton/compiler/compiler.py", line 80, in make_ir
+    return ast_to_ttir(self.fn, self, context=context, options=options, codegen_fns=codegen_fns,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+triton.compiler.errors.CompilationError: at 1:0:
+def _set_k_and_s_triton_kernel(
+^
+ValueError("type fp8e4nv not supported in this architecture. The supported fp8 dtypes are ('fp8e4b15', 'fp8e5')")
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/lab/sglang/python/sglang/test/test_utils.py", line 2512, in _callTestMethod
+    retry(
+  File "/root/lab/sglang/python/sglang/srt/utils/common.py", line 482, in retry
+    raise Exception("retry() exceed maximum number of retries.")
+Exception: retry() exceed maximum number of retries.
+
+----------------------------------------------------------------------
+Ran 1 test in 18.182s
+
+FAILED (errors=1)
+errors: 1 skipped: 0
+/root/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 1 leaked shared_memory objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

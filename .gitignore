@@ -4,3 +4,4 @@ __pycache__/
 
 # Downloaded papers (re-downloadable from arXiv)
 papers/
+.DS_Store

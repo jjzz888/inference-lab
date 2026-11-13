@@ -176,8 +176,17 @@ The `cudaGetErrorString(int)` bug is the more serious finding, but it already ha
 ## Status
 - [x] Week 1 run found the failure (2026-11-08, `cbbc6b67f4`)
 - [x] Duplicate search, history and root cause (2026-11-08, `main` `3bcde0c80e`)
-- [ ] E1 reproduce at the PR base
-- [ ] Branch, edit, pre-commit, commit, push to fork
-- [ ] E2–E6 on Kaggle; logs in `results/week02/`
-- [ ] PR opened; CI triggered
+- [x] Step 1 re-check (2026-11-08, `main` `c24285bde9`): still no issue/PR; file last changed at `cbbc6b67f4`; gate unchanged. [#47578](https://github.com/sgl-project/sglang/pull/47578) touches `page_interleave` but not this file
+- [x] E1 reproduce at the PR base (`c24285bde9`): `ERROR`, `fp8e4nv not supported`
+- [x] Branch, edit, pre-commit (all passed), commit `61918f024d` (signed-off + Claude `Co-authored-by`, common in upstream history), pushed to `fork/test/dsa-indexer-shard-fp8-gate`
+- [x] E2–E6 on Kaggle 2× T4 (2026-11-08, notebook `tiramisooo/sglang-first-pr`); logs in `results/week02/logs/`. All as expected:
+  - E2 skipped with the new reason; E3 whole file `FAILED (errors=1, skipped=2)` → `OK (skipped=3)`, the other 4 tests unchanged; E4 patched `(9, 0)` → back to `fp8e4nv` (`errors: 1`); E5 `requires 2 GPUs`
+  - E6a sweep: `test_page_interleave_gather_multi_gpu.py` and `test_dsa_layer_split_broadcast.py` check `device_count()` but use no FP8, so this file is the only hit
+  - E6b `unit/mem_cache` via `sglang_tests.sh`: this file now passes. Compared with Week 1, `test_page_interleave_shard.py` also passes now (unrelated); new failure `test_unified_scheduler_hooks.py` (see below)
+  - `ci_base.log` / `ci_pr.log` are **invalid**: the cell ran `run_suite.py` without `.venv/bin` on `PATH`, so the child `python3` had no `sglang`. E6b is the valid CI-style evidence
+- [x] PR body drafted: [sglang_pr_body.md](sglang_pr_body.md)
+- [x] PR opened: [#49164](https://github.com/sgl-project/sglang/pull/49164) (2026-11-08, head `61918f024d`); mergeable, review required
+- [ ] CI triggered: the `pr-gate` checks fail with `Missing required label 'run-ci'` (and the `*-finish` jobs fail after them). Needs a maintainer to add `run-ci` / comment `/tag-and-rerun-ci`; asked in the PR body. If nobody responds in a few days, ask on the SGLang Slack
+- [ ] 2026-11-13 check: no labels, comments, reviews or review requests since opening (only the bot note that automated review is off for forks). Still merges cleanly into `main` `4f8b686753`; upstream changed the file twice (`4a99de617f`, `1edbe8f6f5`) but not `TestPageInterleaveIndexer`, and the gate is still missing. Pinged for `run-ci` in a [PR comment](https://github.com/sgl-project/sglang/pull/49164#issuecomment-6842615998) (2026-11-13), then [cc'd hnyls2002](https://github.com/sgl-project/sglang/pull/49164#issuecomment-6842667199) (`mem_cache` CODEOWNER, author of #49144). If still silent in a few days: SGLang Slack
+- [ ] Candidate for a 2nd PR: `test_unified_scheduler_hooks.py::TestOpportunisticCompactionErrors::test_an_error_after_processing_a_result_early_propagates` fails with `AttributeError: 'Scheduler' object has no attribute 'pause_state'`. [#49144](https://github.com/sgl-project/sglang/pull/49144) (`b070051032`) moved `_engine_paused` into `PauseState`, but the test still sets `scheduler._engine_paused`. Not fixed on `main` `3825fcd397`; no issue or PR found. CPU CI should hit it too, so someone may fix it soon: re-check before taking it. Plan: [sglang_second_pr_plan.md](sglang_second_pr_plan.md)
 - [ ] Optional: verification comment on the `cudaGetErrorString` PRs

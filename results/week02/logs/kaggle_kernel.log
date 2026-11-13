@@ -1,0 +1,131 @@
+[{"stream_name":"stderr","time":7.701332111,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":7.701388507,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":7.701393037,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":7.701395579,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":8.275533462,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":8.275559186,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":8.275577538,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":8.275582111,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stdout","time":253.291816501,"data":"\u001b[1;36m==\u003e GPU / driver\u001b[0m\n"}
+,{"stream_name":"stdout","time":253.291865587,"data":"\u001b[1;36m==\u003e libcuda.so link stub for FlashInfer JIT\u001b[0m\n"}
+,{"stream_name":"stdout","time":253.291875414,"data":"created: /usr/local/lib/libcuda.so -\u003e /usr/local/nvidia/lib64/libcuda.so.1 (verified: -lcuda links)\n"}
+,{"stream_name":"stdout","time":253.291880308,"data":"\u001b[1;36m==\u003e Installing / upgrading uv\u001b[0m\n"}
+,{"stream_name":"stdout","time":253.291884625,"data":"\u001b[1;36m==\u003e uv settings preset by the image (if any)\u001b[0m\n"}
+,{"stream_name":"stdout","time":253.291889589,"data":"\u001b[1;36m==\u003e SGLang: clone (c24285bde9)\u001b[0m\n"}
+,{"stream_name":"stdout","time":253.291895043,"data":"Cloning into '/root/lab/sglang'...\n"}
+,{"stream_name":"stdout","time":253.291899369,"data":"sglang @ c24285bde9 (c24285bde9)\n"}
+,{"stream_name":"stdout","time":253.291904097,"data":"\u001b[1;36m==\u003e SGLang: venv + editable install\u001b[0m\n"}
+,{"stream_name":"stdout","time":253.291908142,"data":"   Building sglang @ file:///root/lab/sglang/python\n"}
+,{"stream_name":"stdout","time":253.291912443,"data":"Downloading sglang-kernel (355.7MiB)\n"}
+,{"stream_name":"stdout","time":253.291918042,"data":"      Built sglang @ file:///root/lab/sglang/python\n"}
+,{"stream_name":"stdout","time":253.291922976,"data":" Downloaded sglang-kernel\n"}
+,{"stream_name":"stdout","time":253.291928461,"data":" + sglang==0.5.24.dev958+gc24285bde (from file:///root/lab/sglang/python)\n"}
+,{"stream_name":"stdout","time":253.291933101,"data":" + sglang-kernel==0.4.10\n"}
+,{"stream_name":"stdout","time":253.291937505,"data":"\u001b[1;36m==\u003e SGLang: sanity check\u001b[0m\n"}
+,{"stream_name":"stdout","time":253.29194278,"data":"python /root/lab/sglang/.venv/bin/python | in venv: True\n"}
+,{"stream_name":"stdout","time":253.291947734,"data":"sglang 0.5.24.dev958+gc24285bde | file /root/lab/sglang/python/sglang/__init__.py\n"}
+,{"stream_name":"stdout","time":253.291952539,"data":"\u001b[1;36m==\u003e Done. Logs in /root/lab/logs\u001b[0m\n"}
+,{"stream_name":"stdout","time":2721.16344803,"data":"name, compute_cap, driver_version\n"}
+,{"stream_name":"stdout","time":2721.163494772,"data":"Tesla T4, 7.5, 580.178.04\n"}
+,{"stream_name":"stdout","time":2721.163500423,"data":"Tesla T4, 7.5, 580.178.04\n"}
+,{"stream_name":"stdout","time":2721.163505101,"data":"torch 2.14.1+cu130 cuda 13.0 triton 3.8.0 cap (7, 5)\n"}
+,{"stream_name":"stdout","time":2721.163509432,"data":"base: c24285bde97c3e6424cd5d8cb35788889034d8ea\n"}
+,{"stream_name":"stdout","time":2721.163513708,"data":"==\u003e E1 base: test_two_gpu\n"}
+,{"stream_name":"stdout","time":2721.163526929,"data":"Ran 1 test in 26.844s\n"}
+,{"stream_name":"stdout","time":2721.163531781,"data":"\n"}
+,{"stream_name":"stdout","time":2721.163539157,"data":"FAILED (errors=1)\n"}
+,{"stream_name":"stdout","time":2721.163542118,"data":"/root/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 1 leaked shared_memory objects to clean up at shutdown\n"}
+,{"stream_name":"stdout","time":2721.163545714,"data":"  warnings.warn('resource_tracker: There appear to be %d '\n"}
+,{"stream_name":"stdout","time":2721.163548056,"data":"ValueError(\"type fp8e4nv not supported in this architecture. The supported fp8 dtypes are ('fp8e4b15', 'fp8e5')\")\n"}
+,{"stream_name":"stdout","time":2721.163550509,"data":"==\u003e E3 base: whole file\n"}
+,{"stream_name":"stdout","time":2721.163552772,"data":"\n"}
+,{"stream_name":"stdout","time":2721.16355485,"data":"FAILED (errors=1, skipped=2)\n"}
+,{"stream_name":"stdout","time":2721.163557032,"data":"/root/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 1 leaked shared_memory objects to clean up at shutdown\n"}
+,{"stream_name":"stdout","time":2721.163559539,"data":"  warnings.warn('resource_tracker: There appear to be %d '\n"}
+,{"stream_name":"stdout","time":2721.163561842,"data":"==\u003e CI-style base run\n"}
+,{"stream_name":"stdout","time":2721.163564011,"data":"\n"}
+,{"stream_name":"stdout","time":2721.163566084,"data":"========== TIMINGS BEGIN ==========\n"}
+,{"stream_name":"stdout","time":2721.163568254,"data":"{\"file\": \"test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py\", \"passed\": false, \"elapsed\": 11}\n"}
+,{"stream_name":"stdout","time":2721.163570954,"data":"========== TIMINGS END ==========\n"}
+,{"stream_name":"stdout","time":2721.163573104,"data":"pr: 61918f024d2aad24c926734ab2d749abd1e7f517\n"}
+,{"stream_name":"stdout","time":2721.163575284,"data":" test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py | 2 ++\n"}
+,{"stream_name":"stdout","time":2721.16357749,"data":" 1 file changed, 2 insertions(+)\n"}
+,{"stream_name":"stdout","time":2721.163579709,"data":"==\u003e E2 PR: test_two_gpu\n"}
+,{"stream_name":"stdout","time":2721.163581887,"data":"\n"}
+,{"stream_name":"stdout","time":2721.163583981,"data":"----------------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":2721.163586173,"data":"Ran 1 test in 0.000s\n"}
+,{"stream_name":"stdout","time":2721.163588701,"data":"\n"}
+,{"stream_name":"stdout","time":2721.163608376,"data":"OK (skipped=1)\n"}
+,{"stream_name":"stdout","time":2721.163612094,"data":"==\u003e E3 PR: whole file\n"}
+,{"stream_name":"stdout","time":2721.163615724,"data":"----------------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":2721.163618874,"data":"Ran 6 tests in 4.344s\n"}
+,{"stream_name":"stdout","time":2721.163622225,"data":"\n"}
+,{"stream_name":"stdout","time":2721.16362573,"data":"OK (skipped=3)\n"}
+,{"stream_name":"stdout","time":2721.163629378,"data":"--- E3 per-test diff (base vs PR):\n"}
+,{"stream_name":"stdout","time":2721.16363263,"data":"==\u003e CI-style PR run\n"}
+,{"stream_name":"stdout","time":2721.163635864,"data":"\n"}
+,{"stream_name":"stdout","time":2721.163638939,"data":"========== TIMINGS BEGIN ==========\n"}
+,{"stream_name":"stdout","time":2721.163642247,"data":"{\"file\": \"test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py\", \"passed\": false, \"elapsed\": 2}\n"}
+,{"stream_name":"stdout","time":2721.163651614,"data":"========== TIMINGS END ==========\n"}
+,{"stream_name":"stdout","time":2721.163655432,"data":"==\u003e E4 PR: capability patched to (9, 0)\n"}
+,{"stream_name":"stdout","time":2721.163659385,"data":"errors: 1 skipped: 0\n"}
+,{"stream_name":"stdout","time":2721.163664692,"data":"/root/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 1 leaked shared_memory objects to clean up at shutdown\n"}
+,{"stream_name":"stdout","time":2721.163669763,"data":"  warnings.warn('resource_tracker: There appear to be %d '\n"}
+,{"stream_name":"stdout","time":2721.163673619,"data":"ValueError(\"type fp8e4nv not supported in this architecture. The supported fp8 dtypes are ('fp8e4b15', 'fp8e5')\")\n"}
+,{"stream_name":"stdout","time":2721.16369495,"data":"==\u003e E5 PR: 1 GPU\n"}
+,{"stream_name":"stdout","time":2721.16369886,"data":"----------------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":2721.163702887,"data":"Ran 1 test in 0.000s\n"}
+,{"stream_name":"stdout","time":2721.163705824,"data":"\n"}
+,{"stream_name":"stdout","time":2721.163708711,"data":"OK (skipped=1)\n"}
+,{"stream_name":"stdout","time":2721.16371188,"data":"==\u003e E6a sweep: device_count() files in unit/mem_cache\n"}
+,{"stream_name":"stdout","time":2721.16371547,"data":"test/registered/unit/mem_cache/test_page_interleave_gather_multi_gpu.py     fp8=0   capgate=0\n"}
+,{"stream_name":"stdout","time":2721.16371873,"data":"test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py           fp8=25  capgate=4\n"}
+,{"stream_name":"stdout","time":2721.163722004,"data":"test/registered/unit/mem_cache/test_dsa_layer_split_broadcast.py            fp8=0   capgate=0\n"}
+,{"stream_name":"stdout","time":2721.163725517,"data":"==\u003e E6b unit/mem_cache suite on PR branch\n"}
+,{"stream_name":"stdout","time":2721.163728647,"data":"{\"file\": \"test/registered/unit/mem_cache/test_iteration_ids.py\", \"passed\": true, \"elapsed\": 15}\n"}
+,{"stream_name":"stdout","time":2721.163733121,"data":"{\"file\": \"test/registered/unit/mem_cache/test_session_unified_radix_cache.py\", \"passed\": true, \"elapsed\": 14}\n"}
+,{"stream_name":"stdout","time":2721.163737206,"data":"{\"file\": \"test/registered/unit/mem_cache/test_hicache_nixl_cleaner.py\", \"passed\": true, \"elapsed\": 8}\n"}
+,{"stream_name":"stdout","time":2721.16374108,"data":"{\"file\": \"test/registered/unit/mem_cache/test_mla_host_dedup_primitives.py\", \"passed\": true, \"elapsed\": 11}\n"}
+,{"stream_name":"stdout","time":2721.163745198,"data":"{\"file\": \"test/registered/unit/mem_cache/test_unified_mamba_views.py\", \"passed\": true, \"elapsed\": 12}\n"}
+,{"stream_name":"stdout","time":2721.163749145,"data":"{\"file\": \"test/registered/unit/mem_cache/test_minimax_sparse_pool_pd_unit.py\", \"passed\": true, \"elapsed\": 12}\n"}
+,{"stream_name":"stdout","time":2721.163753427,"data":"{\"file\": \"test/registered/unit/mem_cache/test_hicache_file_storage_path_unit.py\", \"passed\": true, \"elapsed\": 7}\n"}
+,{"stream_name":"stdout","time":2721.163757787,"data":"{\"file\": \"test/registered/unit/mem_cache/test_hicache_host_register.py\", \"passed\": true, \"elapsed\": 6}\n"}
+,{"stream_name":"stdout","time":2721.163761393,"data":"{\"file\": \"test/registered/unit/mem_cache/test_physical_write_loc.py\", \"passed\": true, \"elapsed\": 43}\n"}
+,{"stream_name":"stdout","time":2721.163765737,"data":"{\"file\": \"test/registered/unit/mem_cache/test_radix_force_miss.py\", \"passed\": true, \"elapsed\": 12}\n"}
+,{"stream_name":"stdout","time":2721.163769976,"data":"{\"file\": \"test/registered/unit/mem_cache/test_free_kv_row_coalesce.py\", \"passed\": true, \"elapsed\": 12}\n"}
+,{"stream_name":"stdout","time":2721.163779919,"data":"{\"file\": \"test/registered/unit/mem_cache/test_unified_window_sub_pools.py\", \"passed\": true, \"elapsed\": 13}\n"}
+,{"stream_name":"stdout","time":2721.163785448,"data":"{\"file\": \"test/registered/unit/mem_cache/test_unified_pending_event_batches.py\", \"passed\": true, \"elapsed\": 14}\n"}
+,{"stream_name":"stdout","time":2721.16378916,"data":"{\"file\": \"test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py\", \"passed\": true, \"elapsed\": 16}\n"}
+,{"stream_name":"stdout","time":2721.163793168,"data":"{\"file\": \"test/registered/unit/mem_cache/test_unified_radix_allocation_eviction.py\", \"passed\": true, \"elapsed\": 14}\n"}
+,{"stream_name":"stdout","time":2721.163797541,"data":"{\"file\": \"test/registered/unit/mem_cache/test_mem_pool_host.py\", \"passed\": true, \"elapsed\": 41}\n"}
+,{"stream_name":"stdout","time":2721.163814057,"data":"{\"file\": \"test/registered/unit/mem_cache/test_swa_cpu_copy_filter.py\", \"passed\": true, \"elapsed\": 13}\n"}
+,{"stream_name":"stdout","time":2721.163818639,"data":"{\"file\": \"test/registered/unit/mem_cache/kv/test_request_window_memory.py\", \"passed\": true, \"elapsed\": 12}\n"}
+,{"stream_name":"stdout","time":2721.163822317,"data":"{\"file\": \"test/registered/unit/mem_cache/kv/test_import_order.py\", \"passed\": true, \"elapsed\": 8}\n"}
+,{"stream_name":"stdout","time":2721.163825975,"data":"{\"file\": \"test/registered/unit/mem_cache/kv/test_uncached_state_share.py\", \"passed\": true, \"elapsed\": 13}\n"}
+,{"stream_name":"stdout","time":2721.163830344,"data":"{\"file\": \"test/registered/unit/mem_cache/kv/test_host_layout.py\", \"passed\": true, \"elapsed\": 13}\n"}
+,{"stream_name":"stdout","time":2721.163834549,"data":"{\"file\": \"test/registered/unit/mem_cache/kv/test_ple_state_coordinates.py\", \"passed\": true, \"elapsed\": 14}\n"}
+,{"stream_name":"stdout","time":2721.163838917,"data":"{\"file\": \"test/registered/unit/mem_cache/kv/test_declared_parts.py\", \"passed\": true, \"elapsed\": 17}\n"}
+,{"stream_name":"stdout","time":2721.163842733,"data":"{\"file\": \"test/registered/unit/mem_cache/kv/test_state_entry_alignment.py\", \"passed\": true, \"elapsed\": 13}\n"}
+,{"stream_name":"stdout","time":2721.163846665,"data":"========== TIMINGS END ==========\n"}
+,{"stream_name":"stdout","time":2721.193196503,"data":"-rw-r--r-- 1 root root   2139 Nov  8 12:08 /kaggle/working/results/week02/ci_base.log\n"}
+,{"stream_name":"stdout","time":2721.193237793,"data":"-rw-r--r-- 1 root root   2136 Nov  8 12:08 /kaggle/working/results/week02/ci_pr.log\n"}
+,{"stream_name":"stdout","time":2721.193244166,"data":"-rw-r--r-- 1 root root  10600 Nov  8 12:06 /kaggle/working/results/week02/e1_base_two_gpu.log\n"}
+,{"stream_name":"stdout","time":2721.193248661,"data":"-rw-r--r-- 1 root root    299 Nov  8 12:08 /kaggle/working/results/week02/e2_pr_two_gpu.log\n"}
+,{"stream_name":"stdout","time":2721.193252655,"data":"-rw-r--r-- 1 root root  11210 Nov  8 12:07 /kaggle/working/results/week02/e3_base_file.log\n"}
+,{"stream_name":"stdout","time":2721.193256306,"data":"-rw-r--r-- 1 root root   1124 Nov  8 12:08 /kaggle/working/results/week02/e3_pr_file.log\n"}
+,{"stream_name":"stdout","time":2721.193259714,"data":"-rw-r--r-- 1 root root  10441 Nov  8 12:09 /kaggle/working/results/week02/e4_gate.log\n"}
+,{"stream_name":"stdout","time":2721.193263042,"data":"-rw-r--r-- 1 root root    283 Nov  8 12:09 /kaggle/working/results/week02/e5_1gpu.log\n"}
+,{"stream_name":"stdout","time":2721.193266441,"data":"-rw-r--r-- 1 root root   4530 Nov  8 12:47 /kaggle/working/results/week02/e6_console.log\n"}
+,{"stream_name":"stdout","time":2721.193269898,"data":"-rw-r--r-- 1 root root 282566 Nov  8 12:47 /kaggle/working/results/week02/e6_mem_cache_tests.log\n"}
+,{"stream_name":"stdout","time":2721.193286989,"data":"-rw-r--r-- 1 root root    282 Nov  8 12:09 /kaggle/working/results/week02/e6_sweep.txt\n"}
+,{"stream_name":"stdout","time":2721.19328996,"data":"-rw-r--r-- 1 root root    338 Nov  8 12:08 /kaggle/working/results/week02/env.txt\n"}
+,{"stream_name":"stdout","time":2721.193292199,"data":"-rw-r--r-- 1 root root  13321 Nov  8 12:47 /kaggle/working/results/week02/setup_sglang.log\n"}
+,{"stream_name":"stderr","time":2723.900315406,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":2723.900352036,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":2724.077851224,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":2724.077884433,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":2724.845059557,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to notebook\n"}
+,{"stream_name":"stderr","time":2724.920863734,"data":"[NbConvertApp] Writing 16557 bytes to __notebook__.ipynb\n"}
+,{"stream_name":"stderr","time":2727.312205696,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to html\n"}
+,{"stream_name":"stderr","time":2727.480212147,"data":"[NbConvertApp] Writing 296586 bytes to __results__.html\n"}
+]

@@ -1,0 +1,7 @@
+test_two_gpu (__main__.TestPageInterleaveIndexer.test_two_gpu) ... [CI Test Method] TestPageInterleaveIndexer.test_two_gpu
+skipped 'DSA indexer K cache stores FP8 E4M3, which needs SM 8.9+'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+OK (skipped=1)

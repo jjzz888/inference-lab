@@ -1,0 +1,7 @@
+test_two_gpu (__main__.TestPageInterleaveIndexer.test_two_gpu) ... [CI Test Method] TestPageInterleaveIndexer.test_two_gpu
+skipped 'indexer KV sharding test requires 2 GPUs'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+OK (skipped=1)

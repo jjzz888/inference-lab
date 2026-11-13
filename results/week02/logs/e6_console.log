@@ -1,0 +1,49 @@
+sglang @ 61918f024d (2026-11-08 19:45:59 +0800)
+
+[1;36m==> Test deps[0m
+
+[1;36m==> Scope: 206 files from: test/registered/unit/mem_cache[0m
+
+[1;36m==> Running test/run_suite.py --hw cpu --suite base-a-test-cpu --continue-on-error --only-file-list /root/lab/logs/sglang_unit_files.txt[0m
+
+[1;36m==> Done in 37 min: some tests failed. Full log: /root/lab/logs/sglang_tests.log[0m
+{"file": "test/registered/unit/mem_cache/test_hicache_mamba_slot_side_states.py", "passed": true, "elapsed": 10}
+{"file": "test/registered/unit/mem_cache/test_unified_byte_budget_sizing.py", "passed": true, "elapsed": 13}
+{"file": "test/registered/unit/mem_cache/test_component_split_contract.py", "passed": true, "elapsed": 14}
+{"file": "test/registered/unit/mem_cache/test_hicache_dcp_host_pool.py", "passed": true, "elapsed": 13}
+{"file": "test/registered/unit/mem_cache/test_unified_conv_compaction.py", "passed": true, "elapsed": 16}
+{"file": "test/registered/unit/mem_cache/test_unified_byte_accounting.py", "passed": true, "elapsed": 14}
+{"file": "test/registered/unit/mem_cache/test_kv_stride_hygiene.py", "passed": true, "elapsed": 11}
+{"file": "test/registered/unit/mem_cache/test_unified_capacity_memo.py", "passed": true, "elapsed": 13}
+{"file": "test/registered/unit/mem_cache/test_storage_prefetch_lifecycle.py", "passed": true, "elapsed": 38}
+{"file": "test/registered/unit/mem_cache/test_hicache_storage_registration_hook.py", "passed": true, "elapsed": 12}
+{"file": "test/registered/unit/mem_cache/test_storage_prefetch_span.py", "passed": true, "elapsed": 12}
+{"file": "test/registered/unit/mem_cache/test_draft_depth_state.py", "passed": true, "elapsed": 12}
+{"file": "test/registered/unit/mem_cache/test_rust_tree_core_errors.py", "passed": false, "elapsed": 11}
+{"file": "test/registered/unit/mem_cache/test_hicache_seaweedfs_storage.py", "passed": true, "elapsed": 12}
+{"file": "test/registered/unit/mem_cache/test_paged_allocator_lazy_release.py", "passed": true, "elapsed": 8}
+{"file": "test/registered/unit/mem_cache/test_iteration_ids.py", "passed": true, "elapsed": 15}
+{"file": "test/registered/unit/mem_cache/test_session_unified_radix_cache.py", "passed": true, "elapsed": 14}
+{"file": "test/registered/unit/mem_cache/test_hicache_nixl_cleaner.py", "passed": true, "elapsed": 8}
+{"file": "test/registered/unit/mem_cache/test_mla_host_dedup_primitives.py", "passed": true, "elapsed": 11}
+{"file": "test/registered/unit/mem_cache/test_unified_mamba_views.py", "passed": true, "elapsed": 12}
+{"file": "test/registered/unit/mem_cache/test_minimax_sparse_pool_pd_unit.py", "passed": true, "elapsed": 12}
+{"file": "test/registered/unit/mem_cache/test_hicache_file_storage_path_unit.py", "passed": true, "elapsed": 7}
+{"file": "test/registered/unit/mem_cache/test_hicache_host_register.py", "passed": true, "elapsed": 6}
+{"file": "test/registered/unit/mem_cache/test_physical_write_loc.py", "passed": true, "elapsed": 43}
+{"file": "test/registered/unit/mem_cache/test_radix_force_miss.py", "passed": true, "elapsed": 12}
+{"file": "test/registered/unit/mem_cache/test_free_kv_row_coalesce.py", "passed": true, "elapsed": 12}
+{"file": "test/registered/unit/mem_cache/test_unified_window_sub_pools.py", "passed": true, "elapsed": 13}
+{"file": "test/registered/unit/mem_cache/test_unified_pending_event_batches.py", "passed": true, "elapsed": 14}
+{"file": "test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py", "passed": true, "elapsed": 16}
+{"file": "test/registered/unit/mem_cache/test_unified_radix_allocation_eviction.py", "passed": true, "elapsed": 14}
+{"file": "test/registered/unit/mem_cache/test_mem_pool_host.py", "passed": true, "elapsed": 41}
+{"file": "test/registered/unit/mem_cache/test_swa_cpu_copy_filter.py", "passed": true, "elapsed": 13}
+{"file": "test/registered/unit/mem_cache/kv/test_request_window_memory.py", "passed": true, "elapsed": 12}
+{"file": "test/registered/unit/mem_cache/kv/test_import_order.py", "passed": true, "elapsed": 8}
+{"file": "test/registered/unit/mem_cache/kv/test_uncached_state_share.py", "passed": true, "elapsed": 13}
+{"file": "test/registered/unit/mem_cache/kv/test_host_layout.py", "passed": true, "elapsed": 13}
+{"file": "test/registered/unit/mem_cache/kv/test_ple_state_coordinates.py", "passed": true, "elapsed": 14}
+{"file": "test/registered/unit/mem_cache/kv/test_declared_parts.py", "passed": true, "elapsed": 17}
+{"file": "test/registered/unit/mem_cache/kv/test_state_entry_alignment.py", "passed": true, "elapsed": 13}
+========== TIMINGS END ==========

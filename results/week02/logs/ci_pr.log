@@ -1,0 +1,49 @@
+Precision filter (--only-file-list /tmp/dsa_list.txt): 1064 -> 1 test file(s)
++------------+-----------------+-----------+-------------+
+| Hardware   | Suite           | Nightly   | Partition   |
+|------------+-----------------+-----------+-------------|
+| CPU        | base-a-test-cpu | False     | full        |
++------------+-----------------+-----------+-------------+
+⚠️  Skipped 4 test(s):
+  - /root/lab/sglang/test/registered/unit/kernel_plugins/nvidia/_fakes.py (reason: megakernel test fakes)
+  - /root/lab/sglang/test/registered/unit/multimodal/rust/_mm_rust_utils.py (reason: Rust multimodal test helpers)
+  - /root/lab/sglang/test/registered/unit/multimodal/rust/qwen/_fixtures.py (reason: Qwen test fixtures)
+  - /root/lab/sglang/test/registered/unit/entrypoints/openai/utils.py (reason: helper module — exported fixtures, not a test)
+
+✅ Enabled 1 test(s) (est total 3.0s):
+  - /root/lab/sglang/test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py (est_time=3.0)
+
+.
+.
+Begin (0/0):
+python3 /root/lab/sglang/test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py
+.
+.
+
+Traceback (most recent call last):
+  File "/root/lab/sglang/test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py", line 26, in <module>
+    from sglang.srt.environ import envs
+ModuleNotFoundError: No module named 'sglang'
+.
+.
+End (0/0):
+filename='/root/lab/sglang/test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py', elapsed=2, estimated_time=3.0
+.
+.
+
+
+✗ FAILED: /root/lab/sglang/test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py returned exit code 1
+
+Fail. Time elapsed: 1.88s
+
+============================================================
+Test Summary: 0/1 passed
+============================================================
+
+✗ FAILED:
+  /root/lab/sglang/test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py (exit code 1)
+============================================================
+
+========== TIMINGS BEGIN ==========
+{"file": "test/registered/unit/mem_cache/test_page_sharded_dsa_attention.py", "passed": false, "elapsed": 2}
+========== TIMINGS END ==========
