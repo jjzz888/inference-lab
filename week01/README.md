@@ -80,7 +80,7 @@ On GPU (Kaggle), steps 7–8 are `GPUModelRunner.execute_model` / `sample_tokens
 4. **Later steps = decode.** Each running request gets 1 scheduled token per step. Watch `allocate_slots`: it usually returns no new blocks, and only grabs one when a request crosses a `block_size` boundary.
 5. **Finish.** When a request hits `max_tokens=48` (or EOS), `update_from_output` marks it finished and its blocks are freed. The output then flows through `process_outputs` back to `LLM.generate`.
 6. Useful debugger moves: `F10` step over, `F11` step into, `Shift+F11` step out. Right-click a breakpoint → **Edit Condition** (e.g. `len(self.waiting) > 0`) to skip empty iterations. The **Call Stack** panel shows how steps 4 → 5 → 6 nest.
-7. Turn what you saw into the Week 1 diagram (API server → scheduler → KV cache manager → model runner → sampler) and save it in `week01/`.
+7. Turn what you saw into the Week 1 diagram. The traced diagrams, a stage-by-stage table with file and line, and a fill-in observation table are in [request_lifecycle.md](request_lifecycle.md).
 
 ## Push to GitHub (before every Kaggle run)
 Kaggle only sees what is on GitHub (`jjzz888/inference-lab`, public), not your local files. If you skip this, `git clone` on Kaggle gets an old or empty repo and fails with `kaggle_setup.sh: No such file or directory`.
