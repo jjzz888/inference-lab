@@ -113,6 +113,33 @@ Caveats before drawing conclusions:
 - Rerun both at fixed concurrency (e.g. `--max-concurrency 16, 64`) and at finite request rates, which is closer to real serving than a single burst.
 - Align the knobs that differ by default (per-step token budget, max running requests) and repeat 3×.
 
+### Request lifecycle (vLLM v1)
+- Traced one request with 10 breakpoints on the Mac (vLLM `cef9a453b2`, `smoke_offline.py`, `InprocClient`). Write-up: [week01/request_lifecycle.md](week01/request_lifecycle.md), with sequence and request-state diagrams (also as PNGs) and answers to the seven stepping questions.
+- Key findings: tokenization runs before `LLMEngine.add_request` (in the offline renderer), so EngineCore only sees token ids. Running requests are scheduled before waiting ones, and one preemption blocks new admissions for that step. Preempted requests are recomputed, but prefix-cache hashes often rescue most of their KV. Prefix caching saves work in the scheduler by advancing `num_computed_tokens`; the runner has no special path.
+- Debugger gotcha: a breakpoint on a line with no bytecode (for example the `if (` line of a multi-line condition) is moved by debugpy to the `def` line and fires at import time.
+
+### Papers
+- Read PagedAttention / vLLM (Kwon et al., 2023) and SGLang / RadixAttention (Zheng et al., 2024). PDFs in `papers/` (git-ignored).
+
+### CUDA (Kaggle T4, 2026-11-11)
+Code and full results are in the vault's `CUDA/` folder ([[CUDA Labs#Exercise Log]]), outside this repo. Full-clock runs:
+
+| Kernel | Size | Result | % of peak |
+|---|---|---|---|
+| Vector add, coalesced | 64M floats | 257.3 GB/s | 80% of 320 GB/s |
+| Vector add, strided | 64M floats | 76.1 GB/s (3.4× slower) | 24% |
+| Naive matmul, `threadIdx.x` → column | 1024³ | 514.4 GFLOPS | 6.4% of 8.1 TFLOPS |
+| Naive matmul, `threadIdx.x` → row | 1024³ | 119.9 GFLOPS (4.3× slower) | 1.5% |
+
+- Every kernel sits left of the T4 ridge point (about 25 FLOP/byte), so all are memory-bound. Naive matmul beats its no-reuse roof (514 vs 80 GFLOPS) because caches give it real reuse.
+- An idle T4 runs at 300 MHz. Warm up for about 0.5 s before timing, or matmul reads 234 instead of 617 GFLOPS.
+
+### Week 1 status
+- [x] Environment, source builds, test suites and serving benchmarks for vLLM and SGLang
+- [x] Papers read; vLLM v1 request lifecycle drawn
+- [x] CUDA vector add and naive matmul
+- [ ] Community: join Slack/Discord, read `CONTRIBUTING.md`, shortlist 5 good first issues. Two PRs already open: [vllm-project/vllm#66355](https://github.com/vllm-project/vllm/pull/66355), [sgl-project/sglang#49164](https://github.com/sgl-project/sglang/pull/49164)
+
 ### Notes / possible first issues
 - vLLM `test_diffusion_read_deferral_keeps_a_longer_pp_wait` fails on any CUDA host with < 3 GPUs (`World size (3) is larger than the number of available GPUs (2)`). Week 2 PR candidate.
 - SGLang `pool_host/common.py` passes an `int` to `torch.cuda.cudart().cudaGetErrorString`, which expects a `cudaError` enum, so CUDA host-register/unregister failures raise `TypeError` instead of the intended warning or `RuntimeError`. Already reported upstream ([#40926](https://github.com/sgl-project/sglang/issues/40926)) with open fix PRs, so not our PR.
