@@ -138,7 +138,7 @@ Code and full results are in the vault's `CUDA/` folder ([[CUDA Labs#Exercise Lo
 - [x] Environment, source builds, test suites and serving benchmarks for vLLM and SGLang
 - [x] Papers read; vLLM v1 request lifecycle drawn
 - [x] CUDA vector add and naive matmul
-- [ ] Community: `CONTRIBUTING.md` read for both projects. Still to do: join Slack/Discord, shortlist 5 good first issues. Two PRs already open: [vllm-project/vllm#66355](https://github.com/vllm-project/vllm/pull/66355), [sgl-project/sglang#49164](https://github.com/sgl-project/sglang/pull/49164)
+- [ ] Community: `CONTRIBUTING.md` read for both projects. 5 issues shortlisted in [week02/issue_shortlist.md](week02/issue_shortlist.md). Still to do: join Slack/Discord. Two PRs already open: [vllm-project/vllm#66355](https://github.com/vllm-project/vllm/pull/66355), [sgl-project/sglang#49164](https://github.com/sgl-project/sglang/pull/49164)
 
 ### Notes / possible first issues
 - vLLM `test_diffusion_read_deferral_keeps_a_longer_pp_wait` fails on any CUDA host with < 3 GPUs (`World size (3) is larger than the number of available GPUs (2)`). Week 2 PR candidate.
