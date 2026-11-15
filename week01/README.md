@@ -58,18 +58,18 @@ Extensions needed: Python, Pylance, Python Debugger (debugpy). vLLM's `.gitignor
 ### 3. Breakpoints, in request order
 Jump to a symbol with `Cmd+T` (e.g. type `allocate_slots`). Line numbers change with every upstream commit, so look functions up by name.
 
-| # | Stage | File | Function | What to look at |
-|---|---|---|---|---|
-| 1 | API entry | `vllm/entrypoints/llm.py` | `LLM.generate` | prompts and `SamplingParams` going in |
-| 2 | Tokenize, wrap | `vllm/v1/engine/llm_engine.py` | `LLMEngine.add_request` | prompt → token ids → `EngineCoreRequest` |
-| 3 | Enqueue | `vllm/v1/engine/core.py` | `EngineCore.add_request` | `Request` lands in `scheduler.waiting` |
-| 4 | One engine iteration | `vllm/v1/engine/core.py` | `EngineCore.step` | the loop: schedule → execute → update |
-| 5 | **Schedule** | `vllm/v1/core/sched/scheduler.py` | `Scheduler.schedule` | `token_budget`, `self.waiting`, `self.running`; returned `SchedulerOutput` (`num_scheduled_tokens`, `scheduled_new_reqs`) |
-| 6 | **KV blocks (PagedAttention)** | `vllm/v1/core/kv_cache_manager.py` | `KVCacheManager.allocate_slots` (and `get_computed_blocks` for prefix-cache hits) | block ids handed to each request; a new block only every `block_size` tokens |
-| 7 | Forward pass | `vllm/v1/worker/cpu/standalone_model_runner.py` | `StandaloneCPUModelRunner.execute_model` | input batch built from `SchedulerOutput`; logits out |
-| 8 | Sample | `vllm/v1/worker/cpu/sampler.py` (via `sample_tokens`) | `CPUSampler.__call__` | logits → next token id (greedy here: `temperature=0`) |
-| 9 | Update state | `vllm/v1/core/sched/scheduler.py` | `Scheduler.update_from_output` | token appended, stop checks; finished requests → `KVCacheManager.free` |
-| 10 | Detokenize, return | `vllm/v1/engine/output_processor.py` | `OutputProcessor.process_outputs` | token ids → text → `RequestOutput` |
+| #   | Stage                          | File                                                  | Function                                                                          | What to look at                                                                                                           |
+| --- | ------------------------------ | ----------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| 1   | API entry                      | `vllm/entrypoints/llm.py`                             | `LLM.generate`                                                                    | prompts and `SamplingParams` going in                                                                                     |
+| 2   | Tokenize, wrap                 | `vllm/v1/engine/llm_engine.py`                        | `LLMEngine.add_request`                                                           | prompt → token ids → `EngineCoreRequest`                                                                                  |
+| 3   | Enqueue                        | `vllm/v1/engine/core.py`                              | `EngineCore.add_request`                                                          | `Request` lands in `scheduler.waiting`                                                                                    |
+| 4   | One engine iteration           | `vllm/v1/engine/core.py`                              | `EngineCore.step`                                                                 | the loop: schedule → execute → update                                                                                     |
+| 5   | **Schedule**                   | `vllm/v1/core/sched/scheduler.py`                     | `Scheduler.schedule`                                                              | `token_budget`, `self.waiting`, `self.running`; returned `SchedulerOutput` (`num_scheduled_tokens`, `scheduled_new_reqs`) |
+| 6   | **KV blocks (PagedAttention)** | `vllm/v1/core/kv_cache_manager.py`                    | `KVCacheManager.allocate_slots` (and `get_computed_blocks` for prefix-cache hits) | block ids handed to each request; a new block only every `block_size` tokens                                              |
+| 7   | Forward pass                   | `vllm/v1/worker/cpu/standalone_model_runner.py`       | `StandaloneCPUModelRunner.execute_model`                                          | input batch built from `SchedulerOutput`; logits out                                                                      |
+| 8   | Sample                         | `vllm/v1/worker/cpu/sampler.py` (via `sample_tokens`) | `CPUSampler.__call__`                                                             | logits → next token id (greedy here: `temperature=0`)                                                                     |
+| 9   | Update state                   | `vllm/v1/core/sched/scheduler.py`                     | `Scheduler.update_from_output`                                                    | token appended, stop checks; finished requests → `KVCacheManager.free`                                                    |
+| 10  | Detokenize, return             | `vllm/v1/engine/output_processor.py`                  | `OutputProcessor.process_outputs`                                                 | token ids → text → `RequestOutput`                                                                                        |
 
 On GPU (Kaggle), steps 7–8 are `GPUModelRunner.execute_model` / `sample_tokens` in `vllm/v1/worker/gpu_model_runner.py` and `Sampler.forward` in `vllm/v1/sample/sampler.py`. Steps 1–6 and 9–10 are the same code.
 
