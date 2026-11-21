@@ -36,7 +36,7 @@ Extensions needed: Python, Pylance, Python Debugger (debugpy). vLLM's `.gitignor
       "name": "vLLM smoke (CPU, in-process)",
       "type": "debugpy",
       "request": "launch",
-      "program": "/Users/jing/Documents/Obsidian Vault/nvidia/inference-lab/week01/smoke_offline.py",
+      "program": "/Users/jing/Documents/Obsidian Vault/Inference/inference-lab/week01/smoke_offline.py",
       "cwd": "${workspaceFolder}",
       "python": "${workspaceFolder}/.venv/bin/python",
       "justMyCode": false,
@@ -87,7 +87,7 @@ Kaggle only sees what is on GitHub (`jjzz888/inference-lab`, public), not your l
 
 The local `inference-lab/` folder is a git repo tracking `origin/main`. After changing any script:
 ```bash
-cd "/Users/jing/Documents/Obsidian Vault/nvidia/inference-lab"
+cd "/Users/jing/Documents/Obsidian Vault/Inference/inference-lab"
 git status                      # check what changed
 git add -A && git commit -m "week01: <what changed>"
 git push
@@ -271,7 +271,7 @@ You can close the page while it runs.
      kaggle kernels output tiramisooo/notebook315e497798 -p /tmp/kaggle_out
      ```
      ```bash
-     cp -R /tmp/kaggle_out/results/week01/. "/Users/jing/Documents/Obsidian Vault/nvidia/inference-lab/results/week01/"
+     cp -R /tmp/kaggle_out/results/week01/. "/Users/jing/Documents/Obsidian Vault/Inference/inference-lab/results/week01/"
      ```
      One-time setup:
      - Install with `uv tool install --with six kaggle`. kaggle 2.2.5 imports `six` but doesn't declare it, so without `--with six` it fails with `ModuleNotFoundError: No module named 'six'`.
